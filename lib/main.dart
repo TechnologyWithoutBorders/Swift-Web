@@ -46,7 +46,7 @@ class LoginScreen extends StatelessWidget {
             children: [
               Image(image: AssetImage('graphics/logo.png')),
               SizedBox(height: 10),
-              Card(child: SignUpForm()),
+              Card(child: LoginForm()),
               SizedBox(height: 150),
             ],
           ),
@@ -56,12 +56,12 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-class SignUpForm extends StatefulWidget {
+class LoginForm extends StatefulWidget {
   @override
-  _SignUpFormState createState() => _SignUpFormState();
+  _LoginFormState createState() => _LoginFormState();
 }
 
-class _SignUpFormState extends State<SignUpForm> {
+class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
 
   final _passwordTextController = TextEditingController();
