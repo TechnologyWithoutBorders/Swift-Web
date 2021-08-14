@@ -181,7 +181,7 @@ class _FilterFormState extends State<FilterForm> {
   @override
   Widget build(BuildContext context) {
     return Form(key: _formKey,
-      child: SizedBox(width: 250,
+      child: SizedBox(width: 350,
         child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -219,7 +219,7 @@ class _FilterFormState extends State<FilterForm> {
           SizedBox(height: 10),
           Text(_filteredDevices.length.toString() + " device(s) match the filter:"),
           SizedBox(height: 10),
-          SizedBox(height: 200,
+          SizedBox(height: 250,
             child: Scrollbar(isAlwaysShown: true,
               controller: _scrollController,
               child: ListView.separated(
@@ -228,7 +228,7 @@ class _FilterFormState extends State<FilterForm> {
                 itemCount: _filteredDevices.length,
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
-                    title: Text(_filteredDevices[index].type),
+                    title: Text(_filteredDevices[index].manufacturer + " " + _filteredDevices[index].type),
                     onTap: () => _openDeviceById(_filteredDevices[index].id)
                   );
                 },
