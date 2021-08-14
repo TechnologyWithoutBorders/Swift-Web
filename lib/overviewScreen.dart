@@ -191,7 +191,7 @@ class _FilterFormState extends State<FilterForm> {
               .headline5),
           TextFormField(
             controller: _typeController,
-            decoration: InputDecoration(hintText: 'Device type (e.g. "ventilator")'),
+            decoration: InputDecoration(hintText: 'Device type (e.g. "Ventilator")'),
             autofocus: true,
             validator: (value) => validateDeviceID(value),
             onFieldSubmitted: (value) => _processInput(),
