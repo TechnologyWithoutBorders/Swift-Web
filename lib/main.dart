@@ -1,0 +1,144 @@
+import 'package:flutter/material.dart';
+import 'package:teog_swift/overviewScreen.dart';
+
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
+
+import 'networkFunctions.dart' as Comm;
+import 'preference_manager.dart' as Prefs;
+
+void main() => runApp(SignUpApp());
+
+class SignUpApp extends StatelessWidget {
+  static const String route = '/';
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: "Swift",
+      initialRoute: SignUpApp.route,
+      routes: {
+        SignUpApp.route: (context) => SignUpScreen(),
+        OverviewScreen.route: (context) => OverviewScreen(),
+        '/help': (context) => SignUpScreen()//TODO Hilfe-Seite
+      },
+      theme: ThemeData(
+        primaryColor: Color(0xFF01265D),
+        buttonTheme: ButtonThemeData(
+           colorScheme: Theme.of(context).colorScheme.copyWith(primary: Colors.red, secondary: Colors.white, background: Colors.yellow),//TODO das klappt nicht
+        ),
+      ),
+    );
+  }
+}
+
+class SignUpScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey[200],
+      body: Center(
+        child: SizedBox(
+          width: 400,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image(image: AssetImage('graphics/logo.png')),
+              SizedBox(height: 10),
+              Card(child: SignUpForm()),
+              SizedBox(height: 150),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SignUpForm extends StatefulWidget {
+  @override
+  _SignUpFormState createState() => _SignUpFormState();
+}
+
+class _SignUpFormState extends State<SignUpForm> {
+  final _formKey = GlobalKey<FormState>();
+
+  final _passwordTextController = TextEditingController();
+
+  void _login() {
+    if (_formKey.currentState.validate()) {
+      String password = _passwordTextController.text;
+      String country = "Test";
+      int hospital = 1;
+
+      Comm.checkCredentials(country, hospital, password).then((success) {
+        if(success) {
+          List<int> bytes = utf8.encode(password);
+          String hash = sha256.convert(bytes).toString();
+
+          Prefs.save(country, hospital, hash).then((success) => Navigator.of(context).pushNamed(OverviewScreen.route));
+        }
+      }).onError((error, stackTrace) {
+        final snackBar = SnackBar(content: Text(error.message));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    Prefs.checkLogin(syncWithServer: true).then((success) { 
+      if(success) {//TODO: das funktioniert nicht
+        Navigator.of(context).pushNamed(OverviewScreen.route);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('Login', style: Theme
+              .of(context)
+              .textTheme
+              .headline4),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: TextFormField(
+              controller: _passwordTextController,
+              decoration: InputDecoration(hintText: 'Password'),
+              obscureText: true,
+              autofocus: true,
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Please enter some text';
+                }
+                return null;
+              },
+              onFieldSubmitted: (value) => _login(),
+            ),
+          ),
+          TextButton(
+            style: ButtonStyle(
+              foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
+                return states.contains(MaterialState.disabled) ? null : Colors.white;
+              }),
+              backgroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
+                return states.contains(MaterialState.disabled) ? null : Color(0xff667d9d);
+              }),
+            ),
+            onPressed: () => _login(),
+            child: Text('Login'),
+          ),
+          SizedBox(height: 5),
+        ],
+      ),
+    );
+  }
+}
