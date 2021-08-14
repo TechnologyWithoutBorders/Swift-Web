@@ -19,9 +19,9 @@ class SwiftApp extends StatelessWidget {
       title: "Swift",
       initialRoute: SwiftApp.route,
       routes: {
-        SwiftApp.route: (context) => SignUpScreen(),
+        SwiftApp.route: (context) => LoginScreen(),
         OverviewScreen.route: (context) => OverviewScreen(),
-        '/help': (context) => SignUpScreen()//TODO Hilfe-Seite
+        '/help': (context) => LoginScreen()//TODO Hilfe-Seite
       },
       theme: ThemeData(
         primaryColor: Color(0xFF01265D),
@@ -33,7 +33,7 @@ class SwiftApp extends StatelessWidget {
   }
 }
 
-class SignUpScreen extends StatelessWidget {
+class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
