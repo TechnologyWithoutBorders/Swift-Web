@@ -64,20 +64,21 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
 
+  String _countryValue = 'Select Country';//TODO: use cookie + get from server
+
   final _passwordTextController = TextEditingController();
 
   void _login() {
     if (_formKey.currentState.validate()) {
       String password = _passwordTextController.text;
-      String country = "Test";
       int hospital = 1;
 
-      Comm.checkCredentials(country, hospital, password).then((success) {
+      Comm.checkCredentials(_countryValue, hospital, password).then((success) {
         if(success) {
           List<int> bytes = utf8.encode(password);
           String hash = sha256.convert(bytes).toString();
 
-          Prefs.save(country, hospital, hash).then((success) => Navigator.of(context).pushNamed(OverviewScreen.route));
+          Prefs.save(_countryValue, hospital, hash).then((success) => Navigator.of(context).pushNamed(OverviewScreen.route));
         }
       }).onError((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.message));
@@ -108,6 +109,24 @@ class _LoginFormState extends State<LoginForm> {
               .of(context)
               .textTheme
               .headline4),
+          DropdownButton<String>(
+            value: _countryValue,
+            icon: const Icon(Icons.expand_more),
+            iconSize: 24,
+            elevation: 16,
+            onChanged: (String newValue) {
+              setState(() {
+                _countryValue = newValue;
+              });
+            },
+            items: <String>['Select Country', 'Test']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
           Padding(
             padding: EdgeInsets.all(8.0),
             child: TextFormField(
