@@ -37,9 +37,9 @@ class DoubleCardLayout extends StatelessWidget {
             padding: EdgeInsets.all(10.0),
             child: leftView)
           ),
-          SizedBox(width: 10),
+          SizedBox(height: 10),
           Text(betweenText, style: TextStyle(fontSize: 30)),
-          SizedBox(width: 10),
+          SizedBox(height: 10),
           Card(child: Padding(
             padding: EdgeInsets.all(10.0),
             child: rightView)
