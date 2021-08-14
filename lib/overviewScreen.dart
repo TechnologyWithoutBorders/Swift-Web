@@ -201,8 +201,8 @@ class _FilterFormState extends State<FilterForm> {
             decoration: InputDecoration(hintText: 'Manufacturer'),
             validator: (value) => validateDeviceID(value),
             onFieldSubmitted: (value) => _processInput(),
-          ),//TODO kein exaktes Matching
-          TextFormField(decoration: InputDecoration(hintText: 'Location (not working yet)')),//TODO nur für Sortierung, da oft nicht hinterlegt
+          ),
+          TextFormField(decoration: InputDecoration(hintText: 'Location (not working yet)')),//TODO: nur für Sortierung, da oft nicht hinterlegt
           SizedBox(height: 10),
           TextButton(
             style: ButtonStyle(
