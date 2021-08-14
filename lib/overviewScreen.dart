@@ -145,7 +145,7 @@ class _FilterFormState extends State<FilterForm> {
   List<HospitalDevice> _filteredDevices = [];
 
   String validateDeviceID(String value) {
-    return null;
+    return null;//TODO:
     /*if(value.isNotEmpty) {
       var numeric = int.tryParse(value);
 
@@ -192,12 +192,16 @@ class _FilterFormState extends State<FilterForm> {
           TextFormField(
             controller: _typeController,
             decoration: InputDecoration(hintText: 'Device type (e.g. "ventilator")'),
-            keyboardType: TextInputType.number,
             autofocus: true,
             validator: (value) => validateDeviceID(value),
             onFieldSubmitted: (value) => _processInput(),
           ),
-          TextFormField(decoration: InputDecoration(hintText: 'Manufacturer (not working yet)')),//TODO kein exaktes Matching
+          TextFormField(
+            controller: _manufacturerController,
+            decoration: InputDecoration(hintText: 'Manufacturer'),
+            validator: (value) => validateDeviceID(value),
+            onFieldSubmitted: (value) => _processInput(),
+          ),//TODO kein exaktes Matching
           TextFormField(decoration: InputDecoration(hintText: 'Location (not working yet)')),//TODO nur für Sortierung, da oft nicht hinterlegt
           SizedBox(height: 10),
           TextButton(
@@ -213,7 +217,7 @@ class _FilterFormState extends State<FilterForm> {
             child: Text('Filter'),
           ),
           SizedBox(height: 10),
-          Text(_filteredDevices.length.toString() + " devices match the filter:"),
+          Text(_filteredDevices.length.toString() + " device(s) match the filter:"),
           SizedBox(height: 10),
           SizedBox(height: 200,
             child: Scrollbar(isAlwaysShown: true,
