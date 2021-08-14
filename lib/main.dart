@@ -8,18 +8,18 @@ import 'package:crypto/crypto.dart';
 import 'networkFunctions.dart' as Comm;
 import 'preference_manager.dart' as Prefs;
 
-void main() => runApp(SignUpApp());
+void main() => runApp(SwiftApp());
 
-class SignUpApp extends StatelessWidget {
+class SwiftApp extends StatelessWidget {
   static const String route = '/';
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Swift",
-      initialRoute: SignUpApp.route,
+      initialRoute: SwiftApp.route,
       routes: {
-        SignUpApp.route: (context) => SignUpScreen(),
+        SwiftApp.route: (context) => SignUpScreen(),
         OverviewScreen.route: (context) => OverviewScreen(),
         '/help': (context) => SignUpScreen()//TODO Hilfe-Seite
       },

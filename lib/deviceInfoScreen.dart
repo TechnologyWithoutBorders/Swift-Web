@@ -117,7 +117,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
 
     Prefs.checkLogin().then((success) {
       if(!success) {
-        Navigator.of(context).pushNamed(SignUpApp.route);
+        Navigator.of(context).pushNamed(SwiftApp.route);
       } else {
         _retrieveDocuments();
       }

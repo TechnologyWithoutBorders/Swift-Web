@@ -49,7 +49,7 @@ class _SearchFormState extends State<SearchForm> {
     Prefs.checkLogin().then((success) {
       
       if(!success) {
-        Navigator.of(context).pushNamed(SignUpApp.route);
+        Navigator.of(context).pushNamed(SwiftApp.route);
       }
     });
   }
