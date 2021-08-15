@@ -228,7 +228,9 @@ class _FilterFormState extends State<FilterForm> {
                 itemCount: _filteredDevices.length,
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
-                    title: Text(_filteredDevices[index].manufacturer + " " + _filteredDevices[index].type),
+                    leading: FlutterLogo(size: 56.0),
+                    title: Text(_filteredDevices[index].type),
+                    subtitle: Text(_filteredDevices[index].manufacturer + " " + _filteredDevices[index].model),
                     onTap: () => _openDeviceById(_filteredDevices[index].id)
                   );
                 },
