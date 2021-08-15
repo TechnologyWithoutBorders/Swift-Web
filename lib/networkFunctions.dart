@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
+import 'package:teog_swift/previewDeviceInfo.dart';
 
 import 'package:teog_swift/swiftResponse.dart';
 
@@ -84,7 +85,7 @@ Future<DeviceInfo> fetchDevice(int deviceId) async {
   }
 }
 
-Future<List<HospitalDevice>> searchDevices(String type, String manufacturer, String location) async {
+Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, String location) async {
   List<int> bytes = utf8.encode("password");
   String hash = sha256.convert(bytes).toString();
 
@@ -92,7 +93,7 @@ Future<List<HospitalDevice>> searchDevices(String type, String manufacturer, Str
 
   final response = await http.post(
     uri,
-    headers: <String, String>{
+    headers: <String, String> {
       'Content-Type': 'application/json; charset=UTF-8',
     },
     body: jsonEncode(<String, dynamic> {
@@ -108,12 +109,17 @@ Future<List<HospitalDevice>> searchDevices(String type, String manufacturer, Str
 
   if(response.statusCode == 200) {
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
-
+    
     if(swiftResponse.responseCode == 0) {
-      List<HospitalDevice> devices = [];
+      print(swiftResponse.message);
+      List<PreviewDeviceInfo> devices = [];
 
       for(var jsonDevice in swiftResponse.message) {
-        devices.add(HospitalDevice.fromJson(jsonDevice));
+        print("bla");
+        devices.add(PreviewDeviceInfo(
+          device: HospitalDevice.fromJson(jsonDevice["device"]),
+          imageData: jsonDevice["image"],
+        ));
       }
 
       return devices;

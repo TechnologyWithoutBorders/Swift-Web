@@ -1,10 +1,11 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:teog_swift/previewDeviceInfo.dart';
 import 'package:teog_swift/deviceInfoScreen.dart';
 import 'package:teog_swift/main.dart';
 
 import 'networkFunctions.dart' as Comm;
 import 'preference_manager.dart' as Prefs;
-import 'hospitalDevice.dart';
 import 'doubleCardLayout.dart';
 
 class OverviewScreen extends StatelessWidget {
@@ -90,7 +91,7 @@ class _SearchFormState extends State<SearchForm> {
   @override
   Widget build(BuildContext context) {
     return Form(key: _formKey,
-      child: SizedBox(width: 250,
+      child: SizedBox(width: 300,
         child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -99,7 +100,8 @@ class _SearchFormState extends State<SearchForm> {
               .textTheme
               .headline5),
           SizedBox(height: 10),
-          Text("This is the easiest way. Please look for a barcode like this:"),
+          Text("This is the easiest way. Please look for a barcode like this and enter the marked number:"),
+          SizedBox(height: 5),
           Image(image: AssetImage('graphics/barcode.jpg')),
           TextFormField(
             controller: _deviceIDController,
@@ -142,7 +144,7 @@ class _FilterFormState extends State<FilterForm> {
 
   final _scrollController = ScrollController();
 
-  List<HospitalDevice> _filteredDevices = [];
+  List<PreviewDeviceInfo> _filteredDevices = [];
 
   String validateDeviceID(String value) {
     return null;//TODO:
@@ -181,7 +183,7 @@ class _FilterFormState extends State<FilterForm> {
   @override
   Widget build(BuildContext context) {
     return Form(key: _formKey,
-      child: SizedBox(width: 350,
+      child: SizedBox(width: 400,
         child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -228,11 +230,11 @@ class _FilterFormState extends State<FilterForm> {
                 itemCount: _filteredDevices.length,
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
-                    leading: FlutterLogo(size: 56.0),
-                    title: Text(_filteredDevices[index].type),
-                    subtitle: Text(_filteredDevices[index].manufacturer + " " + _filteredDevices[index].model),
-                    trailing: Text(_filteredDevices[index].location),
-                    onTap: () => _openDeviceById(_filteredDevices[index].id)
+                    leading: Image.memory(base64Decode(_filteredDevices[index].imageData)),
+                    title: Text(_filteredDevices[index].device.type),
+                    subtitle: Text(_filteredDevices[index].device.manufacturer + " " + _filteredDevices[index].device.model),
+                    trailing: Text(_filteredDevices[index].device.location),
+                    onTap: () => _openDeviceById(_filteredDevices[index].device.id)
                   );
                 },
                 separatorBuilder: (BuildContext context, int index) => const Divider(),
