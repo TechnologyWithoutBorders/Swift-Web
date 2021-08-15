@@ -231,6 +231,7 @@ class _FilterFormState extends State<FilterForm> {
                     leading: FlutterLogo(size: 56.0),
                     title: Text(_filteredDevices[index].type),
                     subtitle: Text(_filteredDevices[index].manufacturer + " " + _filteredDevices[index].model),
+                    trailing: Text(_filteredDevices[index].location),
                     onTap: () => _openDeviceById(_filteredDevices[index].id)
                   );
                 },
