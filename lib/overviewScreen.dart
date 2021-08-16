@@ -82,7 +82,7 @@ class _SearchFormState extends State<SearchForm> {
           )
         );
       }).onError((error, stackTrace) {
-        final snackBar = SnackBar(content: Text(error.message));
+        final snackBar = SnackBar(content: Text(error.data));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       });
     }

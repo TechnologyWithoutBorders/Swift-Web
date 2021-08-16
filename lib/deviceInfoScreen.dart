@@ -204,7 +204,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
         //TODO Gerätedaten aktualisieren
         //setState(() { deviceInfo = modifiedDeviceInfo; });
       }).onError((error, stackTrace) {
-        final snackBar = SnackBar(content: Text(error.message));
+        final snackBar = SnackBar(content: Text(error.data));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       });
     }

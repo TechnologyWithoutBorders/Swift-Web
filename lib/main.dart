@@ -81,7 +81,7 @@ class _LoginFormState extends State<LoginForm> {
           Prefs.save(_countryValue, int.parse(_hospitalValue), hash).then((success) => Navigator.of(context).pushNamed(OverviewScreen.route));
         }
       }).onError((error, stackTrace) {
-        final snackBar = SnackBar(content: Text(error.message));
+        final snackBar = SnackBar(content: Text(error.data));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       });
     }
