@@ -174,7 +174,7 @@ Future<Report> queueRepair(String title, String problemDescription) async {
 
   final response = await http.post(
     uri,
-    headers: <String, String>{
+    headers: <String, String> {
       'Content-Type': 'application/json; charset=UTF-8',
     },
     body: jsonEncode(<String, dynamic> {
