@@ -1,13 +1,13 @@
 class SwiftResponse {
   final int responseCode;
-  final dynamic message;
+  final dynamic data;
 
-  SwiftResponse({this.responseCode, this.message});
+  SwiftResponse({this.responseCode, this.data});
 
   factory SwiftResponse.fromJson(Map<String, dynamic> json) {
     return SwiftResponse(
       responseCode: json['response_code'],
-      message: json['data'],
+      data: json['data'],
     );
   }
 }

@@ -40,7 +40,7 @@ Future<bool> checkCredentials(String country, int hospital, String password, {ha
     if(swiftResponse.responseCode == 0) {
       return true;
     } else {
-      throw Exception(swiftResponse.message.toString());
+      throw Exception(swiftResponse.data.toString());
     }
   } else {
     throw Exception("something went wrong");
@@ -72,12 +72,12 @@ Future<DeviceInfo> fetchDevice(int deviceId) async {
 
     if(swiftResponse.responseCode == 0) {
       return DeviceInfo(
-        device: HospitalDevice.fromJson(swiftResponse.message["device"]),
-        report: Report.fromJson(swiftResponse.message["report"]),
-        imageData: swiftResponse.message["image"],
+        device: HospitalDevice.fromJson(swiftResponse.data["device"]),
+        report: Report.fromJson(swiftResponse.data["report"]),
+        imageData: swiftResponse.data["image"],
       );
     } else {
-      throw Exception(swiftResponse.message);
+      throw Exception(swiftResponse.data);
     }
   } else {
     print(response.statusCode.toString());
@@ -111,10 +111,10 @@ Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, 
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
     
     if(swiftResponse.responseCode == 0) {
-      print(swiftResponse.message);
+      print(swiftResponse.data);
       List<PreviewDeviceInfo> devices = [];
 
-      for(var jsonDevice in swiftResponse.message) {
+      for(var jsonDevice in swiftResponse.data) {
         print("bla");
         devices.add(PreviewDeviceInfo(
           device: HospitalDevice.fromJson(jsonDevice["device"]),
@@ -124,7 +124,7 @@ Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, 
 
       return devices;
     } else {
-      throw Exception(swiftResponse.message);
+      throw Exception(swiftResponse.data);
     }
   } else {
     print(response.statusCode.toString());
@@ -152,13 +152,13 @@ Future<List<String>> retrieveDocuments(String manufacturer, String model) async 
     if(swiftResponse.responseCode == 0) {
       List<String> documents = [];
 
-      for(var jsonDocument in swiftResponse.message) {
+      for(var jsonDocument in swiftResponse.data) {
         documents.add(jsonDocument);
       }
 
       return documents;
     } else {
-      throw Exception(swiftResponse.message);
+      throw Exception(swiftResponse.data);
     }
   } else {
     print(response.statusCode.toString());
@@ -166,7 +166,7 @@ Future<List<String>> retrieveDocuments(String manufacturer, String model) async 
   }
 }
 
-Future<DeviceInfo> queueRepair(String content) async {//TODO image muss eigentlich nicht mit zurückgegeben werden
+Future<Report> queueRepair(String content) async {
   List<int> bytes = utf8.encode("password");
   String hash = sha256.convert(bytes).toString();
 
@@ -189,13 +189,9 @@ Future<DeviceInfo> queueRepair(String content) async {//TODO image muss eigentli
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
 
     if(swiftResponse.responseCode == 0) {
-      return DeviceInfo(
-        device: HospitalDevice.fromJson(swiftResponse.message["device"]),
-        report: Report.fromJson(swiftResponse.message["report"]),
-        imageData: swiftResponse.message["image"],
-      );
+      return Report.fromJson(swiftResponse.data);
     } else {
-      throw Exception(swiftResponse.message);
+      throw Exception(swiftResponse.data);
     }
   } else {
     print(response.statusCode.toString());
