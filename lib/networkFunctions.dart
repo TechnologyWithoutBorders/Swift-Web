@@ -115,7 +115,6 @@ Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, 
       List<PreviewDeviceInfo> devices = [];
 
       for(var jsonDevice in swiftResponse.data) {
-        print("bla");
         devices.add(PreviewDeviceInfo(
           device: HospitalDevice.fromJson(jsonDevice["device"]),
           imageData: jsonDevice["image"],
