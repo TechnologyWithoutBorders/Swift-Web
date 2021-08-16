@@ -274,11 +274,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
               ),
               onPressed: () {
                 if (_formKey.currentState.validate()) {
-                  //Comm.queueRepair("password").then((success) {//TODO Exceptions
-                  //  if(success) {
-                      //TODO
-                  //  }
-                  //});
+                  _createReport();
                 }
               },
               child: Padding(padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8.0), child: Text('Request repair')),
