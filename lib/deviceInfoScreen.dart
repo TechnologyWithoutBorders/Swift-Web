@@ -201,7 +201,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
 
   void _createReport() {
     if (_formKey.currentState.validate()) {
-      Comm.queueRepair(_reportTitleController.text, _problemTextController.text).then((newReport) {
+      Comm.queueRepair(479, _reportTitleController.text, _problemTextController.text).then((newReport) {
         //TODO: Gerätedaten aktualisieren
         //setState(() { deviceInfo = modifiedDeviceInfo; });
       }).onError((error, stackTrace) {
