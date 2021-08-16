@@ -214,7 +214,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
   void _createReport() {
     if (_formKey.currentState.validate()) {
       Comm.queueRepair(479, _reportTitleController.text, _problemTextController.text).then((newReport) {
-        setState(() { widget.updateDeviceInfo(DeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData)); });
+        widget.updateDeviceInfo(DeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData));
       }).onError((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.data));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
