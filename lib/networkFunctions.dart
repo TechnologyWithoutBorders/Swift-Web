@@ -181,9 +181,9 @@ Future<Report> queueRepair(String title, String problemDescription) async {
       'action': "queue_repair",
       'country': "Test",
       'hospital': "1",
+      'password': hash,
       'title': title,
       'problemDescription': problemDescription,
-      'password': hash,
     }),
   );
 
