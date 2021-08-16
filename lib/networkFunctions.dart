@@ -166,7 +166,7 @@ Future<List<String>> retrieveDocuments(String manufacturer, String model) async 
   }
 }
 
-Future<Report> queueRepair(String content) async {
+Future<Report> queueRepair(String title, String problemDescription) async {
   List<int> bytes = utf8.encode("password");
   String hash = sha256.convert(bytes).toString();
 
@@ -181,6 +181,8 @@ Future<Report> queueRepair(String content) async {
       'action': "queue_repair",
       'country': "Test",
       'hospital': "1",
+      'title': title,
+      'problemDescription': problemDescription,
       'password': hash,
     }),
   );

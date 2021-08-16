@@ -196,12 +196,13 @@ class ReportProblemForm extends StatefulWidget {
 class _ReportProblemFormState extends State<ReportProblemForm> {
   final _formKey = GlobalKey<FormState>();
 
+  final _reportTitleController = TextEditingController();
   final _problemTextController = TextEditingController();
 
   void _createReport() {
     if (_formKey.currentState.validate()) {
-      Comm.queueRepair(_problemTextController.text).then((modifiedDeviceInfo) {
-        //TODO Gerätedaten aktualisieren
+      Comm.queueRepair(_reportTitleController.text, _problemTextController.text).then((newReport) {
+        //TODO: Gerätedaten aktualisieren
         //setState(() { deviceInfo = modifiedDeviceInfo; });
       }).onError((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.data));
@@ -221,19 +222,30 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
           ),
           child: Column(mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Report a problem', style: Theme
+            Text("Report a problem", style: Theme
                 .of(context)
                 .textTheme
                 .headline5),
+            TextFormField(
+              controller: _reportTitleController,
+              decoration: InputDecoration(hintText: "Title"),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return "Please give your report a title.";
+                }
+                return null;
+              },
+              onFieldSubmitted: (value) => _createReport(),
+            ),
             Padding(
               padding: EdgeInsets.all(8.0),
               child: TextFormField(
                 controller: _problemTextController,
-                decoration: InputDecoration(hintText: 'Please describe the problem... (not working yet)'),
+                decoration: InputDecoration(hintText: "Problem description"),
                 maxLines: 4,
                 validator: (value) {
                   if (value.isEmpty) {
-                    return 'Please enter some text';
+                    return "Please describe the problem in a few sentences.";
                   }
                   return null;
                 },
