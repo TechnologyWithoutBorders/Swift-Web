@@ -10,6 +10,7 @@ import 'deviceInfo.dart';
 import 'deviceStates.dart' as DeviceState;
 
 class DetailScreen extends StatefulWidget {
+  //this one is never modified
   final DeviceInfo deviceInfo;
 
   DetailScreen({Key key, @required this.deviceInfo}) : super(key: key);
@@ -23,9 +24,9 @@ class _DetailScreenState extends State<DetailScreen> {
 
   _DetailScreenState({this.deviceInfo});
 
-  _updateDeviceInfo(DeviceInfo deviceInfo) {
+  _updateDeviceInfo(DeviceInfo modifiedDeviceInfo) {
     setState(() {
-      this.deviceInfo = deviceInfo;
+      this.deviceInfo = modifiedDeviceInfo;
     });
   }
 
@@ -35,7 +36,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
     String reasonText;
 
-    switch(widget.deviceInfo.report.currentState) {
+    switch(deviceInfo.report.currentState) {
       case DeviceState.broken:
         reasonText = "The defect has already been reported.";
         break;
@@ -50,7 +51,7 @@ class _DetailScreenState extends State<DetailScreen> {
     if(reasonText != null) {
       reportWidget = Text(reasonText, style: TextStyle(fontSize: 20));
     } else {
-      reportWidget = ReportProblemForm(deviceInfo: widget.deviceInfo, updateDeviceInfo: _updateDeviceInfo,);
+      reportWidget = ReportProblemForm(deviceInfo: deviceInfo, updateDeviceInfo: _updateDeviceInfo,);
     }
 
     return Scaffold(
@@ -64,20 +65,20 @@ class _DetailScreenState extends State<DetailScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(widget.deviceInfo.device.manufacturer + " " + widget.deviceInfo.device.model, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                Text(widget.deviceInfo.device.location, style: TextStyle(fontSize: 25)),
+                Text(deviceInfo.device.manufacturer + " " + deviceInfo.device.model, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                Text(deviceInfo.device.location, style: TextStyle(fontSize: 25)),
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(height: 350,
-                      child: Image.memory(base64Decode(widget.deviceInfo.imageData)),
+                      child: Image.memory(base64Decode(deviceInfo.imageData)),
                     ),
                     SizedBox(width: 30),
                     Column(mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                       SizedBox(height: 5),
-                      StateScreen(deviceInfo: widget.deviceInfo),
+                      StateScreen(deviceInfo: deviceInfo),
                       SizedBox(height: 20),
                       reportWidget,
                     ])
@@ -85,7 +86,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 ),
                 SizedBox(height: 20),
                 Text("Available Documents:", style: TextStyle(fontSize: 20)),
-                DocumentScreen(deviceInfo: widget.deviceInfo),
+                DocumentScreen(deviceInfo: deviceInfo),
               ]
             )
           ),
