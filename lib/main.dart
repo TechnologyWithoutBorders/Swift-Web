@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teog_swift/dashboardScreen.dart';
 import 'package:teog_swift/overviewScreen.dart';
 
 import 'dart:convert';
@@ -21,7 +22,8 @@ class SwiftApp extends StatelessWidget {
       routes: {
         SwiftApp.route: (context) => LoginScreen(),
         OverviewScreen.route: (context) => OverviewScreen(),
-        '/help': (context) => LoginScreen()//TODO Hilfe-Seite
+        '/help': (context) => LoginScreen(),//TODO Hilfe-Seite
+        DashboardScreen.route: (context) => DashboardScreen()
       },
       theme: ThemeData(
         primaryColor: Color(0xFF01265D),
@@ -105,10 +107,10 @@ class _LoginFormState extends State<LoginForm> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Login', style: Theme
+          Text('Sign in to report problems with devices or download user manuals.', style: Theme
               .of(context)
               .textTheme
-              .headline4),
+              .headline5),
           DropdownButton<String>(
             value: _countryValue,
             icon: const Icon(Icons.expand_more),

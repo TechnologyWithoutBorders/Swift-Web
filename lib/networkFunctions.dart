@@ -131,6 +131,49 @@ Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, 
   }
 }
 
+Future<List<DeviceInfo>> getTodoDevices() async {
+  List<int> bytes = utf8.encode("password");
+  String hash = sha256.convert(bytes).toString();
+
+  Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+
+  final response = await http.post(
+    uri,
+    headers: <String, String> {
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, dynamic> {
+      'action': "get_todo_devices",
+      'country': "Test",
+      'hospital': 1,
+      'password': hash,
+    }),
+  );
+
+  if(response.statusCode == 200) {
+    SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
+    
+    if(swiftResponse.responseCode == 0) {
+      print(swiftResponse.data);
+      List<DeviceInfo> devices = [];
+
+      for(var jsonDevice in swiftResponse.data) {
+        devices.add(DeviceInfo(
+          device: HospitalDevice.fromJson(jsonDevice["device"]),
+          report: Report.fromJson(jsonDevice["report"])
+        ));
+      }
+
+      return devices;
+    } else {
+      throw Exception(swiftResponse.data);
+    }
+  } else {
+    print(response.statusCode.toString());
+    throw Exception('something went wrong');
+  }
+}
+
 Future<List<String>> retrieveDocuments(String manufacturer, String model) async {
   Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/documents.php');
 
