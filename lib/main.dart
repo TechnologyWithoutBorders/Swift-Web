@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:teog_swift/dashboardScreen.dart';
 import 'package:teog_swift/overviewScreen.dart';
+import 'package:teog_swift/codeGenerationScreen.dart';
 
 import 'dart:convert';
 
@@ -23,7 +24,8 @@ class SwiftApp extends StatelessWidget {
         SwiftApp.route: (context) => LoginScreen(),
         OverviewScreen.route: (context) => OverviewScreen(),
         '/help': (context) => LoginScreen(),//TODO Hilfe-Seite
-        DashboardScreen.route: (context) => DashboardScreen()
+        DashboardScreen.route: (context) => DashboardScreen(),
+        CodeGenerationScreen.route: (context) => CodeGenerationScreen()
       },
       theme: ThemeData(
         primaryColor: Color(0xFF01265D),
