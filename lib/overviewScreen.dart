@@ -8,6 +8,8 @@ import 'networkFunctions.dart' as Comm;
 import 'preference_manager.dart' as Prefs;
 import 'doubleCardLayout.dart';
 
+import 'package:teog_swift/sessionMixin.dart';
+
 class OverviewScreen extends StatelessWidget {
   static const String route = '/welcome';
 
@@ -38,7 +40,7 @@ class SearchForm extends StatefulWidget {
   _SearchFormState createState() => _SearchFormState();
 }
 
-class _SearchFormState extends State<SearchForm> {
+class _SearchFormState extends State with SessionMixin {
   final _formKey = GlobalKey<FormState>();
 
   final _deviceIDController = TextEditingController();
@@ -46,13 +48,6 @@ class _SearchFormState extends State<SearchForm> {
   @override
   void initState() {
     super.initState();
-
-    Prefs.checkLogin().then((success) {
-      
-      if(!success) {
-        Navigator.of(context).pushNamed(SwiftApp.route);
-      }
-    });
   }
 
   ///Validates whether a given [value] is a valid device ID.
