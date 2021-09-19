@@ -11,8 +11,6 @@ import 'package:teog_swift/previewDeviceInfo.dart';
 import 'package:teog_swift/deviceInfoScreen.dart';
 
 class DashboardScreen extends StatefulWidget {
-  static const String route = '/dashboard';
-
   DashboardScreen({Key key}) : super(key: key);
 
   @override

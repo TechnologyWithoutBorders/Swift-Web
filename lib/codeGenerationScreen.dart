@@ -13,8 +13,6 @@ import 'package:teog_swift/deviceInfoScreen.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class CodeGenerationScreen extends StatefulWidget {
-  static const String route = '/code_generation';
-
   CodeGenerationScreen({Key key}) : super(key: key);
 
   @override
