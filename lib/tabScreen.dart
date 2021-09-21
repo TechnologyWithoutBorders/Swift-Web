@@ -22,7 +22,7 @@ class TabScreen extends StatelessWidget {
                 Tab(text: "User Management", icon: Icon(Icons.person)),
               ],
             ),
-            title: Text('Menu'),
+            title: Text('Swift'),
           ),
           body: TabBarView(
             children: [
