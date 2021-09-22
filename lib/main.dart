@@ -50,7 +50,7 @@ class LoginScreen extends StatelessWidget {
             children: [
               Image(image: AssetImage('graphics/logo.png')),
               SizedBox(height: 10),
-              Card(child: LoginForm()),
+              Card(child: Padding(padding: EdgeInsets.all(10.0), child: LoginForm())),
               SizedBox(height: 150),
             ],
           ),
@@ -149,22 +149,20 @@ class _LoginFormState extends State<LoginForm> {
               );
             }).toList(),
           ),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: TextFormField(
-              controller: _passwordTextController,
-              decoration: InputDecoration(hintText: 'Password'),
-              obscureText: true,
-              autofocus: true,
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Please enter some text';
-                }
-                return null;
-              },
-              onFieldSubmitted: (value) => _login(),
-            ),
+          TextFormField(
+            controller: _passwordTextController,
+            decoration: InputDecoration(hintText: 'Password'),
+            obscureText: true,
+            autofocus: true,
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Please enter some text';
+              }
+              return null;
+            },
+            onFieldSubmitted: (value) => _login(),
           ),
+          SizedBox(height: 10),
           TextButton(
             style: ButtonStyle(
               foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {

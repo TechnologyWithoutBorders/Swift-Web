@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:teog_swift/codeGenerationScreen.dart';
 import 'package:teog_swift/dashBoardScreen.dart';
+import 'package:teog_swift/userManagementScreen.dart';
 
 class TabScreen extends StatelessWidget {
   static const String route = '/tabs';
@@ -28,7 +29,7 @@ class TabScreen extends StatelessWidget {
             children: [
               DashboardScreen(),
               CodeGenerationScreen(),
-              Icon(Icons.directions_bike),
+              UserManagementScreen(),
             ],
           ),
         ),
