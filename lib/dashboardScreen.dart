@@ -57,7 +57,10 @@ class _DetailScreenState extends State<DashboardScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text("TODO"),
+                      Text("TODO", style: Theme
+                        .of(context)
+                        .textTheme
+                        .headline5),
                       SizedBox(height: 500, width: 600,
                         child: Scrollbar(isAlwaysShown: true,
                           controller: _scrollController,
