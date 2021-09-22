@@ -28,7 +28,7 @@ dependencies:
   http: ^0.13.3
   shared_preferences: ^2.0.8
   qr_flutter: ^4.0.0
-  pdf_render: ^1.0.13
+  pdf: ^3.6.0
 
 dev_dependencies:
   flutter_test:
