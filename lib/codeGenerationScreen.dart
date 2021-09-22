@@ -11,7 +11,6 @@ import 'deviceStates.dart' as DeviceState;
 import 'package:teog_swift/previewDeviceInfo.dart';
 import 'package:teog_swift/deviceInfoScreen.dart';
 
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pdfLib;
 import 'package:printing/printing.dart';
@@ -56,7 +55,10 @@ class _DetailScreenState extends State<CodeGenerationScreen> {
           pageFormat: PdfPageFormat.a4,
           build: (pdfLib.Context context) {
             return pdfLib.Center(
-              child: pdfLib.Text("Hello World"),
+              child: pdfLib.BarcodeWidget(
+                barcode: pdfLib.Barcode.qrCode(),
+                data: "Test"
+              ),
             ); // Center
           }
         )

@@ -10,8 +10,6 @@ import 'deviceStates.dart' as DeviceState;
 import 'package:teog_swift/previewDeviceInfo.dart';
 import 'package:teog_swift/deviceInfoScreen.dart';
 
-import 'package:qr_flutter/qr_flutter.dart';
-
 class UserManagementScreen extends StatefulWidget {
   UserManagementScreen({Key key}) : super(key: key);
 
