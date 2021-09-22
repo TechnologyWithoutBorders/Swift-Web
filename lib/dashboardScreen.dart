@@ -1,13 +1,7 @@
-import 'dart:convert';
-import 'package:teog_swift/main.dart';
-
 import 'package:flutter/material.dart';
 
 import 'networkFunctions.dart' as Comm;
-import 'preference_manager.dart' as Prefs;
 import 'deviceInfo.dart';
-import 'deviceStates.dart' as DeviceState;
-import 'package:teog_swift/previewDeviceInfo.dart';
 import 'package:teog_swift/deviceInfoScreen.dart';
 
 class DashboardScreen extends StatefulWidget {

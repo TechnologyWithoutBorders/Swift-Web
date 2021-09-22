@@ -2,10 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:teog_swift/previewDeviceInfo.dart';
 import 'package:teog_swift/deviceInfoScreen.dart';
-import 'package:teog_swift/main.dart';
 
 import 'networkFunctions.dart' as Comm;
-import 'preference_manager.dart' as Prefs;
 import 'doubleCardLayout.dart';
 
 import 'package:teog_swift/sessionMixin.dart';

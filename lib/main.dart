@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:teog_swift/dashboardScreen.dart';
 import 'package:teog_swift/overviewScreen.dart';
-import 'package:teog_swift/codeGenerationScreen.dart';
 import 'package:teog_swift/tabScreen.dart';
 
 import 'dart:convert';
