@@ -16,11 +16,13 @@ class CodeGenerationScreen extends StatefulWidget {
 class _DetailScreenState extends State<CodeGenerationScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  final _amountTextController = TextEditingController();
+  final _firstNumberTextController = TextEditingController();
+  final _lastNumberTextController = TextEditingController();
 
   void _generateBarcodes() async {
     if(_formKey.currentState.validate()) {
-      int amount = int.parse(_amountTextController.text);
+      int firstNumber = int.parse(_firstNumberTextController.text);
+      int lastNumber = int.parse(_lastNumberTextController.text);
 
       final font = await rootBundle.load("OpenSans-Regular.ttf");
       final ttf = pdfLib.Font.ttf(font);
@@ -28,8 +30,7 @@ class _DetailScreenState extends State<CodeGenerationScreen> {
       final ttfBold = pdfLib.Font.ttf(fontBold);
       final fontItalic = await rootBundle.load("OpenSans-Italic.ttf");
       final ttfItalic = pdfLib.Font.ttf(fontItalic);
-      final fontBoldItalic =
-          await rootBundle.load("OpenSans-BoldItalic.ttf");
+      final fontBoldItalic = await rootBundle.load("OpenSans-BoldItalic.ttf");
       final ttfBoldItalic = pdfLib.Font.ttf(fontBoldItalic);
       final pdfLib.ThemeData themeData = pdfLib.ThemeData.withFont(
         base: ttf,
@@ -48,7 +49,7 @@ class _DetailScreenState extends State<CodeGenerationScreen> {
             return pdfLib.Center(
               child: pdfLib.BarcodeWidget(
                 barcode: pdfLib.Barcode.qrCode(),
-                data: "Test"
+                data: firstNumber.toString()
               ),
             ); // Center
           }
@@ -73,8 +74,19 @@ class _DetailScreenState extends State<CodeGenerationScreen> {
                   .headline5),
                 SizedBox(height: 20),
                 TextFormField(
-                  controller: _amountTextController,
-                  decoration: InputDecoration(hintText: 'Amount of barcodes'),
+                  controller: _firstNumberTextController,
+                  decoration: InputDecoration(hintText: 'First number'),
+                  validator: (value) {
+                    if (value.isEmpty || int.tryParse(value) == null) {
+                      return 'Please enter a valid number';
+                    }
+                    return null;
+                  },
+                  onFieldSubmitted: (value) => _generateBarcodes(),
+                ),
+                TextFormField(
+                  controller: _lastNumberTextController,
+                  decoration: InputDecoration(hintText: 'Last number'),
                   validator: (value) {
                     if (value.isEmpty || int.tryParse(value) == null) {
                       return 'Please enter a valid number';
