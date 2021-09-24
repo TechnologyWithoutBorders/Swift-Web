@@ -15,19 +15,22 @@ class OverviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
-      body: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Welcome', style: Theme
-            .of(context)
-            .textTheme
-            .headline3),
-          Text('Please tell us which device you are looking for', style: Theme
-            .of(context)
-            .textTheme
-            .headline5),
-          SizedBox(height: 25),
-          DoubleCardLayout(DoubleCardLayout.horizontal, SearchForm(), "OR", FilterForm()),
-        ])
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Welcome', style: Theme
+              .of(context)
+              .textTheme
+              .headline3),
+            Text('Please tell us which device you are looking for', style: Theme
+              .of(context)
+              .textTheme
+              .headline5),
+            SizedBox(height: 25),
+            DoubleCardLayout(DoubleCardLayout.horizontal, SearchForm(), "OR", FilterForm()),
+          ]
+        )
       ),
     );
   }
