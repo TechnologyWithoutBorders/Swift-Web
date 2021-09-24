@@ -10,6 +10,7 @@ import 'constants.dart';
 import 'deviceInfo.dart';
 import 'hospitalDevice.dart';
 import 'report.dart';
+import 'user.dart';
 
 const String _host = "teog.virlep.de";
 
@@ -165,6 +166,46 @@ Future<List<DeviceInfo>> getTodoDevices() async {
       }
 
       return devices;
+    } else {
+      throw Exception(swiftResponse.data);
+    }
+  } else {
+    print(response.statusCode.toString());
+    throw Exception('something went wrong');
+  }
+}
+
+Future<List<User>> getUsers() async {
+  List<int> bytes = utf8.encode("password");
+  String hash = sha256.convert(bytes).toString();
+
+  Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+
+  final response = await http.post(
+    uri,
+    headers: <String, String> {
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, dynamic> {
+      'action': "get_users",
+      'country': "Test",
+      'hospital': 1,
+      'password': hash,
+    }),
+  );
+
+  if(response.statusCode == 200) {
+    SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
+    
+    if(swiftResponse.responseCode == 0) {
+      print(swiftResponse.data);
+      List<User> users = [];
+
+      for(var jsonUser in swiftResponse.data) {
+        users.add(User.fromJson(jsonUser));
+      }
+
+      return users;
     } else {
       throw Exception(swiftResponse.data);
     }
