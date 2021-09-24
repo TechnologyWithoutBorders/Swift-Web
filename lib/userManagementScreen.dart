@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'doubleCardLayout.dart';
+
 class UserManagementScreen extends StatefulWidget {
   UserManagementScreen({Key key}) : super(key: key);
 
@@ -22,9 +24,9 @@ class _DetailScreenState extends State<UserManagementScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: SizedBox(width: 400, height: 350,
-          child: Card(
-            child: Padding(padding: EdgeInsets.all(10.0),
+        child: DoubleCardLayout(
+          DoubleCardLayout.horizontal,
+            SizedBox(width: 300,
               child: Form(key: _formKey,
                 child: Column(mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -60,10 +62,11 @@ class _DetailScreenState extends State<UserManagementScreen> {
                   ]
                 )
               )
-            )
-          )
+            ),
+          "",
+          Text("bla")
         ),
-      )
+      ),
     );
   }
 }
