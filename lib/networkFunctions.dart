@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
+import 'package:teog_swift/dataAction.dart';
 import 'package:teog_swift/previewDeviceInfo.dart';
 
 import 'package:teog_swift/swiftResponse.dart';
@@ -13,26 +14,24 @@ import 'report.dart';
 import 'user.dart';
 
 const String _host = "teog.virlep.de";
+const Map<String, String> _headers = {'Content-Type': 'application/json; charset=UTF-8'};
+const String _actionIdentifier = "action";
+const String _passwordIdentifier = "password";
+const String _countryIdentifier = "country";
+const String _hospitalIdentifier = "hospital";
 
-Future<bool> checkCredentials(String country, int hospital, String password, {hashPassword: true}) async {
+Future<bool> checkCredentials(final String country, final int hospital, String password, {final hashPassword: true}) async {
   if(hashPassword) {
     List<int> bytes = utf8.encode(password);
     password = sha256.convert(bytes).toString();
   }
 
-  Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
   final response = await http.post(
     uri,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, dynamic> {
-      'action': "login_light",
-      'country': country,
-      'hospital': hospital,
-      'password': password,
-    }),
+    headers: _headers,
+    body: jsonEncode(_generateParameterMap(action: DataAction.login, authentication: true))
   );
 
   if(response.statusCode == 200) {
@@ -44,28 +43,19 @@ Future<bool> checkCredentials(String country, int hospital, String password, {ha
       throw Exception(swiftResponse.data.toString());
     }
   } else {
-    throw Exception("something went wrong");
+    throw Exception(Constants.generic_error_message);
   }
 }
 
-Future<DeviceInfo> fetchDevice(int deviceId) async {
-  List<int> bytes = utf8.encode("password");
-  String hash = sha256.convert(bytes).toString();
-
-  Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+Future<DeviceInfo> fetchDevice(final int deviceId) async {
+  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
   final response = await http.post(
     uri,
-    headers: <String, String> {
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, dynamic>{
-      'action': "fetch_device_info",
-      'country': "Test",
-      'hospital': 1,
-      'device_id': deviceId,
-      'password': hash,
-    }),
+    headers: _headers,
+    body: jsonEncode(_generateParameterMap(action: DataAction.fetchDeviceInfo, authentication: true,
+        additional: <String, dynamic> {'device_id': deviceId}),
+    ),
   );
 
   if(response.statusCode == 200) {
@@ -82,30 +72,19 @@ Future<DeviceInfo> fetchDevice(int deviceId) async {
     }
   } else {
     print(response.statusCode.toString());
-    throw Exception('something went wrong');
+    throw Exception(Constants.generic_error_message);
   }
 }
 
 Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, String location) async {
-  List<int> bytes = utf8.encode("password");
-  String hash = sha256.convert(bytes).toString();
-
-  Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
   final response = await http.post(
     uri,
-    headers: <String, String> {
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, dynamic> {
-      'action': "search_devices",
-      'country': "Test",
-      'hospital': 1,
-      'type': type,
-      'manufacturer': manufacturer,
-      'location': location,
-      'password': hash,
-    }),
+    headers: _headers,
+    body: jsonEncode(_generateParameterMap(action: DataAction.searchDevices, authentication: true,
+        additional: <String, dynamic> {'type': type, 'manufacturer': manufacturer, 'location': location,})
+    ),
   );
 
   if(response.statusCode == 200) {
@@ -128,27 +107,17 @@ Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, 
     }
   } else {
     print(response.statusCode.toString());
-    throw Exception('something went wrong');
+    throw Exception(Constants.generic_error_message);
   }
 }
 
 Future<List<DeviceInfo>> getTodoDevices() async {
-  List<int> bytes = utf8.encode("password");
-  String hash = sha256.convert(bytes).toString();
-
-  Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
   final response = await http.post(
     uri,
-    headers: <String, String> {
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, dynamic> {
-      'action': "get_todo_devices",
-      'country': "Test",
-      'hospital': 1,
-      'password': hash,
-    }),
+    headers: _headers,
+    body: jsonEncode(_generateParameterMap(action: DataAction.getTodoDevices, authentication: true)),
   );
 
   if(response.statusCode == 200) {
@@ -171,27 +140,17 @@ Future<List<DeviceInfo>> getTodoDevices() async {
     }
   } else {
     print(response.statusCode.toString());
-    throw Exception('something went wrong');
+    throw Exception(Constants.generic_error_message);
   }
 }
 
 Future<List<User>> getUsers() async {
-  List<int> bytes = utf8.encode("password");
-  String hash = sha256.convert(bytes).toString();
-
-  Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
   final response = await http.post(
     uri,
-    headers: <String, String> {
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, dynamic> {
-      'action': "get_users",
-      'country': "Test",
-      'hospital': 1,
-      'password': hash,
-    }),
+    headers: _headers,
+    body: jsonEncode(_generateParameterMap(action: DataAction.getUsers, authentication: true)),
   );
 
   if(response.statusCode == 200) {
@@ -211,22 +170,17 @@ Future<List<User>> getUsers() async {
     }
   } else {
     print(response.statusCode.toString());
-    throw Exception('something went wrong');
+    throw Exception(Constants.generic_error_message);
   }
 }
 
 Future<List<String>> retrieveDocuments(String manufacturer, String model) async {
-  Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/documents.php');
+  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/documents.php');
 
   final response = await http.post(
     uri,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, dynamic> {
-      'manufacturer': manufacturer,
-      'model': model,
-    }),
+    headers: _headers,
+    body: jsonEncode(_generateParameterMap(additional: <String, dynamic> {'manufacturer': manufacturer,'model': model})),
   );
 
   if(response.statusCode == 200) {
@@ -245,7 +199,7 @@ Future<List<String>> retrieveDocuments(String manufacturer, String model) async 
     }
   } else {
     print(response.statusCode.toString());
-    throw Exception('something went wrong');
+    throw Exception(Constants.generic_error_message);
   }
 }
 
@@ -253,22 +207,14 @@ Future<Report> queueRepair(int deviceId, String title, String problemDescription
   List<int> bytes = utf8.encode("password");
   String hash = sha256.convert(bytes).toString();
 
-  Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
   final response = await http.post(
     uri,
-    headers: <String, String> {
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, dynamic> {
-      'action': "queue_repair",
-      'country': "Test",
-      'hospital': "1",
-      'password': hash,
-      'device_id': deviceId,
-      'title': title,
-      'problem_description': problemDescription,
-    }),
+    headers: _headers,
+    body: jsonEncode(_generateParameterMap(action: DataAction.queueRepair, authentication: true,
+        additional: <String, dynamic> {'device_id': deviceId, 'title': title, 'problem_description': problemDescription,}),
+    ),
   );
 
   if(response.statusCode == 200) {
@@ -281,7 +227,26 @@ Future<Report> queueRepair(int deviceId, String title, String problemDescription
     }
   } else {
     print(response.statusCode.toString());
-    throw Exception('something went wrong');
+    throw Exception(Constants.generic_error_message);
   }
+}
+
+Map<String, dynamic> _generateParameterMap({final String action = "", final bool authentication = false, final Map<String, dynamic> additional = const {}}) {
+  final Map<String, dynamic> parameterMap = Map();
+
+  if(action.isNotEmpty) {
+    parameterMap[_actionIdentifier] = action;
+  }
+
+  if(authentication) {
+    List<int> bytes = utf8.encode("password");
+    String hash = sha256.convert(bytes).toString();
+
+    parameterMap[_countryIdentifier] = "Test";//TODO: get everything from preferences
+    parameterMap[_hospitalIdentifier] = 1;
+    parameterMap[_passwordIdentifier] = hash;
+  }
+
+  return parameterMap;
 }
   
