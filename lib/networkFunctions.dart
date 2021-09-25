@@ -204,9 +204,6 @@ Future<List<String>> retrieveDocuments(String manufacturer, String model) async 
 }
 
 Future<Report> queueRepair(int deviceId, String title, String problemDescription) async {
-  List<int> bytes = utf8.encode("password");
-  String hash = sha256.convert(bytes).toString();
-
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
   final response = await http.post(
