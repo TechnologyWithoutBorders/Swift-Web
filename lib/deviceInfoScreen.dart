@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'networkFunctions.dart' as Comm;
 import 'preference_manager.dart' as Prefs;
 import 'deviceInfo.dart';
-import 'deviceStates.dart' as DeviceState;
 
 class DetailScreen extends StatefulWidget {
   //this one is never modified

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'deviceStates.dart' as DeviceState;
+import 'package:teog_swift/deviceState.dart';
 
 class Report {
   final int currentState;
