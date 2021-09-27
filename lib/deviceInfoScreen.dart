@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'networkFunctions.dart' as Comm;
 import 'preference_manager.dart' as Prefs;
 import 'deviceInfo.dart';
+import 'report.dart';
+import 'package:teog_swift/deviceState.dart';
 
 class DetailScreen extends StatefulWidget {
   //this one is never modified
@@ -168,6 +170,8 @@ class _StateScreenState extends State<StateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Report report = widget.deviceInfo.report;
+
     return Column(
       children: [
         Text("Current state:", style: Theme
@@ -175,12 +179,12 @@ class _StateScreenState extends State<StateScreen> {
           .textTheme
           .headline5),
         SizedBox(height: 5),
-          Container(color: widget.deviceInfo.report.getColor(),
+          Container(color: DeviceState.getColor(report.currentState),
           child: Padding(padding: EdgeInsets.all(3.0),
             child: Row(children: [
-                Icon(widget.deviceInfo.report.getIconData()),
+                Icon(DeviceState.getIconData(report.currentState)),
               SizedBox(width: 5),
-              Text(widget.deviceInfo.report.getStateString(),
+              Text(DeviceState.getStateString(report.currentState),
                 style: TextStyle(fontSize: 25)
               ),
               ]
@@ -188,7 +192,7 @@ class _StateScreenState extends State<StateScreen> {
           )
         ),
         SizedBox(height: 5),
-        Text(widget.deviceInfo.report.created),
+        Text(report.created),
       ]
     );
   }
