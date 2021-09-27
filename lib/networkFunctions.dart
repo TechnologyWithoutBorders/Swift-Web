@@ -75,7 +75,6 @@ Future<DeviceInfo> fetchDevice(final int deviceId) async {
       throw Exception(swiftResponse.data);
     }
   } else {
-    print(response.statusCode.toString());
     throw Exception(Constants.generic_error_message);
   }
 }
@@ -95,7 +94,6 @@ Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, 
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
     
     if(swiftResponse.responseCode == 0) {
-      print(swiftResponse.data);
       List<PreviewDeviceInfo> devices = [];
 
       for(var jsonDevice in swiftResponse.data) {
@@ -110,7 +108,6 @@ Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, 
       throw Exception(swiftResponse.data);
     }
   } else {
-    print(response.statusCode.toString());
     throw Exception(Constants.generic_error_message);
   }
 }
@@ -128,7 +125,6 @@ Future<List<DeviceInfo>> getTodoDevices() async {
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
     
     if(swiftResponse.responseCode == 0) {
-      print(swiftResponse.data);
       List<DeviceInfo> devices = [];
 
       for(var jsonDevice in swiftResponse.data) {
@@ -143,7 +139,6 @@ Future<List<DeviceInfo>> getTodoDevices() async {
       throw Exception(swiftResponse.data);
     }
   } else {
-    print(response.statusCode.toString());
     throw Exception(Constants.generic_error_message);
   }
 }
@@ -161,7 +156,6 @@ Future<List<User>> getUsers() async {
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
     
     if(swiftResponse.responseCode == 0) {
-      print(swiftResponse.data);
       List<User> users = [];
 
       for(var jsonUser in swiftResponse.data) {
@@ -173,7 +167,6 @@ Future<List<User>> getUsers() async {
       throw Exception(swiftResponse.data);
     }
   } else {
-    print(response.statusCode.toString());
     throw Exception(Constants.generic_error_message);
   }
 }
@@ -202,7 +195,6 @@ Future<List<String>> retrieveDocuments(String manufacturer, String model) async 
       throw Exception(swiftResponse.data);
     }
   } else {
-    print(response.statusCode.toString());
     throw Exception(Constants.generic_error_message);
   }
 }
@@ -227,7 +219,6 @@ Future<Report> queueRepair(int deviceId, String title, String problemDescription
       throw Exception(swiftResponse.data);
     }
   } else {
-    print(response.statusCode.toString());
     throw Exception(Constants.generic_error_message);
   }
 }
