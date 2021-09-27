@@ -159,20 +159,26 @@ class _FilterFormState extends State<FilterForm> {
 
   void _processInput() {
     if (_formKey.currentState.validate()) {
-      Comm.searchDevices(_typeController.text, _manufacturerController.text, _locationController.text).then((devices) {//TODO catch Exception
+      Comm.searchDevices(_typeController.text, _manufacturerController.text, _locationController.text).then((devices) {
         setState(() { _filteredDevices = devices; });
+      }).onError((error, stackTrace) {
+        final snackBar = SnackBar(content: Text(error.data));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       });
     }
   }
 
   void _openDeviceById(int id) {
-    Comm.fetchDevice(id).then((deviceInfo) {//TODO catch Exception
+    Comm.fetchDevice(id).then((deviceInfo) {
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => DetailScreen(deviceInfo: deviceInfo),
         )
       );
+    }).onError((error, stackTrace) {
+      final snackBar = SnackBar(content: Text(error.data));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
   }
 
