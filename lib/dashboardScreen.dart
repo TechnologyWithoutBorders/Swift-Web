@@ -54,6 +54,31 @@ class _DetailScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var countList = [0, 0, 0, 0, 0, 0];
+
+    _devices.forEach((deviceInfo) {
+      countList[deviceInfo.report.currentState] += 1;
+    });
+
+    final data = [
+      new CategoryData(DeviceState.getStateString(DeviceState.working), countList[DeviceState.working], charts.ColorUtil.fromDartColor(DeviceState.getColor(DeviceState.working))),
+      new CategoryData(DeviceState.getStateString(DeviceState.maintenance), countList[DeviceState.maintenance], charts.ColorUtil.fromDartColor(DeviceState.getColor(DeviceState.maintenance))),
+      new CategoryData(DeviceState.getStateString(DeviceState.broken), countList[DeviceState.broken], charts.ColorUtil.fromDartColor(DeviceState.getColor(DeviceState.broken))),
+      new CategoryData(DeviceState.getStateString(DeviceState.inProgress), countList[DeviceState.inProgress], charts.ColorUtil.fromDartColor(DeviceState.getColor(DeviceState.inProgress))),
+      new CategoryData(DeviceState.getStateString(DeviceState.salvage), countList[DeviceState.salvage], charts.ColorUtil.fromDartColor(DeviceState.getColor(DeviceState.salvage))),
+      new CategoryData(DeviceState.getStateString(DeviceState.limitations), countList[DeviceState.limitations], charts.ColorUtil.fromDartColor(DeviceState.getColor(DeviceState.limitations))),
+    ];
+
+    List<charts.Series<CategoryData, String>> seriesList = [
+      new charts.Series<CategoryData, String>(
+        id: 'Categories',
+        domainFn: (CategoryData categoryData, _) => categoryData.category,
+        measureFn: (CategoryData categoryData, _) => categoryData.count,
+        colorFn: (CategoryData categoryData, _) => categoryData.color,
+        data: data,
+        labelAccessorFn: (CategoryData categoryData, _) => '${categoryData.category}: ${categoryData.count}',
+    )];
+
     return Scaffold(
       body: Container(alignment: Alignment.center,
         child: FractionallySizedBox(widthFactor: 0.8, heightFactor: 0.8,
@@ -61,7 +86,7 @@ class _DetailScreenState extends State<DashboardScreen> {
             child: Padding(padding: EdgeInsets.all(8.0),
               child: Row(mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Flexible(child: FractionallySizedBox(heightFactor: 0.9, widthFactor: 0.4,child: DatumLegendWithMeasures.withSampleData())),
+                  Flexible(child: FractionallySizedBox(heightFactor: 0.9, widthFactor: 0.4,child: DatumLegendWithMeasures(seriesList))),
                   Flexible(child: FractionallySizedBox(heightFactor: 0.9, widthFactor: 0.4,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -120,13 +145,6 @@ class DatumLegendWithMeasures extends StatelessWidget {
 
   DatumLegendWithMeasures(this.seriesList);
 
-  factory DatumLegendWithMeasures.withSampleData() {
-    return new DatumLegendWithMeasures(
-      _createSampleData(),
-      // Disable animations for image tests.
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return new charts.PieChart(
@@ -136,26 +154,6 @@ class DatumLegendWithMeasures extends StatelessWidget {
               labelPosition: charts.ArcLabelPosition.outside)
         ])
     );
-  }
-
-  /// Create series list with one series
-  static List<charts.Series<CategoryData, String>> _createSampleData() {
-    final data = [
-      new CategoryData(DeviceState.getStateString(DeviceState.working), 128, charts.ColorUtil.fromDartColor(DeviceState.getColor(DeviceState.working))),
-      new CategoryData(DeviceState.getStateString(DeviceState.maintenance), 83, charts.ColorUtil.fromDartColor(DeviceState.getColor(DeviceState.maintenance))),
-      new CategoryData(DeviceState.getStateString(DeviceState.broken), 15, charts.ColorUtil.fromDartColor(DeviceState.getColor(DeviceState.broken))),
-    ];
-
-    return [
-      new charts.Series<CategoryData, String>(
-        id: 'Categories',
-        domainFn: (CategoryData categoryData, _) => categoryData.category,
-        measureFn: (CategoryData categoryData, _) => categoryData.count,
-        colorFn: (CategoryData categoryData, _) => categoryData.color,
-        data: data,
-        labelAccessorFn: (CategoryData categoryData, _) => '${categoryData.category}: ${categoryData.count}',
-      )
-    ];
   }
 }
 
