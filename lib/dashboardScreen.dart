@@ -44,62 +44,60 @@ class _DetailScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: SizedBox(width: 400, height: 600,
-          child: Column(mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Card(
-                child: Padding(padding: EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      SizedBox(height: 400, width: 100, child: DatumLegendWithMeasures.withSampleData()),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text("TODO", style: Theme
-                            .of(context)
-                            .textTheme
-                            .headline5),
-                          SizedBox(height: 500, width: 600,
-                            child: Scrollbar(isAlwaysShown: true,
+      body: Container(alignment: Alignment.center,
+        child: FractionallySizedBox(widthFactor: 0.8, heightFactor: 0.8,
+          child: Card(
+            child: Padding(padding: EdgeInsets.all(8.0),
+              child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Flexible(child: FractionallySizedBox(heightFactor: 0.9, widthFactor: 0.4,child: DatumLegendWithMeasures.withSampleData())),
+                  Flexible(child: FractionallySizedBox(heightFactor: 0.9, widthFactor: 0.4,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("TODO", style: Theme
+                          .of(context)
+                          .textTheme
+                          .headline5),
+                        Flexible(child: SizedBox(height: 0.7, width: 1.0,
+                          child: Scrollbar(isAlwaysShown: true,
+                            controller: _scrollController,
+                            child: ListView.separated(
                               controller: _scrollController,
-                              child: ListView.separated(
-                                controller: _scrollController,
-                                padding: const EdgeInsets.all(8),
-                                itemCount: _devices.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return ListTile(
-                                    leading: Container(width: 30, height: 30, color: DeviceState.getColor(_devices[index].report.currentState),
-                                      child: Padding(padding: EdgeInsets.all(3.0),
-                                        child: Row(children: [
-                                            Icon(DeviceState.getIconData(_devices[index].report.currentState))
-                                          ]
-                                        )
+                              padding: const EdgeInsets.all(8),
+                              itemCount: _devices.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return ListTile(
+                                  leading: Container(width: 30, height: 30, color: DeviceState.getColor(_devices[index].report.currentState),
+                                    child: Padding(padding: EdgeInsets.all(3.0),
+                                      child: Row(children: [
+                                          Icon(DeviceState.getIconData(_devices[index].report.currentState))
+                                        ]
                                       )
-                                    ),
-                                    title: Text(_devices[index].device.type),
-                                    subtitle: Text(_devices[index].device.manufacturer + " " + _devices[index].device.model),
-                                    trailing: Text(_devices[index].device.location),
-                                    onTap: () => _openDeviceById(_devices[index].device.id)
-                                  );
-                                },
-                                separatorBuilder: (BuildContext context, int index) => const Divider(),
-                              ),
+                                    )
+                                  ),
+                                  title: Text(_devices[index].device.type),
+                                  subtitle: Text(_devices[index].device.manufacturer + " " + _devices[index].device.model),
+                                  trailing: Text(_devices[index].device.location),
+                                  onTap: () => _openDeviceById(_devices[index].device.id)
+                                );
+                              },
+                              separatorBuilder: (BuildContext context, int index) => const Divider(),
                             ),
                           ),
-                          TextButton(
-                            child: Text('Create new device?'),
-                            onPressed: () => {},
-                          ),
-                        ]
-                      )
-                    ]
-                  )
-                ),
-              )     
-            ]
-          )
+                        )),
+                        TextButton(
+                          child: Text('Create new device?'),
+                          onPressed: () => {},
+                        )
+                      ]
+                    )
+                  ))
+                ]
+              )
+            ),
+          )     
         )
       )
     );
@@ -108,15 +106,13 @@ class _DetailScreenState extends State<DashboardScreen> {
 
 class DatumLegendWithMeasures extends StatelessWidget {
   final List<charts.Series> seriesList;
-  final bool animate;
 
-  DatumLegendWithMeasures(this.seriesList, {this.animate});
+  DatumLegendWithMeasures(this.seriesList);
 
   factory DatumLegendWithMeasures.withSampleData() {
     return new DatumLegendWithMeasures(
       _createSampleData(),
       // Disable animations for image tests.
-      animate: false,
     );
   }
 
@@ -124,19 +120,10 @@ class DatumLegendWithMeasures extends StatelessWidget {
   Widget build(BuildContext context) {
     return new charts.PieChart(
       seriesList,
-      animate: animate,
-      behaviors: [
-        new charts.DatumLegend(
-          position: charts.BehaviorPosition.end,
-          horizontalFirst: false,
-          cellPadding: new EdgeInsets.only(right: 4.0, bottom: 4.0),
-          showMeasures: true,
-          legendDefaultMeasure: charts.LegendDefaultMeasure.firstValue,
-          measureFormatter: (num value) {
-            return value == null ? '-' : '${value}k';
-          },
-        ),
-      ],
+      defaultRenderer: new charts.ArcRendererConfig(arcRendererDecorators: [
+          new charts.ArcLabelDecorator(
+              labelPosition: charts.ArcLabelPosition.outside)
+        ])
     );
   }
 
@@ -155,6 +142,7 @@ class DatumLegendWithMeasures extends StatelessWidget {
         measureFn: (CategoryData categoryData, _) => categoryData.count,
         colorFn: (CategoryData categoryData, _) => categoryData.color,
         data: data,
+        labelAccessorFn: (CategoryData categoryData, _) => '${categoryData.category}: ${categoryData.count}',
       )
     ];
   }
