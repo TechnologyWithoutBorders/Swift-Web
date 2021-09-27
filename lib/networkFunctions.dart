@@ -20,6 +20,10 @@ const String _passwordIdentifier = "password";
 const String _countryIdentifier = "country";
 const String _hospitalIdentifier = "hospital";
 
+String getBaseUrl() {
+  return Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString()).toString();
+}
+
 Future<bool> checkCredentials(final String country, final int hospital, String password, {final hashPassword: true}) async {
   if(hashPassword) {
     List<int> bytes = utf8.encode(password);
