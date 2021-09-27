@@ -248,6 +248,10 @@ Map<String, dynamic> _generateParameterMap({final String action = "", final bool
     parameterMap[_passwordIdentifier] = hash;
   }
 
+  additional.forEach((key, value) {
+    parameterMap[key] = value;
+  });
+
   return parameterMap;
 }
   
