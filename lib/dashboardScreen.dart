@@ -18,20 +18,31 @@ class _DetailScreenState extends State<DashboardScreen> {
   final _scrollController = ScrollController();
 
   List<DeviceInfo> _devices = [];
+  List<DeviceInfo> _todoDevices = [];
 
   @override
   void initState() {
     super.initState();
 
-    Comm.getTodoDevices().then((devices) {//TODO catch Exception
+    Comm.getDevices().then((devices) {//TODO: catch Exception
       setState(() {
         _devices = devices;
+
+        _todoDevices.clear();
+
+        _devices.forEach((deviceInfo) {
+          int currentState = deviceInfo.report.currentState;
+
+          if(currentState == DeviceState.broken || currentState == DeviceState.maintenance || currentState == DeviceState.inProgress) {
+            _todoDevices.add(deviceInfo);
+          }
+        });
       });
     });
   }
 
   void _openDeviceById(int id) {
-    Comm.fetchDevice(id).then((deviceInfo) {//TODO catch Exception
+    Comm.fetchDevice(id).then((deviceInfo) {//TODO: catch Exception
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -66,21 +77,21 @@ class _DetailScreenState extends State<DashboardScreen> {
                             child: ListView.separated(
                               controller: _scrollController,
                               padding: const EdgeInsets.all(8),
-                              itemCount: _devices.length,
+                              itemCount: _todoDevices.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return ListTile(
-                                  leading: Container(width: 30, height: 30, color: DeviceState.getColor(_devices[index].report.currentState),
+                                  leading: Container(width: 30, height: 30, color: DeviceState.getColor(_todoDevices[index].report.currentState),
                                     child: Padding(padding: EdgeInsets.all(3.0),
                                       child: Row(children: [
-                                          Icon(DeviceState.getIconData(_devices[index].report.currentState))
+                                          Icon(DeviceState.getIconData(_todoDevices[index].report.currentState))
                                         ]
                                       )
                                     )
                                   ),
-                                  title: Text(_devices[index].device.type),
-                                  subtitle: Text(_devices[index].device.manufacturer + " " + _devices[index].device.model),
-                                  trailing: Text(_devices[index].device.location),
-                                  onTap: () => _openDeviceById(_devices[index].device.id)
+                                  title: Text(_todoDevices[index].device.type),
+                                  subtitle: Text(_todoDevices[index].device.manufacturer + " " + _todoDevices[index].device.model),
+                                  trailing: Text(_todoDevices[index].device.location),
+                                  onTap: () => _openDeviceById(_todoDevices[index].device.id)
                                 );
                               },
                               separatorBuilder: (BuildContext context, int index) => const Divider(),

@@ -112,13 +112,13 @@ Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, 
   }
 }
 
-Future<List<DeviceInfo>> getTodoDevices() async {
+Future<List<DeviceInfo>> getDevices() async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
   final response = await http.post(
     uri,
     headers: _headers,
-    body: jsonEncode(_generateParameterMap(action: DataAction.getTodoDevices, authentication: true)),
+    body: jsonEncode(_generateParameterMap(action: DataAction.getDevices, authentication: true)),
   );
 
   if(response.statusCode == 200) {
