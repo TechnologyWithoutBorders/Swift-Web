@@ -136,10 +136,6 @@ class _DetailScreenState extends State<DashboardScreen> {
                             ),
                           ),
                         )),
-                        TextButton(
-                          child: Text('Create new device?'),
-                          onPressed: () => {},
-                        )
                       ]
                     )
                   )
