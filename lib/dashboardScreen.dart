@@ -94,7 +94,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                           .of(context)
                           .textTheme
                           .headline5),
-                        Flexible(child: DatumLegendWithMeasures(seriesList)),
+                        Flexible(child: Padding(padding: EdgeInsets.all(10.0), child: DatumLegendWithMeasures(seriesList))),
                       ]
                     )
                   ),
