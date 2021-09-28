@@ -46,43 +46,6 @@ class _DetailScreenState extends State<UserManagementScreen> {
               child: Row(mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Flexible(
-                    child: Form(key: _formKey,
-                      child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('Register a new user', style: Theme
-                            .of(context)
-                            .textTheme
-                            .headline5),
-                          SizedBox(height: 20),
-                          TextFormField(
-                            controller: _nameTextController,
-                            decoration: InputDecoration(hintText: 'Name of user'),
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please enter some text';
-                              }
-                              return null;
-                            },
-                            onFieldSubmitted: (value) => _createUser(),
-                          ),
-                          SizedBox(height: 5),
-                          TextButton(
-                            style: ButtonStyle(
-                              foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                                return states.contains(MaterialState.disabled) ? null : Colors.white;
-                              }),
-                              backgroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                                return states.contains(MaterialState.disabled) ? null : Color(0xff667d9d);
-                              }),
-                            ),
-                            onPressed: () => _createUser(),
-                            child: Text('Register user'),
-                          )
-                        ]
-                      )
-                    )
-                  ),
-                  Flexible(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -110,7 +73,42 @@ class _DetailScreenState extends State<UserManagementScreen> {
                         )),
                       ]
                     )
-                  )
+                  ),
+                  Flexible(
+                    child: Form(key: _formKey,
+                      child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Register a new user', style: Theme
+                            .of(context)
+                            .textTheme
+                            .headline5),
+                          TextFormField(
+                            controller: _nameTextController,
+                            decoration: InputDecoration(hintText: 'Name of user'),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter some text';
+                              }
+                              return null;
+                            },
+                            onFieldSubmitted: (value) => _createUser(),
+                          ),
+                          TextButton(
+                            style: ButtonStyle(
+                              foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
+                                return states.contains(MaterialState.disabled) ? null : Colors.white;
+                              }),
+                              backgroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
+                                return states.contains(MaterialState.disabled) ? null : Color(0xff667d9d);
+                              }),
+                            ),
+                            onPressed: () => _createUser(),
+                            child: Text('Register user'),
+                          )
+                        ]
+                      )
+                    )
+                  ),
                 ]
               )
             ),
