@@ -82,7 +82,7 @@ class _DetailScreenState extends State<DashboardScreen> {
       body: Container(alignment: Alignment.center,
         child: FractionallySizedBox(widthFactor: 0.8, heightFactor: 0.8,
           child: Card(
-            child: Padding(padding: EdgeInsets.all(20.0),
+            child: Padding(padding: EdgeInsets.all(25.0),
               child: Row(mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Flexible(
