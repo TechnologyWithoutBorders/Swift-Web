@@ -9,7 +9,7 @@ class User {
     return User(
       id: int.parse(json['id']),
       name: json['name'],
-      position: json['posittion']
+      position: json['position']
     );
   }
 }
