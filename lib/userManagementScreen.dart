@@ -64,7 +64,6 @@ class _DetailScreenState extends State<UserManagementScreen> {
                                 return ListTile(
                                   title: Text(_users[index].name),
                                   subtitle: Text(_users[index].position),
-                                  //TODO: onTap: () => _openDeviceById(_todoDevices[index].device.id)
                                 );
                               },
                               separatorBuilder: (BuildContext context, int index) => const Divider(),
