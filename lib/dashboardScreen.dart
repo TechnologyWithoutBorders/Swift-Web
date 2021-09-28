@@ -93,7 +93,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                           .of(context)
                           .textTheme
                           .headline4),
-                        Flexible(child: Padding(padding: EdgeInsets.all(30.0), child: DatumLegendWithMeasures(seriesList))),
+                        Flexible(child: Padding(padding: EdgeInsets.all(50.0), child: DatumLegendWithMeasures(seriesList))),
                         Text("xy devices are due for maintenance", style: Theme
                           .of(context)
                           .textTheme
