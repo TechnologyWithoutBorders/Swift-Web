@@ -86,15 +86,15 @@ class _DetailScreenState extends State<DashboardScreen> {
             child: Padding(padding: EdgeInsets.all(15.0),
               child: Row(mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Flexible(child: 
-                    Column(
+                  Flexible(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text("Categories", style: Theme
                           .of(context)
                           .textTheme
                           .headline5),
-                        DatumLegendWithMeasures(seriesList),
+                        Flexible(child: DatumLegendWithMeasures(seriesList)),
                       ]
                     )
                   ),
