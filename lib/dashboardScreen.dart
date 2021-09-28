@@ -86,8 +86,8 @@ class _DetailScreenState extends State<DashboardScreen> {
             child: Padding(padding: EdgeInsets.all(8.0),
               child: Row(mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Flexible(child: FractionallySizedBox(heightFactor: 1.0, widthFactor: 0.5, child: DatumLegendWithMeasures(seriesList))),
-                  Flexible(child: FractionallySizedBox(heightFactor: 1.0, widthFactor: 0.5,
+                  Flexible(child: DatumLegendWithMeasures(seriesList)),
+                  Flexible(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
@@ -96,7 +96,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                           .of(context)
                           .textTheme
                           .headline5),
-                        Flexible(child: FractionallySizedBox(heightFactor: 1.0, widthFactor: 1.0,
+                        Flexible(
                           child: Scrollbar(isAlwaysShown: true,
                             controller: _scrollController,
                             child: ListView.separated(
@@ -122,14 +122,14 @@ class _DetailScreenState extends State<DashboardScreen> {
                               separatorBuilder: (BuildContext context, int index) => const Divider(),
                             ),
                           ),
-                        )),
+                        ),
                         TextButton(
                           child: Text('Create new device?'),
                           onPressed: () => {},
                         )
                       ]
                     )
-                  ))
+                  )
                 ]
               )
             ),
