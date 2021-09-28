@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'networkFunctions.dart' as Comm;
 import 'user.dart';
 
 class UserManagementScreen extends StatefulWidget {
@@ -22,6 +23,17 @@ class _DetailScreenState extends State<UserManagementScreen> {
     if (_formKey.currentState.validate()) {
       String userName = _nameTextController.text;
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    Comm.getUsers().then((users) {//TODO: catch Exception
+      setState(() {
+        _users = users;
+      });
+    });
   }
 
   @override
