@@ -60,14 +60,13 @@ class _DetailScreenState extends State<DashboardScreen> {
       countList[deviceInfo.report.currentState] += 1;
     });
 
-    final data = [
-      new CategoryData(DeviceState.getStateString(DeviceState.working), countList[DeviceState.working], charts.ColorUtil.fromDartColor(DeviceState.getColor(DeviceState.working))),
-      new CategoryData(DeviceState.getStateString(DeviceState.maintenance), countList[DeviceState.maintenance], charts.ColorUtil.fromDartColor(DeviceState.getColor(DeviceState.maintenance))),
-      new CategoryData(DeviceState.getStateString(DeviceState.broken), countList[DeviceState.broken], charts.ColorUtil.fromDartColor(DeviceState.getColor(DeviceState.broken))),
-      new CategoryData(DeviceState.getStateString(DeviceState.inProgress), countList[DeviceState.inProgress], charts.ColorUtil.fromDartColor(DeviceState.getColor(DeviceState.inProgress))),
-      new CategoryData(DeviceState.getStateString(DeviceState.salvage), countList[DeviceState.salvage], charts.ColorUtil.fromDartColor(DeviceState.getColor(DeviceState.salvage))),
-      new CategoryData(DeviceState.getStateString(DeviceState.limitations), countList[DeviceState.limitations], charts.ColorUtil.fromDartColor(DeviceState.getColor(DeviceState.limitations))),
-    ];
+    final data = [];
+
+    for(int state = 0; state < countList.length; state++) {
+      if(countList[state] > 0) {
+        data.add(new CategoryData(DeviceState.getStateString(state), countList[state], charts.ColorUtil.fromDartColor(DeviceState.getColor(state))));
+      }
+    }
 
     List<charts.Series<CategoryData, String>> seriesList = [
       new charts.Series<CategoryData, String>(
