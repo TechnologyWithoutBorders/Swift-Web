@@ -92,12 +92,12 @@ class _DetailScreenState extends State<DashboardScreen> {
                         Text("Categories", style: Theme
                           .of(context)
                           .textTheme
-                          .headline5),
-                        Flexible(child: Padding(padding: EdgeInsets.all(15.0), child: DatumLegendWithMeasures(seriesList))),
+                          .headline4),
+                        Flexible(child: Padding(padding: EdgeInsets.all(20.0), child: DatumLegendWithMeasures(seriesList))),
                         Text("xy devices are due for maintenance", style: Theme
                           .of(context)
                           .textTheme
-                          .headline3),
+                          .headline4),
                       ]
                     )
                   ),
@@ -108,8 +108,8 @@ class _DetailScreenState extends State<DashboardScreen> {
                         Text("TODO", style: Theme
                           .of(context)
                           .textTheme
-                          .headline5),
-                        Flexible(
+                          .headline6),
+                        Flexible(child: Padding(padding: EdgeInsets.all(10.0),
                           child: Scrollbar(isAlwaysShown: true,
                             controller: _scrollController,
                             child: ListView.separated(
@@ -135,7 +135,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                               separatorBuilder: (BuildContext context, int index) => const Divider(),
                             ),
                           ),
-                        ),
+                        )),
                         TextButton(
                           child: Text('Create new device?'),
                           onPressed: () => {},
