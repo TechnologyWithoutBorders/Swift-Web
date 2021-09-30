@@ -14,6 +14,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final _nameTextController = TextEditingController();
+  final _mailTextController = TextEditingController();
 
   final _scrollController = ScrollController();
 
@@ -21,7 +22,14 @@ class _DetailScreenState extends State<UserManagementScreen> {
 
   void _createUser() {
     if (_formKey.currentState.validate()) {
-      String userName = _nameTextController.text;
+      String name = _nameTextController.text;
+      String mail = _mailTextController.text;
+
+      Comm.createUser(mail, name).then((users) {
+        setState(() {
+          _users = users;
+        });
+      });
     }
   }
 
@@ -87,7 +95,18 @@ class _DetailScreenState extends State<UserManagementScreen> {
                             decoration: InputDecoration(hintText: 'Name of user'),
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Please enter some text';
+                                return 'Please enter the name of the user';
+                              }
+                              return null;
+                            },
+                            onFieldSubmitted: (value) => _createUser(),
+                          ),
+                          TextFormField(
+                            controller: _nameTextController,
+                            decoration: InputDecoration(hintText: 'Mail address of user'),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter the mail address of the user';
                               }
                               return null;
                             },
