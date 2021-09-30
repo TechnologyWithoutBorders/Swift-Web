@@ -70,9 +70,9 @@ class _DetailScreenState extends State<UserManagementScreen> {
                               itemCount: _users.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return ListTile(
-                                  leading: Text(_users[index].name),
-                                  title: Text(_users[index].position),
-                                  subtitle: Text(_users[index].mail),
+                                  title: Text(_users[index].name),
+                                  subtitle: Text(_users[index].position),
+                                  trailing: Text(_users[index].mail),
                                 );
                               },
                               separatorBuilder: (BuildContext context, int index) => const Divider(),
