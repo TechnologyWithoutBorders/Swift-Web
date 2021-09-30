@@ -14,6 +14,7 @@ class TabScreen extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        backgroundColor: Colors.grey[200],
         appBar: AppBar(
           bottom: TabBar(
             tabs: [

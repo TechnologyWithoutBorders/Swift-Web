@@ -63,6 +63,7 @@ class _DetailScreenState extends State<CodeGenerationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       body: Center(
         child: SizedBox(width: 400, height: 600,
           child: Form(key: _formKey,

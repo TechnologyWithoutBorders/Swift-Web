@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:teog_swift/overviewScreen.dart';
 import 'package:teog_swift/tabScreen.dart';
+import 'package:teog_swift/aboutScreen.dart';
+import 'package:teog_swift/constants.dart';
 
 import 'dart:convert';
 
@@ -17,12 +19,12 @@ class SwiftApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Swift",
+      title: Constants.app_name,
       initialRoute: SwiftApp.route,
       routes: {
         SwiftApp.route: (context) => LoginScreen(),
         OverviewScreen.route: (context) => OverviewScreen(),
-        '/help': (context) => LoginScreen(),//TODO Hilfe-Seite
+        AboutScreen.route: (context) => AboutScreen(),
         TabScreen.route: (context) => TabScreen(),
       },
       theme: ThemeData(

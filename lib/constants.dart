@@ -6,4 +6,6 @@ class Constants {
   static const String key_hospital = "hospital";
 
   static const String generic_error_message = "something went wrong";
+
+  static const String app_name = "Swift";
 }

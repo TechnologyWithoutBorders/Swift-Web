@@ -79,6 +79,7 @@ class _DetailScreenState extends State<DashboardScreen> {
     )];
 
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       body: Container(alignment: Alignment.center,
         child: FractionallySizedBox(widthFactor: 0.8, heightFactor: 0.8,
           child: Card(
