@@ -60,7 +60,7 @@ class _DetailScreenState extends State<DetailScreen> {
       appBar: AppBar(
         title: Text(widget.deviceInfo.device.type),
       ),
-      body: Center(child: FractionallySizedBox(widthFactor: 0.65, heightFactor: 0.8,
+      body: Center(child: FractionallySizedBox(widthFactor: 0.8, heightFactor: 0.8,
         child: Card(
           child: Padding(padding: EdgeInsets.all(8.0),
             child: Column(
