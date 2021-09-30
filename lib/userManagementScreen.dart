@@ -102,7 +102,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
                             onFieldSubmitted: (value) => _createUser(),
                           ),
                           TextFormField(
-                            controller: _nameTextController,
+                            controller: _mailTextController,
                             decoration: InputDecoration(hintText: 'Mail address of user'),
                             validator: (value) {
                               if (value.isEmpty) {
