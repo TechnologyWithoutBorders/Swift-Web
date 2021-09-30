@@ -12,6 +12,7 @@ import 'deviceInfo.dart';
 import 'hospitalDevice.dart';
 import 'report.dart';
 import 'user.dart';
+import 'hospital.dart';
 
 const String _host = "teog.virlep.de";
 const Map<String, String> _headers = {'Content-Type': 'application/json; charset=UTF-8'};
@@ -193,6 +194,36 @@ Future<List<User>> getUsers() async {
       }
 
       return users;
+    } else {
+      throw Exception(swiftResponse.data);
+    }
+  } else {
+    throw Exception(Constants.generic_error_message);
+  }
+}
+
+Future<List<Hospital>> getHospitals(String country) async {
+  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+
+  final response = await http.post(
+    uri,
+    headers: _headers,
+    body: jsonEncode(_generateParameterMap(action: DataAction.getUsers, authentication: false,
+      additional: <String, dynamic> {'country': country}),
+    )
+  );
+
+  if(response.statusCode == 200) {
+    SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
+    
+    if(swiftResponse.responseCode == 0) {
+      List<Hospital> hospitals = [];
+
+      for(var jsonHospital in swiftResponse.data) {
+        hospitals.add(Hospital.fromJson(jsonHospital));
+      }
+
+      return hospitals;
     } else {
       throw Exception(swiftResponse.data);
     }

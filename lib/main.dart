@@ -10,6 +10,7 @@ import 'package:crypto/crypto.dart';
 
 import 'networkFunctions.dart' as Comm;
 import 'preferenceManager.dart' as Prefs;
+import 'hospital.dart';
 
 void main() => runApp(SwiftApp());
 
@@ -69,20 +70,22 @@ class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
 
   String _countryValue = 'Select Country';//TODO: use cookie + get from server
-  String _hospitalValue = "1";
+  Hospital _hospitalValue;
 
   final _passwordTextController = TextEditingController();
+
+  List<DropdownMenuItem<Hospital>> _hospitals = [];
 
   void _loginMedical() {
     if (_formKey.currentState.validate()) {
       String password = _passwordTextController.text;
 
-      Comm.checkCredentials(_countryValue, int.parse(_hospitalValue), password).then((success) {
+      Comm.checkCredentials(_countryValue, _hospitalValue.id, password).then((success) {
         if(success) {
           List<int> bytes = utf8.encode(password);
           String hash = sha256.convert(bytes).toString();
 
-          Prefs.save(_countryValue, int.parse(_hospitalValue), hash).then((success) => Navigator.of(context).pushNamed(OverviewScreen.route));
+          Prefs.save(_countryValue, _hospitalValue.id, hash).then((success) => Navigator.of(context).pushNamed(OverviewScreen.route));
         }
       }).onError((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.data));
@@ -95,12 +98,12 @@ class _LoginFormState extends State<LoginForm> {
     if (_formKey.currentState.validate()) {
       String password = _passwordTextController.text;
 
-      Comm.checkCredentials(_countryValue, int.parse(_hospitalValue), password).then((success) {
+      Comm.checkCredentials(_countryValue, _hospitalValue.id, password).then((success) {
         if(success) {
           List<int> bytes = utf8.encode(password);
           String hash = sha256.convert(bytes).toString();
 
-          Prefs.save(_countryValue, int.parse(_hospitalValue), hash).then((success) => Navigator.of(context).pushNamed(TabScreen.route));
+          Prefs.save(_countryValue, _hospitalValue.id, hash).then((success) => Navigator.of(context).pushNamed(TabScreen.route));
         }
       }).onError((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.data));
@@ -137,8 +140,17 @@ class _LoginFormState extends State<LoginForm> {
             iconSize: 24,
             elevation: 16,
             onChanged: (String newValue) {
-              setState(() {
-                _countryValue = newValue;
+              _countryValue = newValue;
+
+              Comm.getHospitals(newValue).then((hospitals) {
+                setState(() {
+                  _hospitals = hospitals.map<DropdownMenuItem<Hospital>>((Hospital hospital) {
+                    return DropdownMenuItem<Hospital>(
+                      value: hospital,
+                      child: Text(hospital.name),
+                    );
+                  }).toList();
+                });
               });
             },
             items: <String>['Select Country', 'Test']
@@ -149,23 +161,14 @@ class _LoginFormState extends State<LoginForm> {
               );
             }).toList(),
           ),
-          DropdownButton<String>(
-            value: _hospitalValue,
+          DropdownButton<Hospital>(
             icon: const Icon(Icons.expand_more),
             iconSize: 24,
             elevation: 16,
-            onChanged: (String newValue) {
-              setState(() {
-                _hospitalValue = newValue;
-              });
+            onChanged: (Hospital newValue) {
+              _hospitalValue = newValue;
             },
-            items: <String>['1']
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
+            items: _hospitals,
           ),
           TextFormField(
             controller: _passwordTextController,
