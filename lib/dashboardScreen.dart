@@ -90,7 +90,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Categories", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                        Text("Overview", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                         Flexible(child: Padding(padding: EdgeInsets.all(30.0), child: DatumLegendWithMeasures(seriesList))),
                         Text("xy devices are due for maintenance", style: TextStyle(fontSize: 20)),
                       ]
