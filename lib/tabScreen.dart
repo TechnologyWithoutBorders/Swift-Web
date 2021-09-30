@@ -11,27 +11,25 @@ class TabScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            bottom: TabBar(
-              tabs: [
-                Tab(text: "Dashboard", icon: Icon(Icons.chair)),
-                Tab(text: "Print Barcodes", icon: Icon(Icons.print)),
-                Tab(text: "User Management", icon: Icon(Icons.person)),
-              ],
-            ),
-            title: Text('Swift'),
-          ),
-          body: TabBarView(
-            children: [
-              DashboardScreen(),
-              CodeGenerationScreen(),
-              UserManagementScreen(),
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          bottom: TabBar(
+            tabs: [
+              Tab(text: "Dashboard", icon: Icon(Icons.chair)),
+              Tab(text: "Print Barcodes", icon: Icon(Icons.print)),
+              Tab(text: "User Management", icon: Icon(Icons.person)),
             ],
           ),
+          title: Text('Swift'),
+        ),
+        body: TabBarView(
+          children: [
+            DashboardScreen(),
+            CodeGenerationScreen(),
+            UserManagementScreen(),
+          ],
         ),
       ),
     );
