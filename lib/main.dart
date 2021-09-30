@@ -9,7 +9,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 
 import 'networkFunctions.dart' as Comm;
-import 'preference_manager.dart' as Prefs;
+import 'preferenceManager.dart' as Prefs;
 
 void main() => runApp(SwiftApp());
 

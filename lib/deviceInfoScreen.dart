@@ -5,7 +5,7 @@ import 'package:teog_swift/main.dart';
 import 'package:flutter/material.dart';
 
 import 'networkFunctions.dart' as Comm;
-import 'preference_manager.dart' as Prefs;
+import 'preferenceManager.dart' as Prefs;
 import 'deviceInfo.dart';
 import 'report.dart';
 import 'package:teog_swift/deviceState.dart';
