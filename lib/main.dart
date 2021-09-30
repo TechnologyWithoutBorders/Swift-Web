@@ -70,7 +70,7 @@ class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
 
   String _countryValue = 'Select Country';//TODO: use cookie + get from server
-  Hospital _hospitalValue = Hospital(id: -1, name: 'Hospital');
+  Hospital _hospitalValue;
 
   final _passwordTextController = TextEditingController();
 
@@ -125,6 +125,52 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    DropdownButton dropDown;
+
+    if(_countryValue == 'Select Country') {
+      dropDown = DropdownButton<String>(
+        value: _countryValue,
+        icon: const Icon(Icons.expand_more),
+        iconSize: 24,
+        elevation: 16,
+        onChanged: (String newValue) {
+          _countryValue = newValue;
+
+          Comm.getHospitals(newValue).then((hospitals) {
+            setState(() {
+              _hospitalValue = Hospital(id: -1, name: "Select Hospital");
+
+              _hospitals = <DropdownMenuItem<Hospital>>[DropdownMenuItem(value: _hospitalValue, child: Text(_hospitalValue.name))];
+              _hospitals.addAll(hospitals.map<DropdownMenuItem<Hospital>>((Hospital hospital) {
+                return DropdownMenuItem<Hospital>(
+                  value: hospital,
+                  child: Text(hospital.name),
+                );
+              }).toList());
+            });
+          });
+        },
+        items: <String>['Select Country', 'Test']
+            .map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+    );
+    } else {
+      dropDown = DropdownButton<Hospital>(
+        value: _hospitalValue,
+        icon: const Icon(Icons.expand_more),
+        iconSize: 24,
+        elevation: 16,
+        onChanged: (Hospital newValue) {
+          _hospitalValue = newValue;
+        },
+        items: _hospitals,
+      );
+    }
+
     return Form(
       key: _formKey,
       child: Column(
@@ -134,43 +180,7 @@ class _LoginFormState extends State<LoginForm> {
               .of(context)
               .textTheme
               .headline5),
-          DropdownButton<String>(
-            value: _countryValue,
-            icon: const Icon(Icons.expand_more),
-            iconSize: 24,
-            elevation: 16,
-            onChanged: (String newValue) {
-              _countryValue = newValue;
-
-              Comm.getHospitals(newValue).then((hospitals) {
-                setState(() {
-                  _hospitals = hospitals.map<DropdownMenuItem<Hospital>>((Hospital hospital) {
-                    return DropdownMenuItem<Hospital>(
-                      value: hospital,
-                      child: Text(hospital.name),
-                    );
-                  }).toList();
-                });
-              });
-            },
-            items: <String>['Select Country', 'Test']
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-          ),
-          DropdownButton<Hospital>(
-            //value: _hospitalValue,
-            icon: const Icon(Icons.expand_more),
-            iconSize: 24,
-            elevation: 16,
-            onChanged: (Hospital newValue) {
-              _hospitalValue = newValue;
-            },
-            items: _hospitals,
-          ),
+          dropDown,
           TextFormField(
             controller: _passwordTextController,
             decoration: InputDecoration(hintText: 'Password'),
