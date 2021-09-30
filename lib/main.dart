@@ -70,11 +70,11 @@ class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
 
   String _countryValue = 'Select Country';//TODO: use cookie + get from server
-  Hospital _hospitalValue = Hospital(id: -1, name: 'Hospitals');
+  Hospital _hospitalValue = Hospital(id: -1, name: 'Hospital');
 
   final _passwordTextController = TextEditingController();
 
-  List<DropdownMenuItem<Hospital>> _hospitals = [DropdownMenuItem<Hospital>(value: Hospital(id: -1, name: 'Hospitals'), child: Text(Hospital(id: -1, name: 'Hospitals').name))];
+  List<DropdownMenuItem<Hospital>> _hospitals = [DropdownMenuItem<Hospital>(value: Hospital(id: -1, name: 'Hospital'), child: Text(Hospital(id: -1, name: 'Hospital').name))];
 
   void _loginMedical() {
     if (_formKey.currentState.validate()) {
@@ -162,6 +162,7 @@ class _LoginFormState extends State<LoginForm> {
             }).toList(),
           ),
           DropdownButton<Hospital>(
+            value: _hospitalValue,
             icon: const Icon(Icons.expand_more),
             iconSize: 24,
             elevation: 16,
