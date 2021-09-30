@@ -61,12 +61,12 @@ class _DetailScreenState extends State<UserManagementScreen> {
                           .of(context)
                           .textTheme
                           .headline4),
-                        Flexible(child: Padding(padding: EdgeInsets.all(10.0),
+                        Flexible(child: Padding(padding: EdgeInsets.all(15.0),
                           child: Scrollbar(isAlwaysShown: true,
                             controller: _scrollController,
                             child: ListView.separated(
                               controller: _scrollController,
-                              padding: const EdgeInsets.all(5),
+                              padding: const EdgeInsets.all(3),
                               itemCount: _users.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return ListTile(
@@ -90,31 +90,36 @@ class _DetailScreenState extends State<UserManagementScreen> {
                               .of(context)
                               .textTheme
                               .headline4),
-                        Flexible(child: Form(key: _formKey,
+                        Flexible(child: Padding(padding: EdgeInsets.all(15.0), child: Form(key: _formKey,
                           child: Column(mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              TextFormField(
-                                controller: _nameTextController,
-                                decoration: InputDecoration(hintText: 'Name of user'),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'Please enter the name of the user';
-                                  }
-                                  return null;
-                                },
-                                onFieldSubmitted: (value) => _createUser(),
+                              FractionallySizedBox(widthFactor: 0.6,
+                                child: TextFormField(
+                                  controller: _nameTextController,
+                                  decoration: InputDecoration(hintText: 'Name of user'),
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return 'Please enter the name of the user';
+                                    }
+                                    return null;
+                                  },
+                                  onFieldSubmitted: (value) => _createUser(),
+                                ),
                               ),
-                              TextFormField(
-                                controller: _mailTextController,
-                                decoration: InputDecoration(hintText: 'Mail address of user'),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'Please enter the mail address of the user';
-                                  }
-                                  return null;
-                                },
-                                onFieldSubmitted: (value) => _createUser(),
+                              FractionallySizedBox(widthFactor: 0.6,
+                                child: TextFormField(
+                                  controller: _mailTextController,
+                                  decoration: InputDecoration(hintText: 'Mail address of user'),
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return 'Please enter the mail address of the user';
+                                    }
+                                    return null;
+                                  },
+                                  onFieldSubmitted: (value) => _createUser(),
+                                ),
                               ),
+                              SizedBox(height: 10,),
                               TextButton(
                                 style: ButtonStyle(
                                   foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
@@ -130,7 +135,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
                             ]
                           )
                         ))
-                      ]
+                      )]
                     ),
                   ),
                 ]

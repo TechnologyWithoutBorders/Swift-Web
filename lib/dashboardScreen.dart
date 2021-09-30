@@ -114,7 +114,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                             controller: _scrollController,
                             child: ListView.separated(
                               controller: _scrollController,
-                              padding: const EdgeInsets.all(5),
+                              padding: const EdgeInsets.all(3),
                               itemCount: _todoDevices.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return ListTile(
