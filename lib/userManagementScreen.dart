@@ -57,10 +57,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Users", style: Theme
-                          .of(context)
-                          .textTheme
-                          .headline4),
+                        Text("Users", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                         Flexible(child: Padding(padding: EdgeInsets.all(15.0),
                           child: Scrollbar(isAlwaysShown: true,
                             controller: _scrollController,
@@ -86,10 +83,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center, 
                       children: [
-                        Text('Register a new user', style: Theme
-                              .of(context)
-                              .textTheme
-                              .headline4),
+                        Text('Register a new user', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                         Flexible(child: Padding(padding: EdgeInsets.all(15.0), child: Form(key: _formKey,
                           child: Column(mainAxisAlignment: MainAxisAlignment.center,
                             children: [
