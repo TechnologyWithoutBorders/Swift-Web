@@ -208,7 +208,7 @@ Future<List<Hospital>> getHospitals(String country) async {
   final response = await http.post(
     uri,
     headers: _headers,
-    body: jsonEncode(_generateParameterMap(action: DataAction.getUsers, authentication: false,
+    body: jsonEncode(_generateParameterMap(action: DataAction.getHospitals, authentication: false,
       additional: <String, dynamic> {'country': country}),
     )
   );
