@@ -90,7 +90,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
                               FractionallySizedBox(widthFactor: 0.6,
                                 child: TextFormField(
                                   controller: _nameTextController,
-                                  decoration: InputDecoration(hintText: 'Name of user'),
+                                  decoration: InputDecoration(hintText: 'Name'),
                                   validator: (value) {
                                     if (value.isEmpty) {
                                       return 'Please enter the name of the user';
@@ -103,7 +103,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
                               FractionallySizedBox(widthFactor: 0.6,
                                 child: TextFormField(
                                   controller: _mailTextController,
-                                  decoration: InputDecoration(hintText: 'Mail address of user'),
+                                  decoration: InputDecoration(hintText: 'Mail Address'),
                                   validator: (value) {
                                     if (value.isEmpty) {
                                       return 'Please enter the mail address of the user';
