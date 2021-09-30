@@ -66,7 +66,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
                             controller: _scrollController,
                             child: ListView.separated(
                               controller: _scrollController,
-                              padding: const EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(5),
                               itemCount: _users.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return ListTile(
@@ -83,50 +83,55 @@ class _DetailScreenState extends State<UserManagementScreen> {
                     )
                   ),
                   Flexible(
-                    child: Form(key: _formKey,
-                      child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('Register a new user', style: Theme
-                            .of(context)
-                            .textTheme
-                            .headline5),
-                          TextFormField(
-                            controller: _nameTextController,
-                            decoration: InputDecoration(hintText: 'Name of user'),
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please enter the name of the user';
-                              }
-                              return null;
-                            },
-                            onFieldSubmitted: (value) => _createUser(),
-                          ),
-                          TextFormField(
-                            controller: _mailTextController,
-                            decoration: InputDecoration(hintText: 'Mail address of user'),
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please enter the mail address of the user';
-                              }
-                              return null;
-                            },
-                            onFieldSubmitted: (value) => _createUser(),
-                          ),
-                          TextButton(
-                            style: ButtonStyle(
-                              foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                                return states.contains(MaterialState.disabled) ? null : Colors.white;
-                              }),
-                              backgroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                                return states.contains(MaterialState.disabled) ? null : Color(0xff667d9d);
-                              }),
-                            ),
-                            onPressed: () => _createUser(),
-                            child: Text('Register user'),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center, 
+                      children: [
+                        Text('Register a new user', style: Theme
+                              .of(context)
+                              .textTheme
+                              .headline4),
+                        Flexible(child: Form(key: _formKey,
+                          child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextFormField(
+                                controller: _nameTextController,
+                                decoration: InputDecoration(hintText: 'Name of user'),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter the name of the user';
+                                  }
+                                  return null;
+                                },
+                                onFieldSubmitted: (value) => _createUser(),
+                              ),
+                              TextFormField(
+                                controller: _mailTextController,
+                                decoration: InputDecoration(hintText: 'Mail address of user'),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter the mail address of the user';
+                                  }
+                                  return null;
+                                },
+                                onFieldSubmitted: (value) => _createUser(),
+                              ),
+                              TextButton(
+                                style: ButtonStyle(
+                                  foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
+                                    return states.contains(MaterialState.disabled) ? null : Colors.white;
+                                  }),
+                                  backgroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
+                                    return states.contains(MaterialState.disabled) ? null : Color(0xff667d9d);
+                                  }),
+                                ),
+                                onPressed: () => _createUser(),
+                                child: Text('Register user'),
+                              )
+                            ]
                           )
-                        ]
-                      )
-                    )
+                        ))
+                      ]
+                    ),
                   ),
                 ]
               )
