@@ -4,5 +4,6 @@ class DataAction {
   static const String searchDevices = "search_devices";
   static const String getDevices = "get_devices";
   static const String getUsers = "get_users";
+  static const String createUser = "create_user";
   static const String queueRepair = "queue_repair";
 }
