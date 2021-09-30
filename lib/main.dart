@@ -70,11 +70,11 @@ class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
 
   String _countryValue = 'Select Country';//TODO: use cookie + get from server
-  Hospital _hospitalValue;
+  Hospital _hospitalValue = Hospital(id: -1, name: 'Hospitals');
 
   final _passwordTextController = TextEditingController();
 
-  List<DropdownMenuItem<Hospital>> _hospitals = [];
+  List<DropdownMenuItem<Hospital>> _hospitals = [DropdownMenuItem<Hospital>(value: Hospital(id: -1, name: 'Hospitals'), child: Text(Hospital(id: -1, name: 'Hospitals').name))];
 
   void _loginMedical() {
     if (_formKey.currentState.validate()) {
