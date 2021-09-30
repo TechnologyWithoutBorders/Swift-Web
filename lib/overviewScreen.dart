@@ -28,7 +28,7 @@ class OverviewScreen extends StatelessWidget {
               .textTheme
               .headline5),
             SizedBox(height: 25),
-            DoubleCardLayout(DoubleCardLayout.horizontal, SearchForm(), "OR", FilterForm()),
+            FractionallySizedBox(widthFactor: 0.8, heightFactor: 0.8, child: DoubleCardLayout(DoubleCardLayout.horizontal, SearchForm(), "OR", FilterForm())),
           ]
         )
       ),

@@ -17,33 +17,33 @@ class DoubleCardLayout extends StatelessWidget {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Card(child: Padding(
+          Flexible(child: Card(child: Padding(
             padding: EdgeInsets.all(10.0),
             child: leftView)
-          ),
+          )),
           SizedBox(width: 10),
           Text(betweenText, style: TextStyle(fontSize: 30)),
           SizedBox(width: 10),
-          Card(child: Padding(
+          Flexible(child: Card(child: Padding(
             padding: EdgeInsets.all(10.0),
             child: rightView)
-          ),
+          )),
       ]);
     } else {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Card(child: Padding(
+          Flexible(child: Card(child: Padding(
             padding: EdgeInsets.all(10.0),
             child: leftView)
-          ),
+          )),
           SizedBox(height: 10),
           Text(betweenText, style: TextStyle(fontSize: 30)),
           SizedBox(height: 10),
-          Card(child: Padding(
+          Flexible(child: Card(child: Padding(
             padding: EdgeInsets.all(10.0),
             child: rightView)
-          ),
+          )),
       ]);
     }
   }
