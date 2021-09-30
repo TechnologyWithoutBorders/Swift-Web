@@ -73,7 +73,7 @@ class _LoginFormState extends State<LoginForm> {
 
   final _passwordTextController = TextEditingController();
 
-  void _login() {
+  void _loginMedical() {
     if (_formKey.currentState.validate()) {
       String password = _passwordTextController.text;
 
@@ -83,6 +83,24 @@ class _LoginFormState extends State<LoginForm> {
           String hash = sha256.convert(bytes).toString();
 
           Prefs.save(_countryValue, int.parse(_hospitalValue), hash).then((success) => Navigator.of(context).pushNamed(OverviewScreen.route));
+        }
+      }).onError((error, stackTrace) {
+        final snackBar = SnackBar(content: Text(error.data));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      });
+    }
+  }
+
+  void _loginTechnician() {
+    if (_formKey.currentState.validate()) {
+      String password = _passwordTextController.text;
+
+      Comm.checkCredentials(_countryValue, int.parse(_hospitalValue), password).then((success) {
+        if(success) {
+          List<int> bytes = utf8.encode(password);
+          String hash = sha256.convert(bytes).toString();
+
+          Prefs.save(_countryValue, int.parse(_hospitalValue), hash).then((success) => Navigator.of(context).pushNamed(TabScreen.route));
         }
       }).onError((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.data));
@@ -160,21 +178,34 @@ class _LoginFormState extends State<LoginForm> {
               }
               return null;
             },
-            onFieldSubmitted: (value) => _login(),
           ),
           SizedBox(height: 10),
-          TextButton(
-            style: ButtonStyle(
-              foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                return states.contains(MaterialState.disabled) ? null : Colors.white;
-              }),
-              backgroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                return states.contains(MaterialState.disabled) ? null : Color(0xff667d9d);
-              }),
+          Row(children: [
+            TextButton(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
+                  return states.contains(MaterialState.disabled) ? null : Colors.white;
+                }),
+                backgroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
+                  return states.contains(MaterialState.disabled) ? null : Color(0xff667d9d);
+                }),
+              ),
+              onPressed: () => _loginMedical(),
+              child: Text('Login as medical staff'),
             ),
-            onPressed: () => _login(),
-            child: Text('Login'),
-          ),
+            TextButton(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
+                  return states.contains(MaterialState.disabled) ? null : Colors.white;
+                }),
+                backgroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
+                  return states.contains(MaterialState.disabled) ? null : Color(0xff667d9d);
+                }),
+              ),
+              onPressed: () => _loginTechnician(),
+              child: Text('Login as technician'),
+            )
+          ]),
           SizedBox(height: 5),
         ],
       ),
