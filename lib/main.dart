@@ -76,7 +76,7 @@ class _LoginFormState extends State<LoginForm> {
 
   List<DropdownMenuItem<Hospital>> _hospitals = [DropdownMenuItem<Hospital>(child: Text(Hospital(id: -1, name: 'Hospital').name))];
 
-  void _loginMedical() {
+  void _login() {
     if (_formKey.currentState.validate()) {
       String password = _passwordTextController.text;
 
@@ -86,24 +86,6 @@ class _LoginFormState extends State<LoginForm> {
           String hash = sha256.convert(bytes).toString();
 
           Prefs.save(_countryValue, _hospitalValue.id, hash).then((success) => Navigator.of(context).pushNamed(OverviewScreen.route));
-        }
-      }).onError((error, stackTrace) {
-        final snackBar = SnackBar(content: Text(error.data));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      });
-    }
-  }
-
-  void _loginTechnician() {
-    if (_formKey.currentState.validate()) {
-      String password = _passwordTextController.text;
-
-      Comm.checkCredentials(_countryValue, _hospitalValue.id, password).then((success) {
-        if(success) {
-          List<int> bytes = utf8.encode(password);
-          String hash = sha256.convert(bytes).toString();
-
-          Prefs.save(_countryValue, _hospitalValue.id, hash).then((success) => Navigator.of(context).pushNamed(TabScreen.route));
         }
       }).onError((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.data));
@@ -192,9 +174,9 @@ class _LoginFormState extends State<LoginForm> {
               }
               return null;
             },
+            onFieldSubmitted: (value) => _login(),
           ),
           SizedBox(height: 10),
-          Row(children: [
             TextButton(
               style: ButtonStyle(
                 foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
@@ -204,22 +186,9 @@ class _LoginFormState extends State<LoginForm> {
                   return states.contains(MaterialState.disabled) ? null : Color(0xff667d9d);
                 }),
               ),
-              onPressed: () => _loginMedical(),
-              child: Text('Login as medical staff'),
+              onPressed: () => _login(),
+              child: Text('Login'),
             ),
-            TextButton(
-              style: ButtonStyle(
-                foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                  return states.contains(MaterialState.disabled) ? null : Colors.white;
-                }),
-                backgroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                  return states.contains(MaterialState.disabled) ? null : Color(0xff667d9d);
-                }),
-              ),
-              onPressed: () => _loginTechnician(),
-              child: Text('Login as technician'),
-            )
-          ]),
           SizedBox(height: 5),
         ],
       ),
