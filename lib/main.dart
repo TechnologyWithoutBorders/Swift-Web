@@ -110,7 +110,7 @@ class _LoginFormState extends State<LoginForm> {
     Widget input;
 
     if(_countryValue == 'Select Country') {
-      input = DropdownButton<String>(
+      input = DropdownButton<String>(//TODO: ListView draus machen
         value: _countryValue,
         icon: const Icon(Icons.expand_more),
         iconSize: 24,
@@ -139,8 +139,8 @@ class _LoginFormState extends State<LoginForm> {
             child: Text(value),
           );
         }).toList(),
-    );
-    } else if(_hospitalValue == null) {
+      );
+    } else if(_hospitals.length == 0) {
       input = DropdownButton<Hospital>(
         value: _hospitalValue,
         icon: const Icon(Icons.expand_more),
