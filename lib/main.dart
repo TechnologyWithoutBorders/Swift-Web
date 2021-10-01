@@ -140,7 +140,7 @@ class _LoginFormState extends State<LoginForm> {
           );
         }).toList(),
       );
-    } else if(_hospitals.length == 0) {
+    } else if(_hospitalValue.id == -1) {
       input = DropdownButton<Hospital>(
         value: _hospitalValue,
         icon: const Icon(Icons.expand_more),
