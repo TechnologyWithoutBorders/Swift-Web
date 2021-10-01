@@ -74,7 +74,7 @@ class _LoginFormState extends State<LoginForm> {
 
   final _passwordTextController = TextEditingController();
 
-  List<DropdownMenuItem<Hospital>> _hospitals = [DropdownMenuItem<Hospital>(child: Text(Hospital(id: -1, name: 'Hospital').name))];
+  List<DropdownMenuItem<Hospital>> _hospitals = [];
 
   void _login() {
     if (_formKey.currentState.validate()) {
@@ -107,10 +107,10 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    DropdownButton dropDown;
+    Widget input;
 
     if(_countryValue == 'Select Country') {
-      dropDown = DropdownButton<String>(
+      input = DropdownButton<String>(
         value: _countryValue,
         icon: const Icon(Icons.expand_more),
         iconSize: 24,
@@ -140,8 +140,8 @@ class _LoginFormState extends State<LoginForm> {
           );
         }).toList(),
     );
-    } else {
-      dropDown = DropdownButton<Hospital>(
+    } else if(_hospitalValue == null) {
+      input = DropdownButton<Hospital>(
         value: _hospitalValue,
         icon: const Icon(Icons.expand_more),
         iconSize: 24,
@@ -150,6 +150,20 @@ class _LoginFormState extends State<LoginForm> {
           _hospitalValue = newValue;
         },
         items: _hospitals,
+      );
+    } else {
+      input = TextFormField(
+        controller: _passwordTextController,
+        decoration: InputDecoration(hintText: 'Password'),
+        obscureText: true,
+        autofocus: true,
+        validator: (value) {
+          if (value.isEmpty) {
+            return 'Please enter some text';
+          }
+          return null;
+        },
+        onFieldSubmitted: (value) => _login(),
       );
     }
 
@@ -162,20 +176,7 @@ class _LoginFormState extends State<LoginForm> {
               .of(context)
               .textTheme
               .headline5),
-          dropDown,
-          TextFormField(
-            controller: _passwordTextController,
-            decoration: InputDecoration(hintText: 'Password'),
-            obscureText: true,
-            autofocus: true,
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-            onFieldSubmitted: (value) => _login(),
-          ),
+          input,
           SizedBox(height: 10),
             TextButton(
               style: ButtonStyle(
