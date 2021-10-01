@@ -178,7 +178,7 @@ class _LoginFormState extends State<LoginForm> {
               .headline5),
           input,
           SizedBox(height: 10),
-            TextButton(
+            TextButton(//TODO: auch erst im letzten Step anzeigen
               style: ButtonStyle(
                 foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
                   return states.contains(MaterialState.disabled) ? null : Colors.white;
