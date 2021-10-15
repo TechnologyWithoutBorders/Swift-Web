@@ -69,7 +69,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 Text(deviceInfo.device.manufacturer + " " + deviceInfo.device.model, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                 Text(deviceInfo.device.location, style: TextStyle(fontSize: 25)),
                 SizedBox(height: 20),
-                Row(
+                Flexible(child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(height: 350,
@@ -84,7 +84,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       reportWidget,
                     ])
                   ]
-                ),
+                )),
                 SizedBox(height: 20),
                 Text("Available Documents:", style: TextStyle(fontSize: 20)),
                 DocumentScreen(deviceInfo: deviceInfo),
