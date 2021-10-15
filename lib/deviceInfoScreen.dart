@@ -62,7 +62,7 @@ class _DetailScreenState extends State<DetailScreen> {
       ),
       body: Center(child: FractionallySizedBox(widthFactor: 0.8, heightFactor: 0.8,
         child: Card(
-          child: Padding(padding: EdgeInsets.all(8.0),
+          child: Padding(padding: EdgeInsets.all(10.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -72,9 +72,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 Flexible(child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(height: 350,
-                      child: Image.memory(base64Decode(deviceInfo.imageData)),
-                    ),
+                    Flexible(child: Image.memory(base64Decode(deviceInfo.imageData))),
                     SizedBox(width: 30),
                     Column(mainAxisAlignment: MainAxisAlignment.center,
                       children: [
