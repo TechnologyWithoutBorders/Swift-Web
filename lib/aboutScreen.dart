@@ -39,6 +39,9 @@ class _AboutScreenState extends State<AboutScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
+      appBar: AppBar(
+        title: Text("About " + _packageInfo.appName),
+      ),
       body: Center(child: Text(_packageInfo.appName + " v" + _packageInfo.version + "-" + _packageInfo.buildNumber))
     );
   }
