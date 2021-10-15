@@ -60,7 +60,7 @@ class _DetailScreenState extends State<DashboardScreen> {
       countList[deviceInfo.report.currentState] += 1;
     });
 
-    final data = [];
+    final List<CategoryData> data = [];
 
     for(int state = 0; state < countList.length; state++) {
       if(countList[state] > 0) {
