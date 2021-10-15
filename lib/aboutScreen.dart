@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:package_info_plus/package_info_plus.dart';
+
 class AboutScreen extends StatefulWidget {
   static const String route = '/about';
 
@@ -10,12 +12,34 @@ class AboutScreen extends StatefulWidget {
 }
 
 class _AboutScreenState extends State<AboutScreen> {
+  PackageInfo _packageInfo = PackageInfo(
+    appName: 'Unknown',
+    packageName: 'Unknown',
+    version: 'Unknown',
+    buildNumber: 'Unknown',
+    buildSignature: 'Unknown',
+  );
+
+
+  @override
+  void initState() {
+    super.initState();
+    
+    _initPackageInfo();
+  }
+
+  Future<void> _initPackageInfo() async {
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      _packageInfo = info;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
-      body: Center()
+      body: Center(child: Text(_packageInfo.appName + " v" + _packageInfo.version + "-" + _packageInfo.buildNumber))
     );
   }
 }
