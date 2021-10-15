@@ -9,7 +9,7 @@ mixin SessionMixin<T> on State {
     Prefs.checkLogin().then((success) {
       
       if(!success) {
-        Navigator.of(context).pushNamed(SwiftApp.route);
+        Navigator.pushNamedAndRemoveUntil(context, SwiftApp.route, (r) => false);
       }
     });
 
