@@ -7,12 +7,12 @@ import 'package:teog_swift/utilities/previewDeviceInfo.dart';
 
 import 'package:teog_swift/utilities/swiftResponse.dart';
 
-import 'constants.dart';
-import 'deviceInfo.dart';
-import 'hospitalDevice.dart';
-import 'report.dart';
-import 'user.dart';
-import 'hospital.dart';
+import 'package:teog_swift/utilities/constants.dart';
+import 'package:teog_swift/utilities/deviceInfo.dart';
+import 'package:teog_swift/utilities/hospitalDevice.dart';
+import 'package:teog_swift/utilities/report.dart';
+import 'package:teog_swift/utilities/user.dart';
+import 'package:teog_swift/utilities/hospital.dart';
 
 const String _host = "teog.virlep.de";
 const Map<String, String> _headers = {'Content-Type': 'application/json; charset=UTF-8'};

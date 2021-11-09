@@ -8,9 +8,9 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 
-import 'package:teog_swift/utilities//networkFunctions.dart' as Comm;
-import 'package:teog_swift/utilities//preferenceManager.dart' as Prefs;
-import 'package:teog_swift/utilities//hospital.dart';
+import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
+import 'package:teog_swift/utilities/hospital.dart';
 
 void main() => runApp(SwiftApp());
 
