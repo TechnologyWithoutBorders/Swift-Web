@@ -224,25 +224,22 @@ class _FilterFormState extends State<FilterForm> {
           Text(_filteredDevices.length.toString() + " device(s) match the filter:"),
           SizedBox(height: 10),
           SizedBox(height: 300,
-            child: Scrollbar(isAlwaysShown: true,
+            child: ListView.separated(
               controller: _scrollController,
-              child: ListView.separated(
-                controller: _scrollController,
-                padding: const EdgeInsets.all(5),
-                itemCount: _filteredDevices.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    leading: Image.memory(base64Decode(_filteredDevices[index].imageData)),
-                    title: Text(_filteredDevices[index].device.type),
-                    subtitle: Text(_filteredDevices[index].device.manufacturer + " " + _filteredDevices[index].device.model),
-                    trailing: Text(_filteredDevices[index].device.location),
-                    onTap: () => _openDeviceById(_filteredDevices[index].device.id)
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) => const Divider(),
-              ),
-            )
-          ),
+              padding: const EdgeInsets.all(5),
+              itemCount: _filteredDevices.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  leading: Image.memory(base64Decode(_filteredDevices[index].imageData)),
+                  title: Text(_filteredDevices[index].device.type),
+                  subtitle: Text(_filteredDevices[index].device.manufacturer + " " + _filteredDevices[index].device.model),
+                  trailing: Text(_filteredDevices[index].device.location),
+                  onTap: () => _openDeviceById(_filteredDevices[index].device.id)
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) => const Divider(),
+            ),
+          )
         ],
       ),
     ));
