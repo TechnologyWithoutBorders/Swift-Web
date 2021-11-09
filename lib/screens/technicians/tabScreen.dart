@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:teog_swift/screens/technicians/codeGenerationScreen.dart';
-import 'package:teog_swift/dashBoardScreen.dart';
+import 'package:teog_swift/screens/technicians/dashBoardScreen.dart';
 import 'package:teog_swift/screens/technicians/userManagementScreen.dart';
 
 class TabScreen extends StatelessWidget {
