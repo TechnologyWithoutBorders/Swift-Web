@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'networkFunctions.dart' as Comm;
-import 'user.dart';
+import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/user.dart';
 
 class UserManagementScreen extends StatefulWidget {
   UserManagementScreen({Key key}) : super(key: key);

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:charts_flutter/flutter.dart' as charts;
 
-import 'networkFunctions.dart' as Comm;
-import 'deviceInfo.dart';
-import 'package:teog_swift/deviceInfoScreen.dart';
-import 'package:teog_swift/deviceState.dart';
+import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/deviceInfo.dart';
+import 'package:teog_swift/screens/deviceInfoScreen.dart';
+import 'package:teog_swift/utilities/deviceState.dart';
 
 class DashboardScreen extends StatefulWidget {
   DashboardScreen({Key key}) : super(key: key);

@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
-import 'package:teog_swift/dataAction.dart';
-import 'package:teog_swift/previewDeviceInfo.dart';
+import 'package:teog_swift/utilities/dataAction.dart';
+import 'package:teog_swift/utilities/previewDeviceInfo.dart';
 
-import 'package:teog_swift/swiftResponse.dart';
+import 'package:teog_swift/utilities/swiftResponse.dart';
 
 import 'constants.dart';
 import 'deviceInfo.dart';

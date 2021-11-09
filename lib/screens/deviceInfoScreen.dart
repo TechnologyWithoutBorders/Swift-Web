@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'dart:html' as html;
-import 'package:teog_swift/main.dart';
+import 'package:teog_swift/screens/main.dart';
 
 import 'package:flutter/material.dart';
 
-import 'networkFunctions.dart' as Comm;
-import 'preferenceManager.dart' as Prefs;
-import 'deviceInfo.dart';
-import 'report.dart';
-import 'package:teog_swift/deviceState.dart';
+import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
+import 'package:teog_swift/utilities/deviceInfo.dart';
+import 'package:teog_swift/utilities/report.dart';
+import 'package:teog_swift/utilities/deviceState.dart';
 
 class DetailScreen extends StatefulWidget {
   //this one is never modified

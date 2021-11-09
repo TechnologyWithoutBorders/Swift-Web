@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:teog_swift/previewDeviceInfo.dart';
-import 'package:teog_swift/deviceInfoScreen.dart';
+import 'package:teog_swift/utilities/previewDeviceInfo.dart';
+import 'package:teog_swift/screens/deviceInfoScreen.dart';
 
-import 'networkFunctions.dart' as Comm;
-import 'doubleCardLayout.dart';
+import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/doubleCardLayout.dart';
 
-import 'package:teog_swift/sessionMixin.dart';
+import 'package:teog_swift/utilities/sessionMixin.dart';
 
 class OverviewScreen extends StatelessWidget {
   static const String route = '/welcome';

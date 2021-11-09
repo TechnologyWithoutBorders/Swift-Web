@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:teog_swift/overviewScreen.dart';
-import 'package:teog_swift/tabScreen.dart';
-import 'package:teog_swift/aboutScreen.dart';
-import 'package:teog_swift/constants.dart';
+import 'package:teog_swift/screens/overviewScreen.dart';
+import 'package:teog_swift/screens/tabScreen.dart';
+import 'package:teog_swift/screens/aboutScreen.dart';
+import 'package:teog_swift/utilities/constants.dart';
 
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 
-import 'networkFunctions.dart' as Comm;
-import 'preferenceManager.dart' as Prefs;
-import 'hospital.dart';
+import 'package:teog_swift/utilities//networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities//preferenceManager.dart' as Prefs;
+import 'package:teog_swift/utilities//hospital.dart';
 
 void main() => runApp(SwiftApp());
 

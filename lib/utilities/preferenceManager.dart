@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'networkFunctions.dart' as Comm;
-import 'constants.dart';
+import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/constants.dart';
 
 /// Checks whether the login data is present within the shared preferences.
 ///
