@@ -116,7 +116,7 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     Widget input;
 
-    if(_hospitalSelected) {
+    if(!_hospitalSelected) {
       input = Row(
         children: [
           Flexible(
