@@ -72,23 +72,27 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
 
-  String _countryValue = 'Select Country';//TODO: use cookie + get from server
-  Hospital _hospitalValue;
+  final _countryScrollController = ScrollController();//TODO: use cookie + get from server
+  List<String> _countries = ["Test"];
+  String _selectedCountry;
+
+  final _hospitalScrollController = ScrollController();
+  List<Hospital> _hospitals = [];
+  Hospital _selectedHospital;
+  bool _hospitalSelected = false;
 
   final _passwordTextController = TextEditingController();
-
-  List<DropdownMenuItem<Hospital>> _hospitals = [];
 
   void _login() {
     if (_formKey.currentState.validate()) {
       String password = _passwordTextController.text;
 
-      Comm.checkCredentials(_countryValue, _hospitalValue.id, password).then((success) {
+      Comm.checkCredentials(_selectedCountry, _selectedHospital.id, password).then((success) {
         if(success) {
           List<int> bytes = utf8.encode(password);
           String hash = sha256.convert(bytes).toString();
 
-          Prefs.save(_countryValue, _hospitalValue.id, hash).then((success) => Navigator.of(context).pushNamed(OverviewScreen.route));
+          Prefs.save(_selectedCountry, _selectedHospital.id, hash).then((success) => Navigator.of(context).pushNamed(OverviewScreen.route));
         }
       }).onError((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.data));
@@ -112,47 +116,50 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     Widget input;
 
-    if(_countryValue == 'Select Country') {
-      input = DropdownButton<String>(//TODO: ListView draus machen
-        value: _countryValue,
-        icon: const Icon(Icons.expand_more),
-        iconSize: 24,
-        elevation: 16,
-        onChanged: (String newValue) {
-          _countryValue = newValue;
-
-          Comm.getHospitals(newValue).then((hospitals) {
-            setState(() {
-              _hospitalValue = Hospital(id: -1, name: "Select Hospital");
-
-              _hospitals = <DropdownMenuItem<Hospital>>[DropdownMenuItem(value: _hospitalValue, child: Text(_hospitalValue.name))];
-              _hospitals.addAll(hospitals.map<DropdownMenuItem<Hospital>>((Hospital hospital) {
-                return DropdownMenuItem<Hospital>(
-                  value: hospital,
-                  child: Text(hospital.name),
+    if(_hospitalSelected) {
+      input = Row(
+        children: [
+          Flexible(
+            child: ListView.separated(
+              controller: _countryScrollController,
+              padding: const EdgeInsets.all(5),
+              itemCount: _countries.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  title: Text(_countries[index]),
+                  onTap: () => {
+                    Comm.getHospitals(_countries[index]).then((hospitals) {
+                      setState(() {
+                        _selectedCountry = _countries[index];
+                        _hospitals = hospitals;
+                      });
+                    })
+                  }
                 );
-              }).toList());
-            });
-          });
-        },
-        items: <String>['Select Country', 'Test']
-            .map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        }).toList(),
-      );
-    } else if(_hospitalValue.id == -1) {
-      input = DropdownButton<Hospital>(
-        value: _hospitalValue,
-        icon: const Icon(Icons.expand_more),
-        iconSize: 24,
-        elevation: 16,
-        onChanged: (Hospital newValue) {
-          _hospitalValue = newValue;
-        },
-        items: _hospitals,
+              },
+              separatorBuilder: (BuildContext context, int index) => const Divider(),
+            )
+          ),
+          Flexible(
+            child: ListView.separated(
+              controller: _hospitalScrollController,
+              padding: const EdgeInsets.all(5),
+              itemCount: _hospitals.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  title: Text(_hospitals[index].name),
+                  onTap: () => {
+                    setState(() {
+                      _selectedHospital = _hospitals[index];
+                      _hospitalSelected = true;
+                    })
+                  }
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) => const Divider(),
+            )
+          )
+        ]
       );
     } else {
       input = TextFormField(
@@ -179,7 +186,9 @@ class _LoginFormState extends State<LoginForm> {
               .of(context)
               .textTheme
               .headline5),
-          input,
+          SizedBox(height: 300,
+            child: input
+          ),
           SizedBox(height: 10),
             TextButton(//TODO: auch erst im letzten Step anzeigen
               style: ButtonStyle(
