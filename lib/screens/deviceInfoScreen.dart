@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:html' as html;
-import 'package:teog_swift/screens/main.dart';
+import 'package:teog_swift/main.dart';
 
 import 'package:flutter/material.dart';
 
