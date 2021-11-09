@@ -120,43 +120,57 @@ class _LoginFormState extends State<LoginForm> {
       input = Row(
         children: [
           Flexible(
-            child: ListView.separated(
-              controller: _countryScrollController,
-              padding: const EdgeInsets.all(5),
-              itemCount: _countries.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  title: Text(_countries[index]),
-                  onTap: () => {
-                    Comm.getHospitals(_countries[index]).then((hospitals) {
-                      setState(() {
-                        _selectedCountry = _countries[index];
-                        _hospitals = hospitals;
-                      });
-                    })
-                  }
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) => const Divider(),
+            child: Column(
+              children: [
+                Text("Country"),
+                Flexible(
+                  child: ListView.separated(
+                    controller: _countryScrollController,
+                    padding: const EdgeInsets.all(5),
+                    itemCount: _countries.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                        title: Text(_countries[index]),
+                        onTap: () => {
+                          Comm.getHospitals(_countries[index]).then((hospitals) {
+                            setState(() {
+                              _selectedCountry = _countries[index];
+                              _hospitals = hospitals;
+                            });
+                          })
+                        }
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) => const Divider(),
+                  )
+                )
+              ]
             )
           ),
           Flexible(
-            child: ListView.separated(
-              controller: _hospitalScrollController,
-              padding: const EdgeInsets.all(5),
-              itemCount: _hospitals.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  title: Text(_hospitals[index].name),
-                  onTap: () => {
-                    setState(() {
-                      _selectedHospital = _hospitals[index];
-                      _hospitalSelected = true;
-                    })
-                  }
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) => const Divider(),
+            child: Column(
+              children: [
+                Text("Hospital"),
+                Flexible(
+                  child: ListView.separated(
+                    controller: _hospitalScrollController,
+                    padding: const EdgeInsets.all(5),
+                    itemCount: _hospitals.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                        title: Text(_hospitals[index].name),
+                        onTap: () => {
+                          setState(() {
+                            _selectedHospital = _hospitals[index];
+                            _hospitalSelected = true;
+                          })
+                        }
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) => const Divider(),
+                  )
+                )
+              ]
             )
           )
         ]
