@@ -25,7 +25,7 @@ String getBaseUrl() {
   return Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString()).toString();
 }
 
-Future<bool> checkCredentials(final String country, final int hospital, String password, {final hashPassword: true}) async {
+Future<String> checkCredentials(final String country, final int hospital, String password, {final hashPassword: true}) async {
   if(hashPassword) {
     List<int> bytes = utf8.encode(password);
     password = sha256.convert(bytes).toString();
@@ -43,7 +43,7 @@ Future<bool> checkCredentials(final String country, final int hospital, String p
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
 
     if(swiftResponse.responseCode == 0) {
-      return true;
+      return "testRole";
     } else {
       throw Exception(swiftResponse.data.toString());
     }

@@ -87,12 +87,12 @@ class _LoginFormState extends State<LoginForm> {
     if (_formKey.currentState.validate()) {
       String password = _passwordTextController.text;
 
-      Comm.checkCredentials(_selectedCountry, _selectedHospital.id, password).then((success) {
-        if(success) {
+      Comm.checkCredentials(_selectedCountry, _selectedHospital.id, password).then((role) {
+        if(role == "testRole") {
           List<int> bytes = utf8.encode(password);
           String hash = sha256.convert(bytes).toString();
 
-          Prefs.save(_selectedCountry, _selectedHospital.id, hash).then((success) => Navigator.of(context).pushNamed(OverviewScreen.route));
+          Prefs.save(_selectedCountry, _selectedHospital.id, role, hash).then((success) => Navigator.of(context).pushNamed(OverviewScreen.route));
         }
       }).onError((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.data));
