@@ -16,9 +16,11 @@ Future<bool> checkLogin({bool syncWithServer: false}) async {
 
   if(password != null && country != null && hospital != null && role != null) {
     if(syncWithServer) {
-      Comm.checkCredentials(country, hospital, password, hashPassword: false).then((success) {
-        return success;
-      });
+      String role = await Comm.checkCredentials(country, hospital, password, hashPassword: false);
+
+      if(role == "testRole") {//TODO: roles
+        return true;
+      }
     } else {
       return true;
     }

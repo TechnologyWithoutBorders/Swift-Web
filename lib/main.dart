@@ -88,7 +88,7 @@ class _LoginFormState extends State<LoginForm> {
       String password = _passwordTextController.text;
 
       Comm.checkCredentials(_selectedCountry, _selectedHospital.id, password).then((role) {
-        if(role == "testRole") {
+        if(role == "testRole") {//TODO: roles
           List<int> bytes = utf8.encode(password);
           String hash = sha256.convert(bytes).toString();
 
@@ -106,7 +106,7 @@ class _LoginFormState extends State<LoginForm> {
     super.initState();
 
     Prefs.checkLogin(syncWithServer: true).then((success) { 
-      if(success) {//TODO: das funktioniert nicht
+      if(success) {
         Navigator.of(context).pushNamed(OverviewScreen.route);
       }
     });
