@@ -33,14 +33,11 @@ Future<String> checkCredentials(final String country, final int hospital, String
 
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
-  List<int> bytes = utf8.encode(password);
-  String hash = sha256.convert(bytes).toString();
-
   final Map<String, dynamic> parameterMap = Map();
   parameterMap[_actionIdentifier] = DataAction.login;
   parameterMap[_countryIdentifier] = country;
   parameterMap[_hospitalIdentifier] = hospital;
-  parameterMap[_passwordIdentifier] = hash;
+  parameterMap[_passwordIdentifier] = password;
 
   final response = await http.post(
     uri,
@@ -50,11 +47,11 @@ Future<String> checkCredentials(final String country, final int hospital, String
 
   if(response.statusCode == 200) {
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
-
+    
     if(swiftResponse.responseCode == 0) {
-      return swiftResponse.data;
+      return swiftResponse.data.toString();
     } else {
-      throw Exception(swiftResponse.data.toString());
+      throw Exception(swiftResponse.data.toString());//this does not work
     }
   } else {
     throw Exception(Constants.generic_error_message);
