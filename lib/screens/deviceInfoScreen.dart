@@ -124,13 +124,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
   void initState() {
     super.initState();
 
-    Prefs.checkLogin().then((success) {
-      if(!success) {
-        Navigator.of(context).pushNamed(SwiftApp.route);
-      } else {
-        _retrieveDocuments();
-      }
-    });
+    _retrieveDocuments();
   }
 
   @override

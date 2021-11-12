@@ -43,7 +43,7 @@ Future<String> checkCredentials(final String country, final int hospital, String
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
 
     if(swiftResponse.responseCode == 0) {
-      return "testRole";
+      return swiftResponse.data;
     } else {
       throw Exception(swiftResponse.data.toString());
     }

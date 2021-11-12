@@ -88,12 +88,18 @@ class _LoginFormState extends State<LoginForm> {
       String password = _passwordTextController.text;
 
       Comm.checkCredentials(_selectedCountry, _selectedHospital.id, password).then((role) {
-        if(role == "testRole") {//TODO: roles
-          List<int> bytes = utf8.encode(password);
-          String hash = sha256.convert(bytes).toString();
+        String route;
 
-          Prefs.save(_selectedCountry, _selectedHospital.id, role, hash).then((success) => Navigator.pushNamedAndRemoveUntil(context, OverviewScreen.route, (r) => false));
+        if(role == Constants.role_technical) {
+          route = TabScreen.route;
+        } else {
+          route = OverviewScreen.route;
         }
+
+        List<int> bytes = utf8.encode(password);
+        String hash = sha256.convert(bytes).toString();
+
+        Prefs.save(_selectedCountry, _selectedHospital.id, role, hash).then((success) => Navigator.pushNamedAndRemoveUntil(context, route, (r) => false));
       }).onError((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.data));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -105,9 +111,11 @@ class _LoginFormState extends State<LoginForm> {
   void initState() {
     super.initState();
 
-    Prefs.checkLogin(syncWithServer: true).then((success) { 
-      if(success) {
+    Prefs.checkLogin(syncWithServer: true).then((role) { 
+      if(role == Constants.role_medical) {
         Navigator.pushNamedAndRemoveUntil(context, OverviewScreen.route, (r) => false);
+      } else if(role == Constants.role_technical) {
+        Navigator.pushNamedAndRemoveUntil(context, TabScreen.route, (r) => false);
       }
     });
   }

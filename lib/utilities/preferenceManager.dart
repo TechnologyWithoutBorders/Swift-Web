@@ -3,10 +3,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/constants.dart';
 
-/// Checks whether the login data is present within the shared preferences.
+/// Checks whether the login data is present within the shared preferences and returns the current role.
 ///
 /// If [syncWithServer] is set to true, the login data is checked against the server.
-Future<bool> checkLogin({bool syncWithServer: false}) async {
+Future<String> checkLogin({bool syncWithServer: false}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   String password = prefs.getString(Constants.key_pw);
@@ -16,17 +16,13 @@ Future<bool> checkLogin({bool syncWithServer: false}) async {
 
   if(password != null && country != null && hospital != null && role != null) {
     if(syncWithServer) {
-      String role = await Comm.checkCredentials(country, hospital, password, hashPassword: false);
-
-      if(role == "testRole") {//TODO: roles
-        return true;
-      }
+      return await Comm.checkCredentials(country, hospital, password, hashPassword: false);
     } else {
-      return true;
+      return role;
     }
   }
 
-  return false;
+  return Constants.role_invalid;
 }
 
 /// Saves [country], [hospital], [role] and [password] in shared preferences.

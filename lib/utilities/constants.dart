@@ -6,6 +6,10 @@ class Constants {
   static const String key_hospital = "hospital";
   static const String key_role = "role";
 
+  static const String role_medical = "medical";
+  static const String role_technical = "technical";
+  static const String role_invalid = "invalid";
+
   static const String generic_error_message = "something went wrong";
 
   static const String app_name = "Swift";
