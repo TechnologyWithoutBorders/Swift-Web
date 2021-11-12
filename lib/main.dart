@@ -92,7 +92,7 @@ class _LoginFormState extends State<LoginForm> {
 
         if(role == Constants.role_technical) {
           route = TabScreen.route;
-        } else {
+        } else if(role == Constants.role_medical) {
           route = OverviewScreen.route;
         }
 
