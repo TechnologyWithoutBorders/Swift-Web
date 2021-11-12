@@ -40,3 +40,9 @@ Future<bool> save(String country, int hospital, String role, String password) as
 
   return true;
 }
+
+Future<void> clear() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  prefs.clear();
+}

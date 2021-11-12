@@ -92,7 +92,7 @@ class _LoginFormState extends State<LoginForm> {
           List<int> bytes = utf8.encode(password);
           String hash = sha256.convert(bytes).toString();
 
-          Prefs.save(_selectedCountry, _selectedHospital.id, role, hash).then((success) => Navigator.of(context).pushNamed(OverviewScreen.route));
+          Prefs.save(_selectedCountry, _selectedHospital.id, role, hash).then((success) => Navigator.pushNamedAndRemoveUntil(context, OverviewScreen.route, (r) => false));
         }
       }).onError((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.data));
@@ -107,7 +107,7 @@ class _LoginFormState extends State<LoginForm> {
 
     Prefs.checkLogin(syncWithServer: true).then((success) { 
       if(success) {
-        Navigator.of(context).pushNamed(OverviewScreen.route);
+        Navigator.pushNamedAndRemoveUntil(context, OverviewScreen.route, (r) => false);
       }
     });
   }
