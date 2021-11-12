@@ -33,10 +33,19 @@ Future<String> checkCredentials(final String country, final int hospital, String
 
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
+  List<int> bytes = utf8.encode(password);
+  String hash = sha256.convert(bytes).toString();
+
+  final Map<String, dynamic> parameterMap = Map();
+  parameterMap[_actionIdentifier] = DataAction.login;
+  parameterMap[_countryIdentifier] = country;
+  parameterMap[_hospitalIdentifier] = hospital;
+  parameterMap[_passwordIdentifier] = hash;
+
   final response = await http.post(
     uri,
     headers: _headers,
-    body: jsonEncode(_generateParameterMap(action: DataAction.login, authentication: true))
+    body: jsonEncode(parameterMap)
   );
 
   if(response.statusCode == 200) {
