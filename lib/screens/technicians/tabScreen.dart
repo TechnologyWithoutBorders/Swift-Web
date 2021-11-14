@@ -24,8 +24,9 @@ class TabScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
+          title: Text('Swift'),
           actions: [
-            Padding(padding: EdgeInsets.only(right: 30.0),
+            Padding(padding: EdgeInsets.only(right: 20.0),
               child: TextButton(
                 style: ButtonStyle(
                   foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
@@ -44,7 +45,6 @@ class TabScreen extends StatelessWidget {
               Tab(text: "User Management", icon: Icon(Icons.person)),
             ],
           ),
-          title: Text('Swift'),
         ),
         body: TabBarView(
           children: [

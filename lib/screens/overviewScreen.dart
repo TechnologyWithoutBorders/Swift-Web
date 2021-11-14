@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:teog_swift/main.dart';
 import 'package:teog_swift/utilities/previewDeviceInfo.dart';
 import 'package:teog_swift/screens/deviceInfoScreen.dart';
 
@@ -8,13 +9,36 @@ import 'package:teog_swift/utilities/doubleCardLayout.dart';
 
 import 'package:teog_swift/utilities/sessionMixin.dart';
 
+import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
+
 class OverviewScreen extends StatelessWidget {
   static const String route = '/welcome';
+
+  void _logout(BuildContext context) async {
+    await Prefs.clear();
+    Navigator.pushNamedAndRemoveUntil(context, SwiftApp.route, (r) => false);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
+      appBar: AppBar(
+        title: Text('Swift'),
+        actions: [
+          Padding(padding: EdgeInsets.only(right: 20.0),
+            child: TextButton(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
+                  return states.contains(MaterialState.disabled) ? null : Colors.white;
+                }),
+              ),
+              child: Text("Logout"),
+              onPressed: () => _logout(context),
+            )
+          )
+        ],
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
