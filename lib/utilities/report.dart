@@ -1,13 +1,13 @@
 class Report {
   final int currentState;
-  final String created;
+  final DateTime created;
 
   Report({this.currentState, this.created});
 
   factory Report.fromJson(Map<String, dynamic> json) {
     return Report(
       currentState: json['currentState'],
-      created: json['created'],//TODO UTC->local
+      created: DateTime.parse(json['created']),//TODO UTC->local
     );
   }
 }

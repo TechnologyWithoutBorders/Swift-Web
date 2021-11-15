@@ -184,7 +184,7 @@ class _StateScreenState extends State<StateScreen> {
           )
         ),
         SizedBox(height: 5),
-        Text(report.created),
+        Text(DateTime.now().difference(report.created).inDays.toString() + " days"),
       ]
     );
   }
