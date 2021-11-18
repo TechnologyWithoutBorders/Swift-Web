@@ -254,7 +254,7 @@ class _FilterFormState extends State<FilterForm> {
               itemCount: _filteredDevices.length,
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
-                  leading: Image.memory(base64Decode(_filteredDevices[index].imageData)),
+                  leading: _filteredDevices[index].imageData.isNotEmpty ? Image.memory(base64Decode(_filteredDevices[index].imageData)) : Text("no image"),
                   title: Text(_filteredDevices[index].device.type),
                   subtitle: Text(_filteredDevices[index].device.manufacturer + " " + _filteredDevices[index].device.model),
                   trailing: Text(_filteredDevices[index].device.location),
