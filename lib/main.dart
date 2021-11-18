@@ -73,7 +73,7 @@ class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
 
   final _countryScrollController = ScrollController();//TODO: use cookie + get from server
-  List<String> _countries = ["Test"];
+  List<String> _countries = [];
   String _selectedCountry;
 
   final _hospitalScrollController = ScrollController();
@@ -116,6 +116,10 @@ class _LoginFormState extends State<LoginForm> {
         Navigator.pushNamedAndRemoveUntil(context, OverviewScreen.route, (r) => false);
       } else if(role == Constants.role_technical) {
         Navigator.pushNamedAndRemoveUntil(context, TabScreen.route, (r) => false);
+      } else {
+        Comm.getCountries().then((countries) {
+          setState(() { _countries = countries; });
+        });
       }
     });
   }
@@ -130,7 +134,10 @@ class _LoginFormState extends State<LoginForm> {
           Flexible(
             child: Column(
               children: [
-                Text("Country"),
+                Text("Country",
+                  style: Theme.of(context)
+                    .textTheme
+                    .headline5),
                 Flexible(
                   child: ListView.separated(
                     controller: _countryScrollController,
@@ -158,7 +165,10 @@ class _LoginFormState extends State<LoginForm> {
           Flexible(
             child: Column(
               children: [
-                Text("Hospital"),
+                Text("Hospital",
+                  style: Theme.of(context)
+                    .textTheme
+                    .headline5),
                 Flexible(
                   child: ListView.separated(
                     controller: _hospitalScrollController,
@@ -207,7 +217,8 @@ class _LoginFormState extends State<LoginForm> {
           Text('Sign in to report problems with devices or download user manuals.', style: Theme
               .of(context)
               .textTheme
-              .headline5),
+              .headline6),
+          SizedBox(height: 15),
           SizedBox(height: 300,
             child: input
           ),

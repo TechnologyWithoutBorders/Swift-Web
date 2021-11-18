@@ -7,4 +7,5 @@ class DataAction {
   static const String createUser = "create_user";
   static const String queueRepair = "queue_repair";
   static const String getHospitals = "get_hospitals";
+  static const String getCountries = "get_countries";
 }
