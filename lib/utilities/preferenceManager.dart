@@ -60,3 +60,9 @@ Future<int> getHospital() async {
 
   return prefs.getInt(Constants.key_hospital);
 }
+
+Future<String> getRole() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  return prefs.getString(Constants.key_role);
+}

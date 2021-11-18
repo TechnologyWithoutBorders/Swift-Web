@@ -22,6 +22,7 @@ const String _actionIdentifier = "action";
 const String _passwordIdentifier = "password";
 const String _countryIdentifier = "country";
 const String _hospitalIdentifier = "hospital";
+const String _roleIdentifier = "role";
 
 String getBaseUrl() {
   return Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString()).toString();
@@ -328,16 +329,15 @@ Future<Map<String, dynamic>> _generateParameterMap({final String action = "", fi
   }
 
   if(authentication) {
-    String password = await Prefs.getPassword();
-    List<int> bytes = utf8.encode(password);
-    String hash = sha256.convert(bytes).toString();
-
     String country = await Prefs.getCountry();
     int hospital = await Prefs.getHospital();
+    String role = await Prefs.getRole();
+    String password = await Prefs.getPassword();
 
     parameterMap[_countryIdentifier] = country;
     parameterMap[_hospitalIdentifier] = hospital;
-    parameterMap[_passwordIdentifier] = hash;
+    parameterMap[_roleIdentifier] = role;
+    parameterMap[_passwordIdentifier] = password;
   }
 
   additional.forEach((key, value) {
