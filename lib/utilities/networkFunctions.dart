@@ -14,6 +14,8 @@ import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/hospital.dart';
 
+import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
+
 const String _host = "teog.virlep.de";
 const Map<String, String> _headers = {'Content-Type': 'application/json; charset=UTF-8'};
 const String _actionIdentifier = "action";
@@ -64,7 +66,7 @@ Future<DeviceInfo> fetchDevice(final int deviceId) async {
   final response = await http.post(
     uri,
     headers: _headers,
-    body: jsonEncode(_generateParameterMap(action: DataAction.fetchDeviceInfo, authentication: true,
+    body: jsonEncode(await _generateParameterMap(action: DataAction.fetchDeviceInfo, authentication: true,
         additional: <String, dynamic> {'device_id': deviceId}),
     ),
   );
@@ -92,7 +94,7 @@ Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, 
   final response = await http.post(
     uri,
     headers: _headers,
-    body: jsonEncode(_generateParameterMap(action: DataAction.searchDevices, authentication: true,
+    body: jsonEncode(await _generateParameterMap(action: DataAction.searchDevices, authentication: true,
         additional: <String, dynamic> {'type': type, 'manufacturer': manufacturer, 'location': location,})
     ),
   );
@@ -125,7 +127,7 @@ Future<List<DeviceInfo>> getDevices() async {
   final response = await http.post(
     uri,
     headers: _headers,
-    body: jsonEncode(_generateParameterMap(action: DataAction.getDevices, authentication: true)),
+    body: jsonEncode(await _generateParameterMap(action: DataAction.getDevices, authentication: true)),
   );
 
   if(response.statusCode == 200) {
@@ -156,7 +158,7 @@ Future<List<User>> createUser(String mail, String name) async {
   final response = await http.post(
     uri,
     headers: _headers,
-    body: jsonEncode(_generateParameterMap(action: DataAction.createUser, authentication: true,
+    body: jsonEncode(await _generateParameterMap(action: DataAction.createUser, authentication: true,
       additional: <String, dynamic> {'mail': mail, 'name': name})
     ),
   );
@@ -186,7 +188,7 @@ Future<List<User>> getUsers() async {
   final response = await http.post(
     uri,
     headers: _headers,
-    body: jsonEncode(_generateParameterMap(action: DataAction.getUsers, authentication: true)),
+    body: jsonEncode(await _generateParameterMap(action: DataAction.getUsers, authentication: true)),
   );
 
   if(response.statusCode == 200) {
@@ -214,7 +216,7 @@ Future<List<Hospital>> getHospitals(String country) async {
   final response = await http.post(
     uri,
     headers: _headers,
-    body: jsonEncode(_generateParameterMap(action: DataAction.getHospitals, authentication: false,
+    body: jsonEncode(await _generateParameterMap(action: DataAction.getHospitals, authentication: false,
       additional: <String, dynamic> {'country': country}),
     )
   );
@@ -244,7 +246,7 @@ Future<List<String>> getCountries() async {
   final response = await http.post(
     uri,
     headers: _headers,
-    body: jsonEncode(_generateParameterMap(action: DataAction.getCountries, authentication: false))
+    body: jsonEncode(await _generateParameterMap(action: DataAction.getCountries, authentication: false))
   );
 
   if(response.statusCode == 200) {
@@ -272,7 +274,7 @@ Future<List<String>> retrieveDocuments(String manufacturer, String model) async 
   final response = await http.post(
     uri,
     headers: _headers,
-    body: jsonEncode(_generateParameterMap(additional: <String, dynamic> {'manufacturer': manufacturer,'model': model})),
+    body: jsonEncode(await _generateParameterMap(additional: <String, dynamic> {'manufacturer': manufacturer,'model': model})),
   );
 
   if(response.statusCode == 200) {
@@ -296,11 +298,11 @@ Future<List<String>> retrieveDocuments(String manufacturer, String model) async 
 
 Future<Report> queueRepair(int deviceId, String title, String problemDescription) async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
-
+  
   final response = await http.post(
     uri,
     headers: _headers,
-    body: jsonEncode(_generateParameterMap(action: DataAction.queueRepair, authentication: true,
+    body: jsonEncode(await _generateParameterMap(action: DataAction.queueRepair, authentication: true,
         additional: <String, dynamic> {'device_id': deviceId, 'title': title, 'problem_description': problemDescription,}),
     ),
   );
@@ -318,7 +320,7 @@ Future<Report> queueRepair(int deviceId, String title, String problemDescription
   }
 }
 
-Map<String, dynamic> _generateParameterMap({final String action = "", final bool authentication = false, final Map<String, dynamic> additional = const {}}) {
+Future<Map<String, dynamic>> _generateParameterMap({final String action = "", final bool authentication = false, final Map<String, dynamic> additional = const {}}) async {
   final Map<String, dynamic> parameterMap = Map();
 
   if(action.isNotEmpty) {
@@ -326,11 +328,15 @@ Map<String, dynamic> _generateParameterMap({final String action = "", final bool
   }
 
   if(authentication) {
-    List<int> bytes = utf8.encode("password");
+    String password = await Prefs.getPassword();
+    List<int> bytes = utf8.encode(password);
     String hash = sha256.convert(bytes).toString();
 
-    parameterMap[_countryIdentifier] = "Test";//TODO: get everything from preferences
-    parameterMap[_hospitalIdentifier] = 1;
+    String country = await Prefs.getCountry();
+    int hospital = await Prefs.getHospital();
+
+    parameterMap[_countryIdentifier] = country;
+    parameterMap[_hospitalIdentifier] = hospital;
     parameterMap[_passwordIdentifier] = hash;
   }
 

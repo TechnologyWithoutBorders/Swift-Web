@@ -39,6 +39,24 @@ Future<bool> save(String country, int hospital, String role, String password) as
 
 Future<void> clear() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-
+  
   prefs.clear();
+}
+
+Future<String> getPassword() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  return prefs.getString(Constants.key_pw);
+}
+
+Future<String> getCountry() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  return prefs.getString(Constants.key_country);
+}
+
+Future<int> getHospital() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  return prefs.getInt(Constants.key_hospital);
 }
