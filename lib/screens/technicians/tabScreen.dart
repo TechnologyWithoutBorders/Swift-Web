@@ -41,6 +41,7 @@ class TabScreen extends StatelessWidget {
             )
           ],
           bottom: TabBar(
+            indicatorColor: Colors.white,
             tabs: [
               Tab(text: "Dashboard", icon: Icon(Icons.chair)),
               Tab(text: "Print Barcodes", icon: Icon(Icons.print)),
