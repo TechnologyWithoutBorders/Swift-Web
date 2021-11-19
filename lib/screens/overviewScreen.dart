@@ -132,15 +132,7 @@ class _SearchFormState extends State with SessionMixin {
             onFieldSubmitted: (value) => _processDeviceId(),
           ),
           SizedBox(height: 10),
-          TextButton(
-            style: ButtonStyle(
-              foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                return states.contains(MaterialState.disabled) ? null : Colors.white;
-              }),
-              backgroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                return states.contains(MaterialState.disabled) ? null : Colors.blue;
-              }),
-            ),
+          ElevatedButton(
             onPressed: () => _processDeviceId(),
             child: Text('Search'),
           ),
@@ -232,15 +224,7 @@ class _FilterFormState extends State<FilterForm> {
           ),
           TextFormField(decoration: InputDecoration(hintText: 'Location (not working yet)')),//TODO: nur für Sortierung, da oft nicht hinterlegt
           SizedBox(height: 10),
-          TextButton(
-            style: ButtonStyle(
-              foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                return states.contains(MaterialState.disabled) ? null : Colors.white;
-              }),
-              backgroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                return states.contains(MaterialState.disabled) ? null : Colors.blue;
-              }),
-            ),
+          ElevatedButton(
             onPressed: () => _processInput(),
             child: Text('Filter'),
           ),

@@ -259,15 +259,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
                 onFieldSubmitted: (value) => _createReport(),
               ),
             ),
-            TextButton(
-              style: ButtonStyle(
-                foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                  return states.contains(MaterialState.disabled) ? null : Colors.white;
-                }),
-                backgroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                  return states.contains(MaterialState.disabled) ? null : Colors.blue;
-                }),
-              ),
+            ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState.validate()) {
                   _createReport();

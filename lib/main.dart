@@ -31,7 +31,10 @@ class SwiftApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Color(0xFF01265D),
         buttonTheme: ButtonThemeData(
-           colorScheme: Theme.of(context).colorScheme.copyWith(primary: Colors.red, secondary: Colors.white, background: Colors.yellow),//TODO das klappt nicht
+           colorScheme: Theme.of(context).colorScheme.copyWith(
+             primary: Colors.red,
+             secondary: Colors.white,
+             background: Colors.yellow),//TODO das klappt nicht
         ),
       ),
     );
@@ -223,15 +226,7 @@ class _LoginFormState extends State<LoginForm> {
             child: input
           ),
           SizedBox(height: 10),
-            TextButton(//TODO: auch erst im letzten Step anzeigen
-              style: ButtonStyle(
-                foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                  return states.contains(MaterialState.disabled) ? null : Colors.white;
-                }),
-                backgroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                  return states.contains(MaterialState.disabled) ? null : Color(0xff667d9d);
-                }),
-              ),
+            ElevatedButton(//TODO: auch erst im letzten Step anzeigen
               onPressed: () => _login(),
               child: Text('Login'),
             ),

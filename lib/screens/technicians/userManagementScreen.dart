@@ -115,7 +115,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
                                 ),
                               ),
                               SizedBox(height: 10,),
-                              TextButton(
+                              ElevatedButton(
                                 style: ButtonStyle(
                                   foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
                                     return states.contains(MaterialState.disabled) ? null : Colors.white;

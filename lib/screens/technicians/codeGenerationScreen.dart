@@ -97,7 +97,7 @@ class _DetailScreenState extends State<CodeGenerationScreen> {
                   onFieldSubmitted: (value) => _generateBarcodes(),
                 ),
                 SizedBox(height: 5),
-                TextButton(
+                ElevatedButton(
                   style: ButtonStyle(
                     foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
                       return states.contains(MaterialState.disabled) ? null : Colors.white;
