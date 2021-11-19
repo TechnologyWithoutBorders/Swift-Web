@@ -31,6 +31,11 @@ class SwiftApp extends StatelessWidget {
       theme: ThemeData(
         appBarTheme: AppBarTheme(
           backgroundColor: Color(Constants.teog_blue),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            primary: Color(Constants.teog_blue_light)
+          )
         )
       ),
     );
