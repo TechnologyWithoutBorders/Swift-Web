@@ -29,13 +29,9 @@ class SwiftApp extends StatelessWidget {
         TabScreen.route: (context) => TabScreen(),
       },
       theme: ThemeData(
-        primaryColor: Color(0xFF01265D),
-        buttonTheme: ButtonThemeData(
-           colorScheme: Theme.of(context).colorScheme.copyWith(
-             primary: Colors.red,
-             secondary: Colors.white,
-             background: Colors.yellow),//TODO das klappt nicht
-        ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Color(Constants.teog_blue),
+        )
       ),
     );
   }

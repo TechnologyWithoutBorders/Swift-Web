@@ -60,7 +60,6 @@ class _DetailScreenState extends State<DetailScreen> {
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         title: Text(widget.deviceInfo.device.type),
-        backgroundColor: Color(Constants.teog_blue),
       ),
       body: Center(child: FractionallySizedBox(widthFactor: 0.8, heightFactor: 0.8,
         child: Card(

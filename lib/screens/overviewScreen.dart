@@ -9,7 +9,6 @@ import 'package:teog_swift/utilities/doubleCardLayout.dart';
 
 import 'package:teog_swift/utilities/sessionMixin.dart';
 
-import 'package:teog_swift/utilities/constants.dart';
 import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
 
 class OverviewScreen extends StatelessWidget {
@@ -26,7 +25,6 @@ class OverviewScreen extends StatelessWidget {
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         title: Text('Swift'),
-        backgroundColor: Color(Constants.teog_blue),
         actions: [
           Padding(padding: EdgeInsets.only(right: 20.0),
             child: TextButton(
