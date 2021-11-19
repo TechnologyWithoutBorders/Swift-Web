@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:package_info_plus/package_info_plus.dart';
 
+import 'package:teog_swift/utilities/constants.dart';
+
 class AboutScreen extends StatefulWidget {
   static const String route = '/about';
 
@@ -41,6 +43,7 @@ class _AboutScreenState extends State<AboutScreen> {
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         title: Text("About " + _packageInfo.appName),
+        backgroundColor: Color(Constants.teog_blue),
       ),
       body: Center(child: Text(_packageInfo.appName + " v" + _packageInfo.version + "-" + _packageInfo.buildNumber))
     );

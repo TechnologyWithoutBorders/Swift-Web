@@ -13,4 +13,6 @@ class Constants {
   static const String generic_error_message = "something went wrong";
 
   static const String app_name = "Swift";
+
+  static const int teog_blue = 0xff01265d;
 }

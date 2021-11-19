@@ -5,6 +5,7 @@ import 'package:teog_swift/screens/technicians/codeGenerationScreen.dart';
 import 'package:teog_swift/screens/technicians/dashBoardScreen.dart';
 import 'package:teog_swift/screens/technicians/userManagementScreen.dart';
 
+import 'package:teog_swift/utilities/constants.dart';
 import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
 
 class TabScreen extends StatelessWidget {
@@ -25,6 +26,7 @@ class TabScreen extends StatelessWidget {
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
           title: Text('Swift'),
+          backgroundColor: Color(Constants.teog_blue),
           actions: [
             Padding(padding: EdgeInsets.only(right: 20.0),
               child: TextButton(

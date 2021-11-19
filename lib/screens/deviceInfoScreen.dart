@@ -1,14 +1,15 @@
 import 'dart:convert';
+// ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
-import 'package:teog_swift/main.dart';
 
 import 'package:flutter/material.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
-import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
 import 'package:teog_swift/utilities/deviceInfo.dart';
 import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
+
+import 'package:teog_swift/utilities/constants.dart';
 
 class DetailScreen extends StatefulWidget {
   //this one is never modified
@@ -59,6 +60,7 @@ class _DetailScreenState extends State<DetailScreen> {
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         title: Text(widget.deviceInfo.device.type),
+        backgroundColor: Color(Constants.teog_blue),
       ),
       body: Center(child: FractionallySizedBox(widthFactor: 0.8, heightFactor: 0.8,
         child: Card(
