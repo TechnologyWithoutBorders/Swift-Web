@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/user.dart';
 
-class UserManagementScreen extends StatefulWidget {
-  UserManagementScreen({Key key}) : super(key: key);
+class InventoryScreen extends StatefulWidget {
+  InventoryScreen({Key key}) : super(key: key);
 
   @override
-  _DetailScreenState createState() => _DetailScreenState();
+  _InventoryScreenState createState() => _InventoryScreenState();
 }
 
-class _DetailScreenState extends State<UserManagementScreen> {
+class _InventoryScreenState extends State<InventoryScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final _nameTextController = TextEditingController();

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:teog_swift/main.dart';
-import 'package:teog_swift/screens/technicians/codeGenerationScreen.dart';
 import 'package:teog_swift/screens/technicians/dashBoardScreen.dart';
+import 'package:teog_swift/screens/technicians/inventoryScreen.dart';
 import 'package:teog_swift/screens/technicians/userManagementScreen.dart';
 
 import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
@@ -42,7 +42,7 @@ class TabScreen extends StatelessWidget {
             indicatorColor: Colors.white,
             tabs: [
               Tab(text: "Dashboard", icon: Icon(Icons.chair)),
-              Tab(text: "Print Barcodes", icon: Icon(Icons.print)),
+              Tab(text: "Inventory", icon: Icon(Icons.inventory)),
               Tab(text: "User Management", icon: Icon(Icons.person)),
             ],
           ),
@@ -50,7 +50,7 @@ class TabScreen extends StatelessWidget {
         body: TabBarView(
           children: [
             DashboardScreen(),
-            CodeGenerationScreen(),
+            InventoryScreen(),
             UserManagementScreen(),
           ],
         ),
