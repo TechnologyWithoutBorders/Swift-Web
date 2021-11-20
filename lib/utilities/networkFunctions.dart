@@ -322,14 +322,14 @@ Future<Report> queueRepair(int deviceId, String title, String problemDescription
   }
 }
 
-Future<void> uploadDocument(String name, Uint8List bytes) async {
+Future<void> uploadDocument(String manufacturer, String model, String name, Uint8List bytes) async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
   
   final response = await http.post(
     uri,
     headers: _headers,
     body: jsonEncode(await _generateParameterMap(action: DataAction.uploadDocument, authentication: true,
-        additional: <String, dynamic> {'file_name': name, 'file_content': base64.encode(bytes)}),
+        additional: <String, dynamic> {'manufacturer': manufacturer, 'model': model, 'file_name': name, 'file_content': base64.encode(bytes)}),
     ),
   );
 

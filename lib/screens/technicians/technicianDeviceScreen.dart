@@ -47,7 +47,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
       for(PlatformFile file in files) {
         //TODO: check pdf extension
 
-        await Comm.uploadDocument(file.name, file.bytes);
+        await Comm.uploadDocument(deviceInfo.device.manufacturer, deviceInfo.device.model, file.name, file.bytes);
       }
     }
   }
