@@ -15,6 +15,7 @@ class InventoryScreen extends StatefulWidget {
 class _InventoryScreenState extends State<InventoryScreen> {
   final _scrollController = ScrollController();
   double _progress = 0;
+  String _listTitle = "";
 
   List<DeviceInfo> _devices = [];
 
@@ -24,6 +25,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
     Comm.getDevices().then((devices) {//TODO: catch Exception
       setState(() {
+        _listTitle = "Number of devices: ";
         _devices = devices;
       });
     });
@@ -42,22 +44,27 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   void _checkManuals() async {
     setState(() {
-      
+      _devices.clear();
+      _listTitle = "Number of devices without manuals: ";
     });
+
+    List<DeviceInfo> devices = await Comm.getDevices();
 
     int counter = 0;
 
-    for(DeviceInfo deviceInfo in _devices) {
+    for(DeviceInfo deviceInfo in devices) {
       try {
         List<String> documents = await Comm.retrieveDocuments(deviceInfo.device.manufacturer, deviceInfo.device.model);
       } catch(e) {//TODO specific exception
-
+        setState(() {
+          _devices.add(deviceInfo);
+        });
       }
 
       counter++;
 
       setState(() {
-        _progress = counter/_devices.length;
+        _progress = counter/devices.length;
       });
     }
   }
@@ -82,7 +89,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     value: _progress
                   ),
                   SizedBox(height: 10),
-                  Text("Number of devices: " + _devices.length.toString()),
+                  Text(_listTitle + _devices.length.toString()),
                   Flexible(child: Padding(padding: EdgeInsets.all(10.0),
                     child: Scrollbar(isAlwaysShown: true,
                       controller: _scrollController,
