@@ -11,6 +11,8 @@ import 'package:teog_swift/utilities/deviceState.dart';
 
 import 'package:teog_swift/utilities/constants.dart';
 
+import 'package:file_picker/file_picker.dart';
+
 class TechnicianDeviceScreen extends StatefulWidget {
   //this one is never modified
   final DeviceInfo deviceInfo;
@@ -26,10 +28,21 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
 
   _TechnicianDeviceScreenState({this.deviceInfo});
 
-  _updateDeviceInfo(DeviceInfo modifiedDeviceInfo) {
+  void _updateDeviceInfo(DeviceInfo modifiedDeviceInfo) {
     setState(() {
       this.deviceInfo = modifiedDeviceInfo;
     });
+  }
+
+  void _uploadFiles() async {
+    FilePickerResult result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
+
+    if(result != null) {
+      //TODO check pdf extension
+    }
   }
 
   @override
@@ -86,6 +99,10 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                 )),
                 SizedBox(height: 20),
                 Text("Available Documents:", style: TextStyle(fontSize: 20)),
+                ElevatedButton(
+                  child: Text("add"),
+                  onPressed: () => _uploadFiles(),
+                ),
                 DocumentScreen(deviceInfo: deviceInfo),
               ]
             )
