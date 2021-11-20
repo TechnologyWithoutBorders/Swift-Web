@@ -35,23 +35,6 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
     });
   }
 
-  void _uploadDocuments() async {
-    FilePickerResult result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-    );
-
-    if(result != null) {
-      List<PlatformFile> files = result.files;
-
-      for(PlatformFile file in files) {
-        //TODO: check pdf extension
-
-        await Comm.uploadDocument(deviceInfo.device.manufacturer, deviceInfo.device.model, file.name, file.bytes);
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     Widget reportWidget;
@@ -106,10 +89,6 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                 )),
                 SizedBox(height: 20),
                 Text("Available Documents:", style: TextStyle(fontSize: 20)),
-                ElevatedButton(
-                  child: Text("add"),
-                  onPressed: () => _uploadDocuments(),
-                ),
                 DocumentScreen(deviceInfo: deviceInfo),
               ]
             )
@@ -131,6 +110,27 @@ class DocumentScreen extends StatefulWidget {
 
 class _DocumentScreenState extends State<DocumentScreen> {
   List<String> _documents = [];
+
+  void _uploadDocuments() async {
+    FilePickerResult result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
+
+    if(result != null) {
+      List<PlatformFile> files = result.files;
+
+      for(PlatformFile file in files) {
+        //TODO: check pdf extension
+
+        List<String> documents = await Comm.uploadDocument(widget.deviceInfo.device.manufacturer, widget.deviceInfo.device.model, file.name, file.bytes);
+
+        setState(() {
+          _documents = documents;
+        });
+      }
+    }
+  }
 
   void _retrieveDocuments() {
     Comm.retrieveDocuments(widget.deviceInfo.device.manufacturer, widget.deviceInfo.device.model).then((documents) {//TODO catch Exception
@@ -154,7 +154,13 @@ class _DocumentScreenState extends State<DocumentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(height: 100, width: 300,
+    return Column(
+      children: [
+      ElevatedButton(
+        child: Text("add"),
+        onPressed: () => _uploadDocuments(),
+      ),
+      SizedBox(height: 100, width: 300,
       child: _documents.length > 0
         ? Scrollbar(
             child: ListView.separated(
@@ -169,7 +175,8 @@ class _DocumentScreenState extends State<DocumentScreen> {
             separatorBuilder: (BuildContext context, int index) => const Divider(),
           )
         )
-      : Center(child: const Text('No documents found')),
+        : Center(child: const Text('No documents found'))),
+      ]
     );
   }
 }

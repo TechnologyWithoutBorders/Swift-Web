@@ -322,7 +322,7 @@ Future<Report> queueRepair(int deviceId, String title, String problemDescription
   }
 }
 
-Future<void> uploadDocument(String manufacturer, String model, String name, Uint8List bytes) async {
+Future<List<String>> uploadDocument(String manufacturer, String model, String name, Uint8List bytes) async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
   
   final response = await http.post(
@@ -337,7 +337,13 @@ Future<void> uploadDocument(String manufacturer, String model, String name, Uint
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
 
     if(swiftResponse.responseCode == 0) {
-      return Report.fromJson(swiftResponse.data);
+      List<String> documents = [];
+
+      for(var jsonDocument in swiftResponse.data) {
+        documents.add(jsonDocument);
+      }
+
+      return documents;
     } else {
       throw Exception(swiftResponse.data);
     }
