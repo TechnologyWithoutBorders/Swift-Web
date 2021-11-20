@@ -111,6 +111,8 @@ class DocumentScreen extends StatefulWidget {
 class _DocumentScreenState extends State<DocumentScreen> {
   List<String> _documents = [];
 
+  bool _uploading = false;
+
   void _uploadDocuments() async {
     FilePickerResult result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -118,6 +120,10 @@ class _DocumentScreenState extends State<DocumentScreen> {
     );
 
     if(result != null) {
+      setState(() {
+        _uploading = true;
+      });
+
       List<PlatformFile> files = result.files;
 
       for(PlatformFile file in files) {
@@ -130,6 +136,10 @@ class _DocumentScreenState extends State<DocumentScreen> {
         });
       }
     }
+
+    setState(() {
+      _uploading = false;
+    });
   }
 
   void _retrieveDocuments() {
@@ -154,12 +164,20 @@ class _DocumentScreenState extends State<DocumentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-      ElevatedButton(
+    Widget uploadWidget;
+
+    if(_uploading) {
+      uploadWidget = CircularProgressIndicator(value: null);
+    } else {
+      uploadWidget = ElevatedButton(
         child: Text("add"),
         onPressed: () => _uploadDocuments(),
-      ),
+      );
+    }
+
+    return Column(
+      children: [
+      uploadWidget,
       SizedBox(height: 100, width: 300,
       child: _documents.length > 0
         ? Scrollbar(
