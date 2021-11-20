@@ -8,4 +8,5 @@ class DataAction {
   static const String queueRepair = "queue_repair";
   static const String getHospitals = "get_hospitals";
   static const String getCountries = "get_countries";
+  static const String uploadDocument = "upload_document";
 }

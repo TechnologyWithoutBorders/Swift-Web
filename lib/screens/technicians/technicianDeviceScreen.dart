@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
@@ -34,14 +35,20 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
     });
   }
 
-  void _uploadFiles() async {
+  void _uploadDocuments() async {
     FilePickerResult result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
     );
 
     if(result != null) {
-      //TODO check pdf extension
+      List<PlatformFile> files = result.files;
+
+      for(PlatformFile file in files) {
+        //TODO: check pdf extension
+
+        await Comm.uploadDocument(file.name, file.bytes);
+      }
     }
   }
 
@@ -101,7 +108,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                 Text("Available Documents:", style: TextStyle(fontSize: 20)),
                 ElevatedButton(
                   child: Text("add"),
-                  onPressed: () => _uploadFiles(),
+                  onPressed: () => _uploadDocuments(),
                 ),
                 DocumentScreen(deviceInfo: deviceInfo),
               ]

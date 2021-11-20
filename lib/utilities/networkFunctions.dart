@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
@@ -305,6 +306,30 @@ Future<Report> queueRepair(int deviceId, String title, String problemDescription
     headers: _headers,
     body: jsonEncode(await _generateParameterMap(action: DataAction.queueRepair, authentication: true,
         additional: <String, dynamic> {'device_id': deviceId, 'title': title, 'problem_description': problemDescription,}),
+    ),
+  );
+
+  if(response.statusCode == 200) {
+    SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
+
+    if(swiftResponse.responseCode == 0) {
+      return Report.fromJson(swiftResponse.data);
+    } else {
+      throw Exception(swiftResponse.data);
+    }
+  } else {
+    throw Exception(Constants.generic_error_message);
+  }
+}
+
+Future<void> uploadDocument(String name, Uint8List bytes) async {
+  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  
+  final response = await http.post(
+    uri,
+    headers: _headers,
+    body: jsonEncode(await _generateParameterMap(action: DataAction.uploadDocument, authentication: true,
+        additional: <String, dynamic> {'file_name': name, 'file_content': base64.encode(bytes)}),
     ),
   );
 
