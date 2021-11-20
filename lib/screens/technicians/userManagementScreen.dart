@@ -116,14 +116,6 @@ class _DetailScreenState extends State<UserManagementScreen> {
                               ),
                               SizedBox(height: 10,),
                               ElevatedButton(
-                                style: ButtonStyle(
-                                  foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                                    return states.contains(MaterialState.disabled) ? null : Colors.white;
-                                  }),
-                                  backgroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                                    return states.contains(MaterialState.disabled) ? null : Color(0xff667d9d);
-                                  }),
-                                ),
                                 onPressed: () => _createUser(),
                                 child: Text('Register user'),
                               )
