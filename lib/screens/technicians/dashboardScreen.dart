@@ -4,7 +4,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/deviceInfo.dart';
-import 'package:teog_swift/screens/deviceInfoScreen.dart';
+import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -46,7 +46,7 @@ class _DetailScreenState extends State<DashboardScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => DetailScreen(deviceInfo: deviceInfo),
+          builder: (context) => TechnicianDeviceScreen(deviceInfo: deviceInfo),
         )
       );
     });

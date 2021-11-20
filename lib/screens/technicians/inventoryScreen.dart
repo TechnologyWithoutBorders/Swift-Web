@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/deviceInfo.dart';
@@ -36,7 +37,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => DetailScreen(deviceInfo: deviceInfo),
+          builder: (context) => TechnicianDeviceScreen(deviceInfo: deviceInfo),
         )
       );
     });
