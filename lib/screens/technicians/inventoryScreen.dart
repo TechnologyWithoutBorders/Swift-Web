@@ -14,6 +14,7 @@ class InventoryScreen extends StatefulWidget {
 
 class _InventoryScreenState extends State<InventoryScreen> {
   final _scrollController = ScrollController();
+  double _progress = 0;
 
   List<DeviceInfo> _devices = [];
 
@@ -39,6 +40,28 @@ class _InventoryScreenState extends State<InventoryScreen> {
     });
   }
 
+  void _checkManuals() async {
+    setState(() {
+      
+    });
+
+    int counter = 0;
+
+    for(DeviceInfo deviceInfo in _devices) {
+      try {
+        List<String> documents = await Comm.retrieveDocuments(deviceInfo.device.manufacturer, deviceInfo.device.model);
+      } catch(e) {//TODO specific exception
+
+      }
+
+      counter++;
+
+      setState(() {
+        _progress = counter/_devices.length;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +75,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 children: [
                   ElevatedButton(
                     child: Text("Check manuals"),
-                    onPressed: () => {}
+                    onPressed: () => _checkManuals()
+                  ),
+                  SizedBox(height: 10),
+                  LinearProgressIndicator(
+                    value: _progress
                   ),
                   SizedBox(height: 10),
                   Text("Number of devices: " + _devices.length.toString()),
