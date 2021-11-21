@@ -7,10 +7,13 @@ import 'package:teog_swift/utilities/constants.dart';
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
+import 'package:teog_swift/utilities/country.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
 import 'package:teog_swift/utilities/hospital.dart';
+
+import 'package:flag/flag.dart';
 
 void main() => runApp(SwiftApp());
 
@@ -77,7 +80,7 @@ class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
 
   final _countryScrollController = ScrollController();//TODO: use cookie + get from server
-  List<String> _countries = [];
+  List<Country> _countries = [];
   String _selectedCountry;
 
   final _hospitalScrollController = ScrollController();
@@ -149,11 +152,12 @@ class _LoginFormState extends State<LoginForm> {
                     itemCount: _countries.length,
                     itemBuilder: (BuildContext context, int index) {
                       return ListTile(
-                        title: Text(_countries[index]),
+                        leading: Flag.fromString(_countries[index].code, height: 35, width: 35),
+                        title: Text(_countries[index].name),
                         onTap: () => {
-                          Comm.getHospitals(_countries[index]).then((hospitals) {
+                          Comm.getHospitals(_countries[index].name).then((hospitals) {
                             setState(() {
-                              _selectedCountry = _countries[index];
+                              _selectedCountry = _countries[index].name;
                               _hospitals = hospitals;
                             });
                           })

@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
+import 'package:teog_swift/utilities/country.dart';
 import 'package:teog_swift/utilities/dataAction.dart';
 import 'package:teog_swift/utilities/previewDeviceInfo.dart';
 
@@ -242,7 +243,7 @@ Future<List<Hospital>> getHospitals(String country) async {
   }
 }
 
-Future<List<String>> getCountries() async {
+Future<List<Country>> getCountries() async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
   final response = await http.post(
@@ -255,10 +256,10 @@ Future<List<String>> getCountries() async {
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
     
     if(swiftResponse.responseCode == 0) {
-      List<String> countries = [];
+      List<Country> countries = [];
 
-      for(String country in swiftResponse.data) {
-        countries.add(country);
+      for(String countryInfo in swiftResponse.data) {
+        countries.add(Country.fromString(countryInfo));
       }
 
       return countries;
