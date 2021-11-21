@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:html' as html;
 
 import 'package:flutter/material.dart';
+import 'package:teog_swift/utilities/hospitalDevice.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/deviceInfo.dart';
@@ -32,6 +33,73 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
     setState(() {
       this.deviceInfo = modifiedDeviceInfo;
     });
+  }
+
+  void _editDevice() {
+    TextEditingController typeController = TextEditingController(text: this.deviceInfo.device.type);
+    TextEditingController manufacturerController = TextEditingController(text: this.deviceInfo.device.manufacturer);
+    TextEditingController modelController = TextEditingController(text: this.deviceInfo.device.model);
+    TextEditingController locationController = TextEditingController(text: this.deviceInfo.device.location);
+
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          contentPadding: const EdgeInsets.all(16.0),
+          content: new Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              new TextField(
+                controller: typeController,
+                decoration: new InputDecoration(
+                  labelText: 'Type'),
+              ),
+              new TextField(
+                controller: manufacturerController,
+                decoration: new InputDecoration(
+                  labelText: 'Manufacturer'),
+              ),
+              new TextField(
+                controller: modelController,
+                decoration: new InputDecoration(
+                  labelText: 'Model'),
+              ),
+              new TextField(
+                controller: locationController,
+                decoration: new InputDecoration(
+                  labelText: 'Location'),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            new ElevatedButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  typeController.dispose();
+                  manufacturerController.dispose();
+                  modelController.dispose();
+                  locationController.dispose();
+
+                  Navigator.pop(context);
+                }),
+            new ElevatedButton(
+                child: const Text('Save'),
+                onPressed: () {
+                  Comm.editDevice(
+                    HospitalDevice(id: this.deviceInfo.device.id, type: typeController.text, manufacturer: manufacturerController.text, model: modelController.text, location: locationController.text)).then((modifiedDeviceInfo) {
+                    
+                    _updateDeviceInfo(modifiedDeviceInfo);
+                    typeController.dispose();
+                    manufacturerController.dispose();
+                    modelController.dispose();
+                    locationController.dispose();
+                  });
+                  Navigator.pop(context);
+                })
+          ],
+        );
+      }
+    );
   }
 
   @override
@@ -71,6 +139,10 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
               children: [
                 Text(deviceInfo.device.manufacturer + " " + deviceInfo.device.model, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                 Text(deviceInfo.device.location, style: TextStyle(fontSize: 25)),
+                TextButton(
+                  child: Text('edit'),
+                  onPressed: () => _editDevice(),
+                ),
                 SizedBox(height: 20),
                 Flexible(child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

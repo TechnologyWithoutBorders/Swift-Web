@@ -16,4 +16,12 @@ class HospitalDevice {
       location: json['location']
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'type': type,
+    'manufacturer': manufacturer,
+    'model': model,
+    'location': location
+  };
 }

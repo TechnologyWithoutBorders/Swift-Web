@@ -91,6 +91,34 @@ Future<DeviceInfo> fetchDevice(final int deviceId) async {
   }
 }
 
+Future<DeviceInfo> editDevice(HospitalDevice device) async {
+  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+
+  final response = await http.post(
+    uri,
+    headers: _headers,
+    body: jsonEncode(await _generateParameterMap(action: DataAction.editDevice, authentication: true,
+        additional: <String, dynamic> {'device': device.toJson()}),
+    ),
+  );
+
+  if(response.statusCode == 200) {
+    SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
+
+    if(swiftResponse.responseCode == 0) {
+      return DeviceInfo(
+        device: HospitalDevice.fromJson(swiftResponse.data["device"]),
+        report: Report.fromJson(swiftResponse.data["report"]),
+        imageData: swiftResponse.data["image"],
+      );
+    } else {
+      throw Exception(swiftResponse.data);
+    }
+  } else {
+    throw Exception(Constants.generic_error_message);
+  }
+}
+
 Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, String location) async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
