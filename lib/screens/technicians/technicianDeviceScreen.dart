@@ -129,7 +129,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: Text(widget.deviceInfo.device.type),
+        title: Text(deviceInfo.device.type),
       ),
       body: Center(child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
         child: Card(
