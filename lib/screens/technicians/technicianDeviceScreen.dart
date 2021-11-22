@@ -216,7 +216,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
   }
 
   void _downloadDocument(String docName) {
-    String url = Comm.getBaseUrl() + "/device_documents/" + widget.deviceInfo.device.manufacturer + "/" + widget.deviceInfo.device.model + "/" + docName;
+    String url = Comm.getBaseUrl() + "device_documents/" + widget.deviceInfo.device.manufacturer + "/" + widget.deviceInfo.device.model + "/" + docName;
     html.AnchorElement anchorElement =  new html.AnchorElement(href: url);
     anchorElement.download = url;
     anchorElement.click();

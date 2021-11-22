@@ -27,7 +27,7 @@ const String _hospitalIdentifier = "hospital";
 const String _roleIdentifier = "role";
 
 String getBaseUrl() {
-  return Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString()).toString();
+  return Uri.https(_host, 'interface/').toString();
 }
 
 Future<String> checkCredentials(final String country, final int hospital, String password, {final hashPassword: true}) async {
@@ -300,7 +300,7 @@ Future<List<Country>> getCountries() async {
 }
 
 Future<List<String>> retrieveDocuments(String manufacturer, String model) async {
-  final Uri uri = Uri.https(_host, 'interface/documents.php');
+  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/documents.php');
 
   final response = await http.post(
     uri,
