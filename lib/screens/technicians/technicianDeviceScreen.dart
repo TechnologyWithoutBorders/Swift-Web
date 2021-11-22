@@ -133,7 +133,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(deviceInfo.device.manufacturer + " " + deviceInfo.device.model, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                SelectableText(deviceInfo.device.manufacturer + " " + deviceInfo.device.model, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                 Text(deviceInfo.device.location, style: TextStyle(fontSize: 25)),
                 TextButton(
                   child: Text('edit'),
