@@ -10,8 +10,6 @@ import 'package:teog_swift/utilities/deviceInfo.dart';
 import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
 
-import 'package:teog_swift/utilities/constants.dart';
-
 import 'package:file_picker/file_picker.dart';
 
 class TechnicianDeviceScreen extends StatefulWidget {
