@@ -56,6 +56,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
     for(DeviceInfo deviceInfo in devices) {
       try {
         List<String> documents = await Comm.retrieveDocuments(deviceInfo.device.manufacturer, deviceInfo.device.model);
+
+        if(documents.length == 0) {
+          _devices.add(deviceInfo);
+        }
       } catch(e) {//TODO specific exception
         setState(() {
           _devices.add(deviceInfo);
