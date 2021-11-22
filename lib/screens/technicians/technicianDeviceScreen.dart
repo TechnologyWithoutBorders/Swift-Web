@@ -36,6 +36,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
   }
 
   void _editDevice() {
+    //TODO: should those be disposed?
     TextEditingController typeController = TextEditingController(text: this.deviceInfo.device.type);
     TextEditingController manufacturerController = TextEditingController(text: this.deviceInfo.device.manufacturer);
     TextEditingController modelController = TextEditingController(text: this.deviceInfo.device.model);
@@ -75,25 +76,22 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
             new ElevatedButton(
                 child: const Text('Cancel'),
                 onPressed: () {
-                  typeController.dispose();
-                  manufacturerController.dispose();
-                  modelController.dispose();
-                  locationController.dispose();
-
                   Navigator.pop(context);
                 }),
             new ElevatedButton(
                 child: const Text('Save'),
                 onPressed: () {
+                  String type = typeController.text;
+                  String manufacturer = manufacturerController.text;
+                  String model = modelController.text;
+                  String location = locationController.text;
+
                   Comm.editDevice(
-                    HospitalDevice(id: this.deviceInfo.device.id, type: typeController.text, manufacturer: manufacturerController.text, model: modelController.text, location: locationController.text)).then((modifiedDeviceInfo) {
+                    HospitalDevice(id: this.deviceInfo.device.id, type: type, manufacturer: manufacturer, model: model, location: location)).then((modifiedDeviceInfo) {
                     
                     _updateDeviceInfo(modifiedDeviceInfo);
-                    typeController.dispose();
-                    manufacturerController.dispose();
-                    modelController.dispose();
-                    locationController.dispose();
                   });
+
                   Navigator.pop(context);
                 })
           ],
