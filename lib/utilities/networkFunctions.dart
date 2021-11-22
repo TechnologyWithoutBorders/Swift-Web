@@ -300,7 +300,7 @@ Future<List<Country>> getCountries() async {
 }
 
 Future<List<String>> retrieveDocuments(String manufacturer, String model) async {
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/documents.php');
+  final Uri uri = Uri.https(_host, 'interface/documents.php');
 
   final response = await http.post(
     uri,
