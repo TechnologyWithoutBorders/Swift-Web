@@ -11,6 +11,7 @@ import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class TechnicianDeviceScreen extends StatefulWidget {
   //this one is never modified
@@ -100,28 +101,6 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Widget reportWidget;
-
-    String reasonText;
-
-    switch(deviceInfo.report.currentState) {
-      case DeviceState.broken:
-        reasonText = "The defect has already been reported.";
-        break;
-      case DeviceState.inProgress:
-        reasonText = "A technician is already working on this device.";
-        break;
-      case DeviceState.salvage:
-        reasonText = "This device cannot be repaired.";
-        break;
-    }
-
-    if(reasonText != null) {
-      reportWidget = Text(reasonText, style: TextStyle(fontSize: 20));
-    } else {
-      reportWidget = ReportProblemForm(deviceInfo: deviceInfo, updateDeviceInfo: _updateDeviceInfo,);
-    }
-
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
@@ -150,7 +129,12 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                       SizedBox(height: 5),
                       StateScreen(deviceInfo: deviceInfo),
                       SizedBox(height: 20),
-                      reportWidget,
+                      QrImage(
+                        data: deviceInfo.device.id.toString(),
+                        version: QrVersions.auto,
+                        size: 150.0,
+                      ),
+                      Text("You can scan this code with the mobile app.")
                     ])
                   ]
                 )),
