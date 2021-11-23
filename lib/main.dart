@@ -50,6 +50,9 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
+      appBar: AppBar(
+        title: Text(Constants.app_name)
+      ),
       body: Center(
         child: SizedBox(
           width: 400,
