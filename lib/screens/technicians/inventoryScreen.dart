@@ -3,7 +3,6 @@ import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/deviceInfo.dart';
-import 'package:teog_swift/screens/deviceInfoScreen.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
 
 class InventoryScreen extends StatefulWidget {
@@ -19,6 +18,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
   String _listTitle = "";
 
   List<DeviceInfo> _devices = [];
+
+  bool _manualButtonDisabled = false;
 
   @override
   void initState() {
@@ -45,6 +46,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   void _checkManuals() async {
     setState(() {
+      _manualButtonDisabled = true;
       _devices.clear();
       _listTitle = "Number of devices without manuals: ";
     });
@@ -72,6 +74,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
         _progress = counter/devices.length;
       });
     }
+
+    setState(() {
+      _manualButtonDisabled = false;
+    });
   }
 
   @override
@@ -85,9 +91,14 @@ class _InventoryScreenState extends State<InventoryScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center, 
                 children: [
-                  ElevatedButton(
-                    child: Text("Check manuals"),
-                    onPressed: () => _checkManuals()
+                  ButtonBar(
+                    alignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        child: Text("Show devices without manuals"),
+                        onPressed: _manualButtonDisabled ? null : () => _checkManuals(),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 10),
                   LinearProgressIndicator(
