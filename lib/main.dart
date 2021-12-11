@@ -188,6 +188,7 @@ class _LoginFormState extends State<LoginForm> {
                     itemBuilder: (BuildContext context, int index) {
                       return ListTile(
                         title: Text(_hospitals[index].name),
+                        subtitle: Text(_hospitals[index].location),
                         onTap: () => {
                           setState(() {
                             _selectedHospital = _hospitals[index];
