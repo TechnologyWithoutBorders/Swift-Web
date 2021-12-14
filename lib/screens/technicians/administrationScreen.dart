@@ -54,6 +54,37 @@ class _DetailScreenState extends State<UserManagementScreen> {
     });
   }
 
+  void _deleteUser() {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          contentPadding: const EdgeInsets.all(16.0),
+          content: new Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text("Are you sure you want to delete this user? (Does nothing at the moment)"),
+            ],
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+            ElevatedButton(
+                child: const Text('Delete'),
+                onPressed: () {
+                  //TODO: implement
+
+                  Navigator.pop(context);
+                })
+          ],
+        );
+      }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,9 +127,10 @@ class _DetailScreenState extends State<UserManagementScreen> {
                               itemCount: _users.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return ListTile(
-                                  title: Text(_users[index].name),
-                                  subtitle: Text(_users[index].mail),
-                                  trailing: Text(_users[index].position),
+                                  title: SelectableText(_users[index].name),
+                                  subtitle: SelectableText(_users[index].position + "\n" + _users[index].mail + "\n" + _users[index].phone),
+                                  trailing: TextButton(child: Icon(Icons.delete), onPressed: () =>_deleteUser()),
+                                  //trailing: Text(_users[index].position),
                                 );
                               },
                               separatorBuilder: (BuildContext context, int index) => const Divider(),

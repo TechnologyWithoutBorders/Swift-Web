@@ -49,22 +49,22 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
           content: new Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              new TextField(
+              TextField(
                 controller: typeController,
                 decoration: new InputDecoration(
                   labelText: 'Type'),
               ),
-              new TextField(
+              TextField(
                 controller: manufacturerController,
                 decoration: new InputDecoration(
                   labelText: 'Manufacturer'),
               ),
-              new TextField(
+              TextField(
                 controller: modelController,
                 decoration: new InputDecoration(
                   labelText: 'Model'),
               ),
-              new TextField(
+              TextField(
                 controller: locationController,
                 decoration: new InputDecoration(
                   labelText: 'Location'),
@@ -72,12 +72,12 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
             ],
           ),
           actions: <Widget>[
-            new ElevatedButton(
+            ElevatedButton(
                 child: const Text('Cancel'),
                 onPressed: () {
                   Navigator.pop(context);
                 }),
-            new ElevatedButton(
+            ElevatedButton(
                 child: const Text('Save'),
                 onPressed: () {
                   String type = typeController.text;
