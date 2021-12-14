@@ -114,10 +114,22 @@ class _InventoryScreenState extends State<InventoryScreen> {
       }
     });
 
+    List<String> filterTexts = text.trim().split(" ");
+
     for(DeviceInfo deviceInfo in _preFilteredDevices) {
       HospitalDevice device = deviceInfo.device;
 
-      if(device.type.toLowerCase().contains(text) || device.manufacturer.toLowerCase().contains(text) || device.model.toLowerCase().contains(text)) {
+      bool skip = false;
+
+      for(String filterText in filterTexts) {
+        if(device.type.toLowerCase().contains(filterText) || device.manufacturer.toLowerCase().contains(filterText) || device.model.toLowerCase().contains(filterText)) {
+          continue;
+        } else {
+          skip = true;
+        }
+      }
+
+      if(!skip) {
         setState(() {
           _displayedDevices.add(deviceInfo);
         });
@@ -155,7 +167,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       border: OutlineInputBorder(),
                       hintText: 'filter...'
                     ),
-                    onChanged: (text) => _filter(text.toLowerCase()),
+                    onChanged: (text) => _filter(text.trim().toLowerCase()),
                     enabled: !_manualButtonDisabled
                   ),
                   SizedBox(height: 10),
