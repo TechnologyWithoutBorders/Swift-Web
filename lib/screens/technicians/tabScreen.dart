@@ -4,6 +4,7 @@ import 'package:teog_swift/main.dart';
 import 'package:teog_swift/screens/technicians/dashBoardScreen.dart';
 import 'package:teog_swift/screens/technicians/inventoryScreen.dart';
 import 'package:teog_swift/screens/technicians/administrationScreen.dart';
+import 'package:teog_swift/screens/technicians/maintenanceScreen.dart';
 
 import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
 
@@ -20,7 +21,7 @@ class TabScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
@@ -42,6 +43,7 @@ class TabScreen extends StatelessWidget {
             indicatorColor: Colors.white,
             tabs: [
               Tab(text: "Dashboard", icon: Icon(Icons.chair)),
+              Tab(text: "Maintenance", icon: Icon(Icons.calendar_today)),
               Tab(text: "Inventory", icon: Icon(Icons.inventory)),
               Tab(text: "Administration", icon: Icon(Icons.person)),
             ],
@@ -50,6 +52,7 @@ class TabScreen extends StatelessWidget {
         body: TabBarView(
           children: [
             DashboardScreen(),
+            MaintenanceScreen(),
             InventoryScreen(),
             UserManagementScreen(),
           ],
