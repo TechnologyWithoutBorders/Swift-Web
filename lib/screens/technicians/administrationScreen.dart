@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'dart:html' as html;
+
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/user.dart';
+import 'package:teog_swift/utilities/hospital.dart';
 
 class UserManagementScreen extends StatefulWidget {
   UserManagementScreen({Key key}) : super(key: key);
@@ -18,6 +21,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
 
   final _scrollController = ScrollController();
 
+  Hospital _hospital;
   List<User> _users = [];
 
   void _createUser() {
@@ -37,6 +41,12 @@ class _DetailScreenState extends State<UserManagementScreen> {
   void initState() {
     super.initState();
 
+    Comm.getHospitalInfo().then((hospital) {//TODO: catch Exception
+      setState(() {
+        _hospital = hospital;
+      });
+    });
+
     Comm.getUsers().then((users) {//TODO: catch Exception
       setState(() {
         _users = users;
@@ -54,17 +64,36 @@ class _DetailScreenState extends State<UserManagementScreen> {
             child: Padding(padding: EdgeInsets.all(25.0),
               child: Row(mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Flexible(
+                  Expanded(
+                    flex: 5,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Users", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                        Flexible(child: Padding(padding: EdgeInsets.all(15.0),
+                        Text('Hospital', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                        SizedBox(height: 10),
+                        _hospital == null ? Text("") : Text(_hospital.name),
+                        SizedBox(height: 5),
+                        _hospital == null ? Text("") : Text(_hospital.location),
+                        _hospital == null ? Text("") : TextButton(onPressed: () => {
+                            html.window.open('https://www.openstreetmap.org/?mlat=' + _hospital.latitude.toString() + '&mlon=' + _hospital.longitude.toString() + '#map=17/' + _hospital.latitude.toString() + '/' + _hospital.longitude.toString(), 'map')
+                          }, child: Icon(Icons.map)),
+                        _hospital == null ? Text("") : TextButton(onPressed: () => {
+                            html.window.open('https://www.openstreetmap.org/?mlat=' + _hospital.latitude.toString() + '&mlon=' + _hospital.longitude.toString() + '#map=17/' + _hospital.latitude.toString() + '/' + _hospital.longitude.toString(), 'map')
+                          }, child: Text("show on map")),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Manage Users", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                        Flexible(
                           child: Scrollbar(isAlwaysShown: true,
                             controller: _scrollController,
                             child: ListView.separated(
                               controller: _scrollController,
-                              padding: const EdgeInsets.all(3),
                               itemCount: _users.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return ListTile(
@@ -76,43 +105,33 @@ class _DetailScreenState extends State<UserManagementScreen> {
                               separatorBuilder: (BuildContext context, int index) => const Divider(),
                             ),
                           ),
-                        )),
-                      ]
-                    )
-                  ),
-                  Flexible(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center, 
-                      children: [
-                        Text('Register a new user', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                        Flexible(child: Padding(padding: EdgeInsets.all(15.0), child: Form(key: _formKey,
+                        ),
+                        SizedBox(height: 15,),
+                        Text('Register a new user', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                        Form(key: _formKey,
                           child: Column(mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              FractionallySizedBox(widthFactor: 0.6,
-                                child: TextFormField(
-                                  controller: _nameTextController,
-                                  decoration: InputDecoration(hintText: 'Name'),
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      return 'Please enter the name of the user';
-                                    }
-                                    return null;
-                                  },
-                                  onFieldSubmitted: (value) => _createUser(),
-                                ),
+                              TextFormField(
+                                controller: _nameTextController,
+                                decoration: InputDecoration(hintText: 'Name'),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter the name of the user';
+                                  }
+                                  return null;
+                                },
+                                onFieldSubmitted: (value) => _createUser(),
                               ),
-                              FractionallySizedBox(widthFactor: 0.6,
-                                child: TextFormField(
-                                  controller: _mailTextController,
-                                  decoration: InputDecoration(hintText: 'Mail Address'),
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      return 'Please enter the mail address of the user';
-                                    }
-                                    return null;
-                                  },
-                                  onFieldSubmitted: (value) => _createUser(),
-                                ),
+                              TextFormField(
+                                controller: _mailTextController,
+                                decoration: InputDecoration(hintText: 'Mail Address'),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter the mail address of the user';
+                                  }
+                                  return null;
+                                },
+                                onFieldSubmitted: (value) => _createUser(),
                               ),
                               SizedBox(height: 10,),
                               ElevatedButton(
@@ -121,9 +140,9 @@ class _DetailScreenState extends State<UserManagementScreen> {
                               )
                             ]
                           )
-                        ))
-                      )]
-                    ),
+                        )
+                      ]
+                    )
                   ),
                 ]
               )

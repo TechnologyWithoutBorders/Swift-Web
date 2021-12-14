@@ -271,6 +271,29 @@ Future<List<Hospital>> getHospitals(String country) async {
   }
 }
 
+Future<Hospital> getHospitalInfo() async {
+  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+
+  final response = await http.post(
+    uri,
+    headers: _headers,
+    body: jsonEncode(await _generateParameterMap(action: DataAction.getHospitalInfo, authentication: true),
+    )
+  );
+
+  if(response.statusCode == 200) {
+    SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
+    
+    if(swiftResponse.responseCode == 0) {
+      return Hospital.fromJson(swiftResponse.data);
+    } else {
+      throw Exception(swiftResponse.data);
+    }
+  } else {
+    throw Exception(Constants.generic_error_message);
+  }
+}
+
 Future<List<Country>> getCountries() async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
