@@ -69,11 +69,10 @@ class _DetailScreenState extends State<UserManagementScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Hospital', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
                         SizedBox(height: 10),
-                        _hospital == null ? Text("") : Text(_hospital.name),
+                        _hospital == null ? Text("") : Text(_hospital.name, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
                         SizedBox(height: 5),
-                        _hospital == null ? Text("") : Text(_hospital.location),
+                        _hospital == null ? Text("") : Text(_hospital.location, style: TextStyle(fontSize: 20)),
                         _hospital == null ? Text("") : TextButton(onPressed: () => {
                             html.window.open('https://www.openstreetmap.org/?mlat=' + _hospital.latitude.toString() + '&mlon=' + _hospital.longitude.toString() + '#map=17/' + _hospital.latitude.toString() + '/' + _hospital.longitude.toString(), 'map')
                           }, child: Icon(Icons.map)),
@@ -88,7 +87,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Manage Users", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                        Text("Manage Staff", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                         Flexible(
                           child: Scrollbar(isAlwaysShown: true,
                             controller: _scrollController,
@@ -107,7 +106,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
                           ),
                         ),
                         SizedBox(height: 15,),
-                        Text('Register a new user', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                        Text('Register a new technician', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
                         Form(key: _formKey,
                           child: Column(mainAxisAlignment: MainAxisAlignment.center,
                             children: [
