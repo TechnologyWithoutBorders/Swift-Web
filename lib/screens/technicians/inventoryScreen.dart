@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
+import 'package:teog_swift/utilities/hospitalDevice.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/deviceInfo.dart';
@@ -18,6 +19,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
   String _listTitle = "";
 
   List<DeviceInfo> _devices = [];
+  List<DeviceInfo> _preFilteredDevices = [];
+  List<DeviceInfo> _displayedDevices = [];
+
+  final _filterTextController = TextEditingController();
 
   bool _manualButtonDisabled = false;
 
@@ -29,6 +34,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
       setState(() {
         _listTitle = "Number of devices: ";
         _devices = devices;
+        _preFilteredDevices = List.from(_devices);
+        _displayedDevices = List.from(_devices);
       });
     });
   }
@@ -44,40 +51,78 @@ class _InventoryScreenState extends State<InventoryScreen> {
     });
   }
 
+  void _showAllDevices() {
+    Comm.getDevices().then((devices) {//TODO: catch Exception
+      setState(() {
+        _filterTextController.clear();
+        _listTitle = "Number of devices: ";
+        _devices = devices;
+        _preFilteredDevices = List.from(_devices);
+        _displayedDevices = List.from(_devices);
+      });
+    });
+  }
+
   void _checkManuals() async {
     setState(() {
       _manualButtonDisabled = true;
-      _devices.clear();
+      _filterTextController.clear();
+      _preFilteredDevices.clear();
+      _displayedDevices.clear();
       _listTitle = "Number of devices without manuals: ";
     });
 
-    List<DeviceInfo> devices = await Comm.getDevices();
-
     int counter = 0;
 
-    for(DeviceInfo deviceInfo in devices) {
+    for(DeviceInfo deviceInfo in _devices) {
       try {
         List<String> documents = await Comm.retrieveDocuments(deviceInfo.device.manufacturer, deviceInfo.device.model);
 
         if(documents.length == 0) {
-          _devices.add(deviceInfo);
+          _preFilteredDevices.add(deviceInfo);
+          setState(() {
+            _displayedDevices.add(deviceInfo);
+          });
         }
       } catch(e) {//TODO specific exception
+        _preFilteredDevices.add(deviceInfo);
         setState(() {
-          _devices.add(deviceInfo);
+          _displayedDevices.add(deviceInfo);
         });
       }
 
       counter++;
 
       setState(() {
-        _progress = counter/devices.length;
+        _progress = counter/_devices.length;
       });
     }
 
     setState(() {
       _manualButtonDisabled = false;
     });
+  }
+
+  void _filter(String text) {
+    setState(() {
+      _displayedDevices.clear();
+
+      if(text.isNotEmpty) {
+        _listTitle = "Number of devices matching the filter: ";
+      } else {
+        _listTitle = "Number of devices: ";
+      }
+    });
+
+    for(DeviceInfo deviceInfo in _preFilteredDevices) {
+      HospitalDevice device = deviceInfo.device;
+
+      if(device.type.toLowerCase().contains(text) || device.manufacturer.toLowerCase().contains(text) || device.model.toLowerCase().contains(text)) {
+        setState(() {
+          _displayedDevices.add(deviceInfo);
+        });
+      }
+    }
   }
 
   @override
@@ -95,38 +140,51 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     alignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
+                        child: Text("Show all devices"),
+                        onPressed: _manualButtonDisabled ? null : () => _showAllDevices(),
+                      ),
+                      ElevatedButton(
                         child: Text("Show devices without manuals"),
                         onPressed: _manualButtonDisabled ? null : () => _checkManuals(),
                       ),
                     ],
+                  ),
+                  TextField(
+                    controller: _filterTextController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'filter...'
+                    ),
+                    onChanged: (text) => _filter(text.toLowerCase()),
+                    enabled: !_manualButtonDisabled
                   ),
                   SizedBox(height: 10),
                   LinearProgressIndicator(
                     value: _progress
                   ),
                   SizedBox(height: 10),
-                  Text(_listTitle + _devices.length.toString()),
+                  Text(_listTitle + _displayedDevices.length.toString()),
                   Flexible(child: Padding(padding: EdgeInsets.all(10.0),
                     child: Scrollbar(isAlwaysShown: true,
                       controller: _scrollController,
                       child: ListView.separated(
                         controller: _scrollController,
                         padding: const EdgeInsets.all(3),
-                        itemCount: _devices.length,
+                        itemCount: _displayedDevices.length,
                         itemBuilder: (BuildContext context, int index) {
                           return ListTile(
-                            leading: Container(width: 30, height: 30, color: DeviceState.getColor(_devices[index].report.currentState),
+                            leading: Container(width: 30, height: 30, color: DeviceState.getColor(_displayedDevices[index].report.currentState),
                               child: Padding(padding: EdgeInsets.all(3.0),
                                 child: Row(children: [
-                                    Icon(DeviceState.getIconData(_devices[index].report.currentState))
+                                    Icon(DeviceState.getIconData(_displayedDevices[index].report.currentState))
                                   ]
                                 )
                               )
                             ),
-                            title: Text(_devices[index].device.type),
-                            subtitle: Text(_devices[index].device.manufacturer + " " + _devices[index].device.model),
-                            trailing: Text(_devices[index].device.location),
-                            onTap: () => _openDeviceById(_devices[index].device.id)
+                            title: Text(_displayedDevices[index].device.type),
+                            subtitle: Text(_displayedDevices[index].device.manufacturer + " " + _displayedDevices[index].device.model),
+                            trailing: Text(_displayedDevices[index].device.location),
+                            onTap: () => _openDeviceById(_displayedDevices[index].device.id)
                           );
                         },
                         separatorBuilder: (BuildContext context, int index) => const Divider(),
