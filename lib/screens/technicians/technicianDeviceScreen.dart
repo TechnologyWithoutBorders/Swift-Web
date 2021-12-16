@@ -112,11 +112,37 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SelectableText(deviceInfo.device.manufacturer + " " + deviceInfo.device.model, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                Text(deviceInfo.device.location, style: TextStyle(fontSize: 25)),
-                TextButton(
-                  child: Text('edit'),
-                  onPressed: () => _editDevice(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 100.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SelectableText(deviceInfo.device.manufacturer + " " + deviceInfo.device.model, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                            Text(deviceInfo.device.location, style: TextStyle(fontSize: 25)),
+                            TextButton(
+                              child: Text('edit'),
+                              onPressed: () => _editDevice(),
+                            ),
+                          ],
+                        )
+                      )
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("You can scan this code using the mobile app."),
+                        QrImage(
+                          data: deviceInfo.device.id.toString(),
+                          version: QrVersions.auto,
+                          size: 100.0,
+                        ),
+                      ]
+                    )
+                  ],
                 ),
                 SizedBox(height: 20),
                 Flexible(child: Row(
@@ -126,16 +152,24 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                     SizedBox(width: 30),
                     Column(mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                      SizedBox(height: 5),
-                      StateScreen(deviceInfo: deviceInfo),
-                      SizedBox(height: 20),
-                      QrImage(
-                        data: deviceInfo.device.id.toString(),
-                        version: QrVersions.auto,
-                        size: 150.0,
-                      ),
-                      Text("You can scan this code with the mobile app.")
-                    ])
+                        StateScreen(deviceInfo: deviceInfo),
+                        /*Flexible(
+                          child: Scrollbar(isAlwaysShown: true,
+                            //controller: _scrollController,
+                            child: ListView.separated(
+                              //controller: _scrollController,
+                              itemCount: 2,
+                              itemBuilder: (BuildContext context, int index) {
+                                return ListTile(
+                                  title: Text("test"),
+                                );
+                              },
+                              separatorBuilder: (BuildContext context, int index) => const Divider(),
+                            ),
+                          ),
+                        ),*/
+                      ]
+                    ),
                   ]
                 )),
                 SizedBox(height: 20),
