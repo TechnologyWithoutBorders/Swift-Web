@@ -119,7 +119,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                   children: [
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 100.0),
+                        padding: const EdgeInsets.only(left: 300.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
