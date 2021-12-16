@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
-import 'package:teog_swift/utilities/deviceInfo.dart';
+import 'package:teog_swift/utilities/shortDeviceInfo.dart';
 import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
 
@@ -15,7 +15,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 class TechnicianDeviceScreen extends StatefulWidget {
   //this one is never modified
-  final DeviceInfo deviceInfo;
+  final ShortDeviceInfo deviceInfo;
 
   TechnicianDeviceScreen({Key key, @required this.deviceInfo}) : super(key: key);
 
@@ -24,11 +24,13 @@ class TechnicianDeviceScreen extends StatefulWidget {
 }
 
 class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
-  DeviceInfo deviceInfo;
+  ShortDeviceInfo deviceInfo;
+
+  final _scrollController = ScrollController();
 
   _TechnicianDeviceScreenState({this.deviceInfo});
 
-  void _updateDeviceInfo(DeviceInfo modifiedDeviceInfo) {
+  void _updateDeviceInfo(ShortDeviceInfo modifiedDeviceInfo) {
     setState(() {
       this.deviceInfo = modifiedDeviceInfo;
     });
@@ -144,37 +146,46 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                     )
                   ],
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 30),
                 Flexible(child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Flexible(child: Image.memory(base64Decode(deviceInfo.imageData))),
+                    Expanded(flex: 5, child: Image.memory(base64Decode(deviceInfo.imageData))),
                     SizedBox(width: 30),
-                    Column(mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        StateScreen(deviceInfo: deviceInfo),
-                        /*Flexible(
-                          child: Scrollbar(isAlwaysShown: true,
-                            //controller: _scrollController,
-                            child: ListView.separated(
-                              //controller: _scrollController,
-                              itemCount: 2,
-                              itemBuilder: (BuildContext context, int index) {
-                                return ListTile(
-                                  title: Text("test"),
-                                );
-                              },
-                              separatorBuilder: (BuildContext context, int index) => const Divider(),
+                    Expanded(
+                      flex: 5,
+                      child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          StateScreen(deviceInfo: deviceInfo),
+                          Flexible(
+                            child: Scrollbar(isAlwaysShown: true,
+                              controller: _scrollController,
+                              child: ListView.separated(
+                                controller: _scrollController,
+                                itemCount: 2,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return ListTile(
+                                    title: Text("test"),
+                                  );
+                                },
+                                separatorBuilder: (BuildContext context, int index) => const Divider(),
+                              ),
                             ),
                           ),
-                        ),*/
-                      ]
+                        ]
+                      )
                     ),
+                    Expanded(
+                      flex: 5,
+                      child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Available Documents:", style: TextStyle(fontSize: 20)),
+                          DocumentScreen(deviceInfo: deviceInfo),
+                        ],
+                      )
+                    )
                   ]
-                )),
-                SizedBox(height: 20),
-                Text("Available Documents:", style: TextStyle(fontSize: 20)),
-                DocumentScreen(deviceInfo: deviceInfo),
+                )), 
               ]
             )
           ),
@@ -185,7 +196,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
 }
 
 class DocumentScreen extends StatefulWidget {
-  final DeviceInfo deviceInfo;
+  final ShortDeviceInfo deviceInfo;
 
   DocumentScreen({Key key, @required this.deviceInfo}) : super(key: key);
 
@@ -285,7 +296,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
 }
 
 class StateScreen extends StatefulWidget {
-  final DeviceInfo deviceInfo;
+  final ShortDeviceInfo deviceInfo;
 
   StateScreen({Key key, @required this.deviceInfo}) : super(key: key);
 
@@ -326,9 +337,9 @@ class _StateScreenState extends State<StateScreen> {
 }
 
 class ReportProblemForm extends StatefulWidget {
-  final DeviceInfo deviceInfo;
+  final ShortDeviceInfo deviceInfo;
 
-  final ValueChanged<DeviceInfo> updateDeviceInfo;
+  final ValueChanged<ShortDeviceInfo> updateDeviceInfo;
 
   ReportProblemForm({Key key, @required this.deviceInfo, this.updateDeviceInfo}) : super(key: key);
 
@@ -345,7 +356,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
   void _createReport() {
     if (_formKey.currentState.validate()) {
       Comm.queueRepair(479, _reportTitleController.text, _problemTextController.text).then((newReport) {
-        widget.updateDeviceInfo(DeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData));
+        widget.updateDeviceInfo(ShortDeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData));
       }).onError((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.toString()));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);

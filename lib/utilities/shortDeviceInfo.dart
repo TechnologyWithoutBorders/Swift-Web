@@ -1,10 +1,10 @@
 import 'hospitalDevice.dart';
 import 'report.dart';
 
-class DeviceInfo {
+class ShortDeviceInfo {
   final HospitalDevice device;
-  final List<Report> reports;
+  final Report report;
   final String imageData;
 
-  DeviceInfo({this.device, this.reports, this.imageData});
+  ShortDeviceInfo({this.device, this.report, this.imageData});
 }

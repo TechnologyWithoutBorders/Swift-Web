@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
-import 'package:teog_swift/utilities/deviceInfo.dart';
+import 'package:teog_swift/utilities/shortDeviceInfo.dart';
 import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
 
@@ -17,8 +17,8 @@ class DashboardScreen extends StatefulWidget {
 class _DetailScreenState extends State<DashboardScreen> {
   final _scrollController = ScrollController();
 
-  List<DeviceInfo> _devices = [];
-  List<DeviceInfo> _todoDevices = [];
+  List<ShortDeviceInfo> _devices = [];
+  List<ShortDeviceInfo> _todoDevices = [];
 
   @override
   void initState() {
