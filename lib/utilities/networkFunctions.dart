@@ -10,7 +10,7 @@ import 'package:teog_swift/utilities/previewDeviceInfo.dart';
 import 'package:teog_swift/utilities/swiftResponse.dart';
 
 import 'package:teog_swift/utilities/constants.dart';
-import 'package:teog_swift/utilities/deviceInfo.dart';
+import 'package:teog_swift/utilities/shortDeviceInfo.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
 import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/user.dart';
@@ -63,7 +63,7 @@ Future<String> checkCredentials(final String country, final int hospital, String
   }
 }
 
-Future<DeviceInfo> fetchDevice(final int deviceId) async {
+Future<ShortDeviceInfo> fetchDevice(final int deviceId) async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
   final response = await http.post(
@@ -78,7 +78,7 @@ Future<DeviceInfo> fetchDevice(final int deviceId) async {
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
 
     if(swiftResponse.responseCode == 0) {
-      return DeviceInfo(
+      return ShortDeviceInfo(
         device: HospitalDevice.fromJson(swiftResponse.data["device"]),
         report: Report.fromJson(swiftResponse.data["report"]),
         imageData: swiftResponse.data["image"],
@@ -91,7 +91,7 @@ Future<DeviceInfo> fetchDevice(final int deviceId) async {
   }
 }
 
-Future<DeviceInfo> editDevice(HospitalDevice device) async {
+Future<ShortDeviceInfo> editDevice(HospitalDevice device) async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
   final response = await http.post(
@@ -106,7 +106,7 @@ Future<DeviceInfo> editDevice(HospitalDevice device) async {
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
 
     if(swiftResponse.responseCode == 0) {
-      return DeviceInfo(
+      return ShortDeviceInfo(
         device: HospitalDevice.fromJson(swiftResponse.data["device"]),
         report: Report.fromJson(swiftResponse.data["report"]),
         imageData: swiftResponse.data["image"],
@@ -152,7 +152,7 @@ Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, 
   }
 }
 
-Future<List<DeviceInfo>> getDevices() async {
+Future<List<ShortDeviceInfo>> getDevices() async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
   final response = await http.post(
@@ -165,10 +165,10 @@ Future<List<DeviceInfo>> getDevices() async {
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
     
     if(swiftResponse.responseCode == 0) {
-      List<DeviceInfo> devices = [];
+      List<ShortDeviceInfo> devices = [];
 
       for(var jsonDevice in swiftResponse.data) {
-        devices.add(DeviceInfo(
+        devices.add(ShortDeviceInfo(
           device: HospitalDevice.fromJson(jsonDevice["device"]),
           report: Report.fromJson(jsonDevice["report"])
         ));

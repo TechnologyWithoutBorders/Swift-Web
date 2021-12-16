@@ -5,7 +5,7 @@ import 'dart:html' as html;
 import 'package:flutter/material.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
-import 'package:teog_swift/utilities/deviceInfo.dart';
+import 'package:teog_swift/utilities/shortDeviceInfo.dart';
 import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
 
@@ -13,7 +13,7 @@ import 'package:teog_swift/utilities/constants.dart';
 
 class DetailScreen extends StatefulWidget {
   //this one is never modified
-  final DeviceInfo deviceInfo;
+  final ShortDeviceInfo deviceInfo;
 
   DetailScreen({Key key, @required this.deviceInfo}) : super(key: key);
 
@@ -22,11 +22,11 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  DeviceInfo deviceInfo;
+  ShortDeviceInfo deviceInfo;
 
   _DetailScreenState({this.deviceInfo});
 
-  _updateDeviceInfo(DeviceInfo modifiedDeviceInfo) {
+  _updateDeviceInfo(ShortDeviceInfo modifiedDeviceInfo) {
     setState(() {
       this.deviceInfo = modifiedDeviceInfo;
     });
@@ -97,7 +97,7 @@ class _DetailScreenState extends State<DetailScreen> {
 }
 
 class DocumentScreen extends StatefulWidget {
-  final DeviceInfo deviceInfo;
+  final ShortDeviceInfo deviceInfo;
 
   DocumentScreen({Key key, @required this.deviceInfo}) : super(key: key);
 
@@ -151,7 +151,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
 }
 
 class StateScreen extends StatefulWidget {
-  final DeviceInfo deviceInfo;
+  final ShortDeviceInfo deviceInfo;
 
   StateScreen({Key key, @required this.deviceInfo}) : super(key: key);
 
@@ -192,9 +192,9 @@ class _StateScreenState extends State<StateScreen> {
 }
 
 class ReportProblemForm extends StatefulWidget {
-  final DeviceInfo deviceInfo;
+  final ShortDeviceInfo deviceInfo;
 
-  final ValueChanged<DeviceInfo> updateDeviceInfo;
+  final ValueChanged<ShortDeviceInfo> updateDeviceInfo;
 
   ReportProblemForm({Key key, @required this.deviceInfo, this.updateDeviceInfo}) : super(key: key);
 
@@ -211,7 +211,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
   void _createReport() {
     if (_formKey.currentState.validate()) {
       Comm.queueRepair(479, _reportTitleController.text, _problemTextController.text).then((newReport) {
-        widget.updateDeviceInfo(DeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData));
+        widget.updateDeviceInfo(ShortDeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData));
       }).onError((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.toString()));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);

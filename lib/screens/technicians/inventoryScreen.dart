@@ -3,7 +3,7 @@ import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
-import 'package:teog_swift/utilities/deviceInfo.dart';
+import 'package:teog_swift/utilities/shortDeviceInfo.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
 
 class InventoryScreen extends StatefulWidget {
@@ -18,9 +18,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
   double _progress = 0;
   String _listTitle = "";
 
-  List<DeviceInfo> _devices = [];
-  List<DeviceInfo> _preFilteredDevices = [];
-  List<DeviceInfo> _displayedDevices = [];
+  List<ShortDeviceInfo> _devices = [];
+  List<ShortDeviceInfo> _preFilteredDevices = [];
+  List<ShortDeviceInfo> _displayedDevices = [];
 
   final _filterTextController = TextEditingController();
 
@@ -74,7 +74,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
     int counter = 0;
 
-    for(DeviceInfo deviceInfo in _devices) {
+    for(ShortDeviceInfo deviceInfo in _devices) {
       try {
         List<String> documents = await Comm.retrieveDocuments(deviceInfo.device.manufacturer, deviceInfo.device.model);
 
@@ -116,7 +116,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
     List<String> filterTexts = text.trim().split(" ");
 
-    for(DeviceInfo deviceInfo in _preFilteredDevices) {
+    for(ShortDeviceInfo deviceInfo in _preFilteredDevices) {
       HospitalDevice device = deviceInfo.device;
 
       bool skip = false;
