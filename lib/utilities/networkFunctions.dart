@@ -5,6 +5,7 @@ import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:teog_swift/utilities/country.dart';
 import 'package:teog_swift/utilities/dataAction.dart';
+import 'package:teog_swift/utilities/deviceInfo.dart';
 import 'package:teog_swift/utilities/previewDeviceInfo.dart';
 
 import 'package:teog_swift/utilities/swiftResponse.dart';
@@ -81,6 +82,40 @@ Future<ShortDeviceInfo> fetchDevice(final int deviceId) async {
       return ShortDeviceInfo(
         device: HospitalDevice.fromJson(swiftResponse.data["device"]),
         report: Report.fromJson(swiftResponse.data["report"]),
+        imageData: swiftResponse.data["image"],
+      );
+    } else {
+      throw Exception(swiftResponse.data);
+    }
+  } else {
+    throw Exception(Constants.generic_error_message);
+  }
+}
+
+Future<DeviceInfo> getDeviceInfo(final int deviceId) async {
+  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+
+  final response = await http.post(
+    uri,
+    headers: _headers,
+    body: jsonEncode(await _generateParameterMap(action: DataAction.getDeviceInfo, authentication: true,
+        additional: <String, dynamic> {'device_id': deviceId}),
+    ),
+  );
+
+  if(response.statusCode == 200) {
+    SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
+
+    if(swiftResponse.responseCode == 0) {
+      List<Report> reports = [];
+
+      for(var jsonReport in swiftResponse.data["reports"]) {
+        reports.add(Report.fromJson(jsonReport));
+      }
+
+      return DeviceInfo(
+        device: HospitalDevice.fromJson(swiftResponse.data["device"]),
+        reports: reports,
         imageData: swiftResponse.data["image"],
       );
     } else {
