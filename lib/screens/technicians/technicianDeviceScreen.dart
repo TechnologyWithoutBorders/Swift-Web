@@ -150,10 +150,10 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                 Flexible(child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(flex: 5, child: Image.memory(base64Decode(deviceInfo.imageData))),
+                    Expanded(flex: 3, child: Image.memory(base64Decode(deviceInfo.imageData))),
                     SizedBox(width: 30),
                     Expanded(
-                      flex: 5,
+                      flex: 2,
                       child: Column(mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           StateScreen(deviceInfo: deviceInfo),
@@ -176,10 +176,11 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                       )
                     ),
                     Expanded(
-                      flex: 5,
+                      flex: 2,
                       child: Column(mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Available Documents:", style: TextStyle(fontSize: 20)),
+                          Text("Available Documents:", style: TextStyle(fontSize: 25)),
+                          SizedBox(height: 10),
                           Flexible(child: DocumentScreen(deviceInfo: deviceInfo)),
                         ],
                       )
@@ -312,11 +313,8 @@ class _StateScreenState extends State<StateScreen> {
 
     return Column(
       children: [
-        Text("Current state:", style: Theme
-          .of(context)
-          .textTheme
-          .headline5),
-        SizedBox(height: 5),
+        Text("Current State:", style: TextStyle(fontSize: 25)),
+        SizedBox(height: 10),
           Container(color: DeviceState.getColor(report.currentState),
           child: Padding(padding: EdgeInsets.all(3.0),
             child: Row(children: [
