@@ -180,7 +180,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                       child: Column(mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text("Available Documents:", style: TextStyle(fontSize: 20)),
-                          DocumentScreen(deviceInfo: deviceInfo),
+                          Flexible(child: DocumentScreen(deviceInfo: deviceInfo)),
                         ],
                       )
                     )
@@ -273,23 +273,23 @@ class _DocumentScreenState extends State<DocumentScreen> {
 
     return Column(
       children: [
-      uploadWidget,
-      SizedBox(height: 100, width: 300,
-      child: _documents.length > 0
-        ? Scrollbar(
-            child: ListView.separated(
-            padding: const EdgeInsets.all(8),
-            itemCount: _documents.length,
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                title: Center(child: Text(_documents[index])),
-                onTap: () => _downloadDocument(_documents[index])
-              );
-            },
-            separatorBuilder: (BuildContext context, int index) => const Divider(),
-          )
-        )
-        : Center(child: const Text('No documents found'))),
+        uploadWidget,
+        _documents.length > 0
+          ? Flexible(child: Scrollbar(
+              isAlwaysShown: true,
+              child: ListView.separated(
+              padding: const EdgeInsets.all(8),
+              itemCount: _documents.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  title: Center(child: Text(_documents[index])),
+                  onTap: () => _downloadDocument(_documents[index])
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) => const Divider(),
+            )
+          ))
+          : Center(child: const Text('No documents found')),
       ]
     );
   }
