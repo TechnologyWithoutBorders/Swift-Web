@@ -15,7 +15,7 @@ class HospitalDevice {
       manufacturer: json['manufacturer'],
       model: json['model'],
       location: json['location'],
-      maintenanceInterval: json['maintenance_interval']
+      maintenanceInterval: json['maintenanceInterval']
     );
   }
 
@@ -25,6 +25,6 @@ class HospitalDevice {
     'manufacturer': manufacturer,
     'model': model,
     'location': location,
-    'maintenance_interval': maintenanceInterval
+    'maintenanceInterval': maintenanceInterval
   };
 }
