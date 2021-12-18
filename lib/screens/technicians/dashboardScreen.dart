@@ -109,19 +109,21 @@ class _DetailScreenState extends State<DashboardScreen> {
                               padding: const EdgeInsets.all(3),
                               itemCount: _todoDevices.length,
                               itemBuilder: (BuildContext context, int index) {
+                                ShortDeviceInfo deviceInfo = _todoDevices[index];
+
                                 return ListTile(
-                                  leading: Container(width: 30, height: 30, color: DeviceState.getColor(_todoDevices[index].report.currentState),
+                                  leading: Container(width: 30, height: 30, color: DeviceState.getColor(deviceInfo.report.currentState),
                                     child: Padding(padding: EdgeInsets.all(3.0),
                                       child: Row(children: [
-                                          Icon(DeviceState.getIconData(_todoDevices[index].report.currentState))
+                                          Icon(DeviceState.getIconData(deviceInfo.report.currentState))
                                         ]
                                       )
                                     )
                                   ),
-                                  title: Text(_todoDevices[index].device.type),
-                                  subtitle: Text(_todoDevices[index].device.manufacturer + " " + _todoDevices[index].device.model),
-                                  trailing: Text(_todoDevices[index].device.location),
-                                  onTap: () => _openDeviceById(_todoDevices[index].device.id)
+                                  title: Text(deviceInfo.device.type),
+                                  subtitle: Text(deviceInfo.device.manufacturer + " " + deviceInfo.device.model),
+                                  trailing: Text(deviceInfo.device.location),
+                                  onTap: () => _openDeviceById(deviceInfo.device.id)
                                 );
                               },
                               separatorBuilder: (BuildContext context, int index) => const Divider(),

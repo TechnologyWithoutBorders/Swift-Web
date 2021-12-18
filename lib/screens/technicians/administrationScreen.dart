@@ -126,9 +126,11 @@ class _DetailScreenState extends State<UserManagementScreen> {
                               controller: _scrollController,
                               itemCount: _users.length,
                               itemBuilder: (BuildContext context, int index) {
+                                User user = _users[index];
+
                                 return ListTile(
-                                  title: SelectableText(_users[index].name),
-                                  subtitle: SelectableText(_users[index].position + "\n" + _users[index].mail + "\n" + _users[index].phone),
+                                  title: SelectableText(user.name),
+                                  subtitle: SelectableText(user.position + "\n" + user.mail + "\n" + user.phone),
                                   trailing: TextButton(child: Icon(Icons.delete), onPressed: () =>_deleteUser()),
                                   //trailing: Text(_users[index].position),
                                 );

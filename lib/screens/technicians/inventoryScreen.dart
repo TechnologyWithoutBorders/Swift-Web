@@ -184,19 +184,21 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         padding: const EdgeInsets.all(3),
                         itemCount: _displayedDevices.length,
                         itemBuilder: (BuildContext context, int index) {
+                          ShortDeviceInfo deviceInfo = _displayedDevices[index];
+
                           return ListTile(
-                            leading: Container(width: 30, height: 30, color: DeviceState.getColor(_displayedDevices[index].report.currentState),
+                            leading: Container(width: 30, height: 30, color: DeviceState.getColor(deviceInfo.report.currentState),
                               child: Padding(padding: EdgeInsets.all(3.0),
                                 child: Row(children: [
-                                    Icon(DeviceState.getIconData(_displayedDevices[index].report.currentState))
+                                    Icon(DeviceState.getIconData(deviceInfo.report.currentState))
                                   ]
                                 )
                               )
                             ),
-                            title: Text(_displayedDevices[index].device.type),
-                            subtitle: Text(_displayedDevices[index].device.manufacturer + " " + _displayedDevices[index].device.model),
-                            trailing: Text(_displayedDevices[index].device.location),
-                            onTap: () => _openDeviceById(_displayedDevices[index].device.id)
+                            title: Text(deviceInfo.device.type),
+                            subtitle: Text(deviceInfo.device.manufacturer + " " + deviceInfo.device.model),
+                            trailing: Text(deviceInfo.device.location),
+                            onTap: () => _openDeviceById(deviceInfo.device.id)
                           );
                         },
                         separatorBuilder: (BuildContext context, int index) => const Divider(),

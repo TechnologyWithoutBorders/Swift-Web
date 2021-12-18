@@ -237,12 +237,14 @@ class _FilterFormState extends State<FilterForm> {
               padding: const EdgeInsets.all(5),
               itemCount: _filteredDevices.length,
               itemBuilder: (BuildContext context, int index) {
+                PreviewDeviceInfo deviceInfo = _filteredDevices[index];
+
                 return ListTile(
-                  leading: _filteredDevices[index].imageData.isNotEmpty ? Image.memory(base64Decode(_filteredDevices[index].imageData)) : Text("no image"),
-                  title: Text(_filteredDevices[index].device.type),
-                  subtitle: Text(_filteredDevices[index].device.manufacturer + " " + _filteredDevices[index].device.model),
-                  trailing: Text(_filteredDevices[index].device.location),
-                  onTap: () => _openDeviceById(_filteredDevices[index].device.id)
+                  leading: deviceInfo.imageData.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData)) : Text("no image"),
+                  title: Text(deviceInfo.device.type),
+                  subtitle: Text(deviceInfo.device.manufacturer + " " + deviceInfo.device.model),
+                  trailing: Text(deviceInfo.device.location),
+                  onTap: () => _openDeviceById(deviceInfo.device.id)
                 );
               },
               separatorBuilder: (BuildContext context, int index) => const Divider(),
