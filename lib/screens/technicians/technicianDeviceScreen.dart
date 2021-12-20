@@ -125,6 +125,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                           children: [
                             SelectableText(deviceInfo.device.manufacturer + " " + deviceInfo.device.model, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                             Text(deviceInfo.device.location, style: TextStyle(fontSize: 25)),
+                            Text("Maintenance interval: " + (deviceInfo.device.maintenanceInterval/4).toString() + " months"),
                             TextButton(
                               child: Text('edit'),
                               onPressed: () => _editDevice(),
