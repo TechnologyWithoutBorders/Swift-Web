@@ -59,7 +59,7 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image(image: AssetImage('graphics/logo.png')),
+              Padding(padding: EdgeInsets.all(10.0), child: Image(image: AssetImage('graphics/logo.png'))),
               SizedBox(height: 10),
               Card(child: Padding(padding: EdgeInsets.all(10.0), child: LoginForm())),
               SizedBox(height: 30),
