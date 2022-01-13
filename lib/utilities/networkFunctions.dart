@@ -16,6 +16,7 @@ import 'package:teog_swift/utilities/hospitalDevice.dart';
 import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/hospital.dart';
+import 'package:teog_swift/utilities/messageException.dart';
 
 import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
 
@@ -57,10 +58,10 @@ Future<String> checkCredentials(final String country, final int hospital, String
     if(swiftResponse.responseCode == 0) {
       return swiftResponse.data.toString();
     } else {
-      throw Exception(swiftResponse.data.toString());//this does not work
+      throw MessageException(swiftResponse.data.toString());
     }
   } else {
-    throw Exception(Constants.generic_error_message);
+    throw MessageException(Constants.generic_error_message);
   }
 }
 
@@ -85,10 +86,10 @@ Future<ShortDeviceInfo> fetchDevice(final int deviceId) async {
         imageData: swiftResponse.data["image"],
       );
     } else {
-      throw Exception(swiftResponse.data);
+      throw MessageException(swiftResponse.data);
     }
   } else {
-    throw Exception(Constants.generic_error_message);
+    throw MessageException(Constants.generic_error_message);
   }
 }
 
@@ -119,10 +120,10 @@ Future<DeviceInfo> getDeviceInfo(final int deviceId) async {
         imageData: swiftResponse.data["image"],
       );
     } else {
-      throw Exception(swiftResponse.data);
+      throw MessageException(swiftResponse.data);
     }
   } else {
-    throw Exception(Constants.generic_error_message);
+    throw MessageException(Constants.generic_error_message);
   }
 }
 
@@ -147,10 +148,10 @@ Future<ShortDeviceInfo> editDevice(HospitalDevice device) async {
         imageData: swiftResponse.data["image"],
       );
     } else {
-      throw Exception(swiftResponse.data);
+      throw MessageException(swiftResponse.data);
     }
   } else {
-    throw Exception(Constants.generic_error_message);
+    throw MessageException(Constants.generic_error_message);
   }
 }
 
@@ -180,10 +181,10 @@ Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, 
 
       return devices;
     } else {
-      throw Exception(swiftResponse.data);
+      throw MessageException(swiftResponse.data);
     }
   } else {
-    throw Exception(Constants.generic_error_message);
+    throw MessageException(Constants.generic_error_message);
   }
 }
 
@@ -211,10 +212,10 @@ Future<List<ShortDeviceInfo>> getDevices() async {
 
       return devices;
     } else {
-      throw Exception(swiftResponse.data);
+      throw MessageException(swiftResponse.data);
     }
   } else {
-    throw Exception(Constants.generic_error_message);
+    throw MessageException(Constants.generic_error_message);
   }
 }
 
@@ -241,10 +242,10 @@ Future<List<User>> createUser(String mail, String name) async {
 
       return users;
     } else {
-      throw Exception(swiftResponse.data);
+      throw MessageException(swiftResponse.data);
     }
   } else {
-    throw Exception(Constants.generic_error_message);
+    throw MessageException(Constants.generic_error_message);
   }
 }
 
@@ -269,10 +270,10 @@ Future<List<User>> getUsers() async {
 
       return users;
     } else {
-      throw Exception(swiftResponse.data);
+      throw MessageException(swiftResponse.data);
     }
   } else {
-    throw Exception(Constants.generic_error_message);
+    throw MessageException(Constants.generic_error_message);
   }
 }
 
@@ -299,10 +300,10 @@ Future<List<Hospital>> getHospitals(String country) async {
 
       return hospitals;
     } else {
-      throw Exception(swiftResponse.data);
+      throw MessageException(swiftResponse.data);
     }
   } else {
-    throw Exception(Constants.generic_error_message);
+    throw MessageException(Constants.generic_error_message);
   }
 }
 
@@ -322,10 +323,10 @@ Future<Hospital> getHospitalInfo() async {
     if(swiftResponse.responseCode == 0) {
       return Hospital.fromJson(swiftResponse.data);
     } else {
-      throw Exception(swiftResponse.data);
+      throw MessageException(swiftResponse.data);
     }
   } else {
-    throw Exception(Constants.generic_error_message);
+    throw MessageException(Constants.generic_error_message);
   }
 }
 
@@ -350,10 +351,10 @@ Future<List<Country>> getCountries() async {
 
       return countries;
     } else {
-      throw Exception(swiftResponse.data);
+      throw MessageException(swiftResponse.data);
     }
   } else {
-    throw Exception(Constants.generic_error_message);
+    throw MessageException(Constants.generic_error_message);
   }
 }
 
@@ -378,10 +379,10 @@ Future<List<String>> retrieveDocuments(String manufacturer, String model) async 
 
       return documents;
     } else {
-      throw Exception(swiftResponse.data);
+      throw MessageException(swiftResponse.data);
     }
   } else {
-    throw Exception(Constants.generic_error_message);
+    throw MessageException(Constants.generic_error_message);
   }
 }
 
@@ -402,10 +403,10 @@ Future<Report> queueRepair(int deviceId, String title, String problemDescription
     if(swiftResponse.responseCode == 0) {
       return Report.fromJson(swiftResponse.data);
     } else {
-      throw Exception(swiftResponse.data);
+      throw MessageException(swiftResponse.data);
     }
   } else {
-    throw Exception(Constants.generic_error_message);
+    throw MessageException(Constants.generic_error_message);
   }
 }
 
@@ -432,10 +433,10 @@ Future<List<String>> uploadDocument(String manufacturer, String model, String na
 
       return documents;
     } else {
-      throw Exception(swiftResponse.data);
+      throw MessageException(swiftResponse.data);
     }
   } else {
-    throw Exception(Constants.generic_error_message);
+    throw MessageException(Constants.generic_error_message);
   }
 }
 
