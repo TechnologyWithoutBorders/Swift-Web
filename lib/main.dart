@@ -12,6 +12,7 @@ import 'package:teog_swift/utilities/country.dart';
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
 import 'package:teog_swift/utilities/hospital.dart';
+import 'package:teog_swift/utilities/messageException.dart';
 
 import 'package:flag/flag.dart';
 
@@ -110,8 +111,8 @@ class _LoginFormState extends State<LoginForm> {
         String hash = sha256.convert(bytes).toString();
 
         Prefs.save(_selectedCountry, _selectedHospital.id, role, hash).then((success) => Navigator.pushNamedAndRemoveUntil(context, route, (r) => false));
-      }).onError((error, stackTrace) {
-        final snackBar = SnackBar(content: Text(error.data));
+      }).onError<MessageException>((error, stackTrace) {
+        final snackBar = SnackBar(content: Text(error.message));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       });
     }
