@@ -152,7 +152,12 @@ class _DetailScreenState extends State<UserManagementScreen> {
                           builder: (Node node) {
                             int id = node.key.value;
 
-                            return Text(nameMap[id]);
+                            return Draggable<String>(
+                              data: nameMap[id],
+                              dragAnchorStrategy: pointerDragAnchorStrategy,
+                              feedback: Text(nameMap[id], style: TextStyle(fontSize: 25, decoration: TextDecoration.none, color: Colors.black)),
+                              child: OutlinedButton(child: Text(nameMap[id], style: TextStyle(fontSize: 15)), onPressed: () => {})
+                            );
                           }
                           ) : Text("loading organizational units..."),
                       ],
