@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:graphview/GraphView.dart';
 
 import 'dart:html' as html;
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/organizationalUnit.dart';
 import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/hospital.dart';
+import 'package:teog_swift/utilities/messageException.dart';
 
 class UserManagementScreen extends StatefulWidget {
   UserManagementScreen({Key key}) : super(key: key);
@@ -22,6 +25,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
   final _scrollController = ScrollController();
 
   Hospital _hospital;
+  List<OrganizationalUnit> _orgUnits = [];
   List<User> _users = [];
 
   void _createUser() {
@@ -41,16 +45,31 @@ class _DetailScreenState extends State<UserManagementScreen> {
   void initState() {
     super.initState();
 
-    Comm.getHospitalInfo().then((hospital) {//TODO: catch Exception
+    Comm.getHospitalInfo().then((hospital) {
       setState(() {
         _hospital = hospital;
       });
+    }).onError<MessageException>((error, stackTrace) {
+        final snackBar = SnackBar(content: Text(error.message));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
 
-    Comm.getUsers().then((users) {//TODO: catch Exception
+    Comm.getOrganizationalUnits().then((orgUnits) {
+      setState(() {
+        _orgUnits = orgUnits;
+      });
+    }).onError<MessageException>((error, stackTrace) {
+        final snackBar = SnackBar(content: Text(error.message));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    });
+
+    Comm.getUsers().then((users) {
       setState(() {
         _users = users;
       });
+    }).onError<MessageException>((error, stackTrace) {
+        final snackBar = SnackBar(content: Text(error.message));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
   }
 
@@ -87,6 +106,22 @@ class _DetailScreenState extends State<UserManagementScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Graph graph = Graph();
+    BuchheimWalkerConfiguration builder = BuchheimWalkerConfiguration();
+
+    Map<int, String> nameMap = Map();
+
+    for(OrganizationalUnit orgUnit in _orgUnits) {
+      Node node = Node.Id(orgUnit.id);
+      graph.addNode(node);
+
+      if(orgUnit.parent != null) {//TODO make sure that parent already exists
+        graph.addEdge(graph.getNodeUsingId(orgUnit.parent), node);
+      }
+
+      nameMap[orgUnit.id] = orgUnit.name;
+    }
+
     return Scaffold(
       backgroundColor: Colors.grey[200],
       body: Container(alignment: Alignment.center,
@@ -110,6 +145,16 @@ class _DetailScreenState extends State<UserManagementScreen> {
                         _hospital == null ? Text("") : TextButton(onPressed: () => {
                             html.window.open('https://www.openstreetmap.org/?mlat=' + _hospital.latitude.toString() + '&mlon=' + _hospital.longitude.toString() + '#map=17/' + _hospital.latitude.toString() + '/' + _hospital.longitude.toString(), 'map')
                           }, child: Text("show on map")),
+                        SizedBox(height: 15),
+                        _orgUnits.length > 0 ? GraphView(
+                          graph: graph,
+                          algorithm: BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
+                          builder: (Node node) {
+                            int id = node.key.value;
+
+                            return Text(nameMap[id]);
+                          }
+                          ) : Text("loading organizational units..."),
                       ],
                     ),
                   ),

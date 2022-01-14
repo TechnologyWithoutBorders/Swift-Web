@@ -36,6 +36,7 @@ dependencies:
   qr_flutter: ^4.0.0
   image: ^3.0.8
   table_calendar: ^3.0.3
+  graphview: ^1.1.1
 
 dev_dependencies:
   flutter_test:
