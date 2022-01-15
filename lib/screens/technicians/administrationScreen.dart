@@ -155,7 +155,14 @@ class _DetailScreenState extends State<UserManagementScreen> {
                             return Draggable<Node>(
                               data: node,
                               feedback: OutlinedButton(child: Text(nameMap[id], style: TextStyle(fontSize: 15)), onPressed: () => {}),
-                              child: OutlinedButton(child: Text(nameMap[id], style: TextStyle(fontSize: 15)), onPressed: () => {})
+                              child: DragTarget<Node>(
+                                builder: (context, candidateItems, rejectedItems) {
+                                  return OutlinedButton(child: Text(nameMap[id], style: TextStyle(fontSize: 15, fontWeight: candidateItems.isNotEmpty ? FontWeight.bold : FontWeight.normal)), onPressed: () => {});
+                                },
+                                onAccept: (item) {
+                                  //TODO: magic
+                                },
+                                )
                             );
                           }
                           ) : Text("loading organizational units..."),
