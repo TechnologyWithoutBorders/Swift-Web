@@ -1,7 +1,7 @@
 class OrganizationalUnit {
   final int id;
   final String name;
-  final int parent;
+  int parent;
 
   OrganizationalUnit({this.id, this.name, this.parent});
 

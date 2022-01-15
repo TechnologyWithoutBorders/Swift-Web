@@ -25,6 +25,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
   final _scrollController = ScrollController();
 
   Hospital _hospital;
+  List<OrganizationalUnit> _orgUnits = [];
   Graph _graph = Graph();
   Map<int, String> _nameMap = Map();
   List<User> _users = [];
@@ -72,6 +73,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
       }
 
       setState(() {
+        _orgUnits = orgUnits;
         _graph = graph;
         _nameMap = nameMap;
       });
@@ -121,6 +123,36 @@ class _DetailScreenState extends State<UserManagementScreen> {
     );
   }
 
+  void _refreshOrgUnits(int id, int parent) {
+    Graph graph = Graph();
+
+    Map<int, String> nameMap = Map();
+
+    List<OrganizationalUnit> orgUnits = List.from(_orgUnits);
+
+    for(OrganizationalUnit orgUnit in orgUnits) {
+      if(orgUnit.id == id) {
+        orgUnit.parent = parent;//TODO: not perfect, but works
+      }
+
+      Node node = Node.Id(orgUnit.id);
+      graph.addNode(node);
+
+      if(orgUnit.parent != null) {//TODO make sure that parent already exists
+        graph.addEdge(graph.getNodeUsingId(orgUnit.parent), node);
+      }
+
+      nameMap[orgUnit.id] = orgUnit.name;
+    }
+
+    //TODO: magic
+    setState(() {
+      _orgUnits = orgUnits;
+      _graph = graph;
+      _nameMap = nameMap;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     BuchheimWalkerConfiguration builder = BuchheimWalkerConfiguration();
@@ -163,12 +195,9 @@ class _DetailScreenState extends State<UserManagementScreen> {
                                   return OutlinedButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, fontWeight: candidateItems.isNotEmpty ? FontWeight.bold : FontWeight.normal)), onPressed: () => {});
                                 },
                                 onAccept: (item) {
-                                  //TODO: magic
-                                  setState(() {
-                                    _graph.removeNode(item);
-                                  });
+                                  _refreshOrgUnits(item.key.value, node.key.value);
                                 },
-                                )
+                              )
                             );
                           }
                           ) : Text("loading organizational units..."),
