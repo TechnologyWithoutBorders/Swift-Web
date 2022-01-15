@@ -25,7 +25,8 @@ class _DetailScreenState extends State<UserManagementScreen> {
   final _scrollController = ScrollController();
 
   Hospital _hospital;
-  List<OrganizationalUnit> _orgUnits = [];
+  Graph _graph = Graph();
+  Map<int, String> _nameMap = Map();
   List<User> _users = [];
 
   void _createUser() {
@@ -55,8 +56,24 @@ class _DetailScreenState extends State<UserManagementScreen> {
     });
 
     Comm.getOrganizationalUnits().then((orgUnits) {
+      Graph graph = Graph();
+
+      Map<int, String> nameMap = Map();
+
+      for(OrganizationalUnit orgUnit in orgUnits) {
+        Node node = Node.Id(orgUnit.id);
+        graph.addNode(node);
+
+        if(orgUnit.parent != null) {//TODO make sure that parent already exists
+          graph.addEdge(graph.getNodeUsingId(orgUnit.parent), node);
+        }
+
+        nameMap[orgUnit.id] = orgUnit.name;
+      }
+
       setState(() {
-        _orgUnits = orgUnits;
+        _graph = graph;
+        _nameMap = nameMap;
       });
     }).onError<MessageException>((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.message));
@@ -106,21 +123,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Graph graph = Graph();
     BuchheimWalkerConfiguration builder = BuchheimWalkerConfiguration();
-
-    Map<int, String> nameMap = Map();
-
-    for(OrganizationalUnit orgUnit in _orgUnits) {
-      Node node = Node.Id(orgUnit.id);
-      graph.addNode(node);
-
-      if(orgUnit.parent != null) {//TODO make sure that parent already exists
-        graph.addEdge(graph.getNodeUsingId(orgUnit.parent), node);
-      }
-
-      nameMap[orgUnit.id] = orgUnit.name;
-    }
 
     return Scaffold(
       backgroundColor: Colors.grey[200],
@@ -146,21 +149,24 @@ class _DetailScreenState extends State<UserManagementScreen> {
                             html.window.open('https://www.openstreetmap.org/?mlat=' + _hospital.latitude.toString() + '&mlon=' + _hospital.longitude.toString() + '#map=17/' + _hospital.latitude.toString() + '/' + _hospital.longitude.toString(), 'map')
                           }, child: Text("show on map")),
                         SizedBox(height: 15),
-                        _orgUnits.length > 0 ? GraphView(
-                          graph: graph,
+                        _graph.nodeCount() > 0 ? GraphView(
+                          graph: _graph,
                           algorithm: BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
                           builder: (Node node) {
                             int id = node.key.value;
 
                             return Draggable<Node>(
                               data: node,
-                              feedback: OutlinedButton(child: Text(nameMap[id], style: TextStyle(fontSize: 15)), onPressed: () => {}),
+                              feedback: OutlinedButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15)), onPressed: () => {}),
                               child: DragTarget<Node>(
                                 builder: (context, candidateItems, rejectedItems) {
-                                  return OutlinedButton(child: Text(nameMap[id], style: TextStyle(fontSize: 15, fontWeight: candidateItems.isNotEmpty ? FontWeight.bold : FontWeight.normal)), onPressed: () => {});
+                                  return OutlinedButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, fontWeight: candidateItems.isNotEmpty ? FontWeight.bold : FontWeight.normal)), onPressed: () => {});
                                 },
                                 onAccept: (item) {
                                   //TODO: magic
+                                  setState(() {
+                                    _graph.removeNode(item);
+                                  });
                                 },
                                 )
                             );
