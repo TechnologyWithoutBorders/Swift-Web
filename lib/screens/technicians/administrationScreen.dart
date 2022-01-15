@@ -26,7 +26,6 @@ class _DetailScreenState extends State<UserManagementScreen> {
   final _scrollController = ScrollController();
 
   Hospital _hospital;
-  Comm.OrganizationalInfo _orgInfo;
   Graph _graph = Graph();
   Map<int, String> _nameMap = Map();
   List<User> _users = [];
@@ -74,7 +73,6 @@ class _DetailScreenState extends State<UserManagementScreen> {
       }
 
       setState(() {
-        _orgInfo = orgInfo;
         _graph = graph;
         _nameMap = nameMap;
       });
@@ -125,40 +123,25 @@ class _DetailScreenState extends State<UserManagementScreen> {
   }
 
   void _refreshOrgUnits(int id, int parent) {
-    Graph graph = Graph();
+    //TODO: magic
+    setState(() {
+      _graph.removeEdges(_graph.getInEdges(_graph.getNodeUsingId(id)));
 
-    List<OrganizationalUnit> orgUnits = List.from(_orgInfo.units);
-    List<OrganizationalRelation> oldOrgRelations = List.from(_orgInfo.relations);
-    List<OrganizationalRelation> orgRelations = [];
+      _graph.addEdge(_graph.getNodeUsingId(parent), _graph.getNodeUsingId(id));
+    });
+  }
 
-    // adjust graph
-    for(OrganizationalRelation orgRelation in oldOrgRelations) {
-      if(orgRelation.id != id) {
-        orgRelations.add(orgRelation);
-      }
-    }
+  void _addUnit(int parent) {
+    int id = 10;//TODO: new id
+    String name = "Test";
 
-    orgRelations.add(new OrganizationalRelation(id: id, parent: parent));
-
-    // redraw graph
-    Map<int, String> nameMap = Map();
-
-    for(OrganizationalUnit orgUnit in orgUnits) {
-      Node node = Node.Id(orgUnit.id);
-      graph.addNode(node);
-
-      nameMap[orgUnit.id] = orgUnit.name;
-    }
-
-    for(OrganizationalRelation orgRelation in orgRelations) {
-        graph.addEdge(graph.getNodeUsingId(orgRelation.parent), graph.getNodeUsingId(orgRelation.id));
-    }
+    Node node = Node.Id(id);
 
     //TODO: magic
     setState(() {
-      _orgInfo = Comm.OrganizationalInfo(units: orgUnits, relations: orgRelations);
-      _graph = graph;
-      _nameMap = nameMap;
+      _graph.addNode(node);
+      _graph.addEdge(_graph.getNodeUsingId(parent), node);
+      _nameMap[id] = name;
     });
   }
 
@@ -201,7 +184,13 @@ class _DetailScreenState extends State<UserManagementScreen> {
                               feedback: OutlinedButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15)), onPressed: () => {}),
                               child: DragTarget<Node>(
                                 builder: (context, candidateItems, rejectedItems) {
-                                  return OutlinedButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, fontWeight: candidateItems.isNotEmpty ? FontWeight.bold : FontWeight.normal)), onPressed: () => {});
+                                  return Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      OutlinedButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, fontWeight: candidateItems.isNotEmpty ? FontWeight.bold : FontWeight.normal)), onPressed: () => {}),
+                                      OutlinedButton(child: Text("add"), onPressed: () => _addUnit(node.key.value)),
+                                    ]
+                                  );
                                 },
                                 onAccept: (item) {
                                   if(item.key.value != 1 && item.key.value != node.key.value) {
