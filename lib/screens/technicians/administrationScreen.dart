@@ -65,11 +65,13 @@ class _DetailScreenState extends State<UserManagementScreen> {
         Node node = Node.Id(orgUnit.id);
         graph.addNode(node);
 
-        if(orgUnit.parent != null) {//TODO make sure that parent already exists
-          graph.addEdge(graph.getNodeUsingId(orgUnit.parent), node);
-        }
-
         nameMap[orgUnit.id] = orgUnit.name;
+      }
+
+      for(OrganizationalUnit orgUnit in orgUnits) {
+        if(orgUnit.parent != null) {
+          graph.addEdge(graph.getNodeUsingId(orgUnit.parent), graph.getNodeUsingId(orgUnit.id));
+        }
       }
 
       setState(() {
@@ -138,11 +140,13 @@ class _DetailScreenState extends State<UserManagementScreen> {
       Node node = Node.Id(orgUnit.id);
       graph.addNode(node);
 
-      if(orgUnit.parent != null) {//TODO make sure that parent already exists
-        graph.addEdge(graph.getNodeUsingId(orgUnit.parent), node);
-      }
-
       nameMap[orgUnit.id] = orgUnit.name;
+    }
+
+    for(OrganizationalUnit orgUnit in orgUnits) {
+      if(orgUnit.parent != null) {
+        graph.addEdge(graph.getNodeUsingId(orgUnit.parent), graph.getNodeUsingId(orgUnit.id));
+      }
     }
 
     //TODO: magic
@@ -195,7 +199,9 @@ class _DetailScreenState extends State<UserManagementScreen> {
                                   return OutlinedButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, fontWeight: candidateItems.isNotEmpty ? FontWeight.bold : FontWeight.normal)), onPressed: () => {});
                                 },
                                 onAccept: (item) {
-                                  _refreshOrgUnits(item.key.value, node.key.value);
+                                  if(item.key.value != 1) {
+                                    _refreshOrgUnits(item.key.value, node.key.value);
+                                  }
                                 },
                               )
                             );
