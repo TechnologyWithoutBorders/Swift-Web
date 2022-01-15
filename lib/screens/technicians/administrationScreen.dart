@@ -154,8 +154,6 @@ class _DetailScreenState extends State<UserManagementScreen> {
         graph.addEdge(graph.getNodeUsingId(orgRelation.parent), graph.getNodeUsingId(orgRelation.id));
     }
 
-    //graph.addEdge(graph.getNodeUsingId(parent), graph.getNodeUsingId(id));
-
     //TODO: magic
     setState(() {
       _orgInfo = Comm.OrganizationalInfo(units: orgUnits, relations: orgRelations);
