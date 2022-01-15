@@ -152,10 +152,9 @@ class _DetailScreenState extends State<UserManagementScreen> {
                           builder: (Node node) {
                             int id = node.key.value;
 
-                            return Draggable<String>(
-                              data: nameMap[id],
-                              dragAnchorStrategy: pointerDragAnchorStrategy,
-                              feedback: Text(nameMap[id], style: TextStyle(fontSize: 25, decoration: TextDecoration.none, color: Colors.black)),
+                            return Draggable<Node>(
+                              data: node,
+                              feedback: OutlinedButton(child: Text(nameMap[id], style: TextStyle(fontSize: 15)), onPressed: () => {}),
                               child: OutlinedButton(child: Text(nameMap[id], style: TextStyle(fontSize: 15)), onPressed: () => {})
                             );
                           }
