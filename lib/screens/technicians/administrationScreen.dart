@@ -4,6 +4,7 @@ import 'package:graphview/GraphView.dart';
 import 'dart:html' as html;
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/organizationalRelation.dart';
 import 'package:teog_swift/utilities/organizationalUnit.dart';
 import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/hospital.dart';
@@ -25,7 +26,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
   final _scrollController = ScrollController();
 
   Hospital _hospital;
-  List<OrganizationalUnit> _orgUnits = [];
+  Comm.OrganizationalInfo _orgInfo;
   Graph _graph = Graph();
   Map<int, String> _nameMap = Map();
   List<User> _users = [];
@@ -56,26 +57,24 @@ class _DetailScreenState extends State<UserManagementScreen> {
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
 
-    Comm.getOrganizationalUnits().then((orgUnits) {
+    Comm.getOrganizationalInfo().then((orgInfo) {
       Graph graph = Graph();
 
       Map<int, String> nameMap = Map();
 
-      for(OrganizationalUnit orgUnit in orgUnits) {
+      for(OrganizationalUnit orgUnit in orgInfo.units) {
         Node node = Node.Id(orgUnit.id);
         graph.addNode(node);
 
         nameMap[orgUnit.id] = orgUnit.name;
       }
 
-      for(OrganizationalUnit orgUnit in orgUnits) {
-        if(orgUnit.parent != null) {
-          graph.addEdge(graph.getNodeUsingId(orgUnit.parent), graph.getNodeUsingId(orgUnit.id));
-        }
+      for(OrganizationalRelation orgRelation in orgInfo.relations) {
+          graph.addEdge(graph.getNodeUsingId(orgRelation.parent), graph.getNodeUsingId(orgRelation.id));
       }
 
       setState(() {
-        _orgUnits = orgUnits;
+        _orgInfo = orgInfo;
         _graph = graph;
         _nameMap = nameMap;
       });
@@ -128,30 +127,38 @@ class _DetailScreenState extends State<UserManagementScreen> {
   void _refreshOrgUnits(int id, int parent) {
     Graph graph = Graph();
 
+    List<OrganizationalUnit> orgUnits = List.from(_orgInfo.units);
+    List<OrganizationalRelation> oldOrgRelations = List.from(_orgInfo.relations);
+    List<OrganizationalRelation> orgRelations = [];
+
+    // adjust graph
+    for(OrganizationalRelation orgRelation in oldOrgRelations) {
+      if(orgRelation.id != id) {
+        orgRelations.add(orgRelation);
+      }
+    }
+
+    orgRelations.add(new OrganizationalRelation(id: id, parent: parent));
+
+    // redraw graph
     Map<int, String> nameMap = Map();
 
-    List<OrganizationalUnit> orgUnits = List.from(_orgUnits);
-
     for(OrganizationalUnit orgUnit in orgUnits) {
-      if(orgUnit.id == id) {
-        orgUnit.parent = parent;//TODO: not perfect, but works
-      }
-
       Node node = Node.Id(orgUnit.id);
       graph.addNode(node);
 
       nameMap[orgUnit.id] = orgUnit.name;
     }
 
-    for(OrganizationalUnit orgUnit in orgUnits) {
-      if(orgUnit.parent != null) {
-        graph.addEdge(graph.getNodeUsingId(orgUnit.parent), graph.getNodeUsingId(orgUnit.id));
-      }
+    for(OrganizationalRelation orgRelation in orgRelations) {
+        graph.addEdge(graph.getNodeUsingId(orgRelation.parent), graph.getNodeUsingId(orgRelation.id));
     }
+
+    //graph.addEdge(graph.getNodeUsingId(parent), graph.getNodeUsingId(id));
 
     //TODO: magic
     setState(() {
-      _orgUnits = orgUnits;
+      _orgInfo = Comm.OrganizationalInfo(units: orgUnits, relations: orgRelations);
       _graph = graph;
       _nameMap = nameMap;
     });

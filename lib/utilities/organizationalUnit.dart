@@ -1,15 +1,13 @@
 class OrganizationalUnit {
   final int id;
   final String name;
-  int parent;
 
-  OrganizationalUnit({this.id, this.name, this.parent});
+  OrganizationalUnit({this.id, this.name});
 
   factory OrganizationalUnit.fromJson(Map<String, dynamic> json) {
     return OrganizationalUnit(
-      id: int.parse(json['id']),
+      id: json['id'],
       name: json['name'],
-      parent: json['parent'] == null ? null : int.parse(json['parent'])
     );
   }
 }
