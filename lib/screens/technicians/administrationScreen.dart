@@ -199,7 +199,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
                                   return OutlinedButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, fontWeight: candidateItems.isNotEmpty ? FontWeight.bold : FontWeight.normal)), onPressed: () => {});
                                 },
                                 onAccept: (item) {
-                                  if(item.key.value != 1) {
+                                  if(item.key.value != 1 && item.key.value != node.key.value) {
                                     _refreshOrgUnits(item.key.value, node.key.value);
                                   }
                                 },
