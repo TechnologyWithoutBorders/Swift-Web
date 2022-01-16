@@ -246,17 +246,20 @@ class _DetailScreenState extends State<UserManagementScreen> {
                               feedback: Card(child: Text(_nameMap[id], style: TextStyle(fontSize: 15))),
                               child: DragTarget<Node>(
                                 builder: (context, candidateItems, rejectedItems) {
-                                  return Card(child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      TextButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, fontWeight: candidateItems.isNotEmpty ? FontWeight.bold : FontWeight.normal)), onPressed: () => {}),
-                                      ButtonBar(mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key.value)),
-                                          id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key.value)) : null
-                                      ],)
-                                    ]
-                                  ));
+                                  return Card(
+                                    color: Colors.grey[100],
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        TextButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, fontWeight: candidateItems.isNotEmpty ? FontWeight.bold : FontWeight.normal)), onPressed: () => {}),
+                                        ButtonBar(mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key.value)),
+                                            id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key.value)) : null
+                                        ],)
+                                      ]
+                                    )
+                                  );
                                 },
                                 onAccept: (item) {
                                   if(item.key.value != 1 && item.key.value != node.key.value) {
