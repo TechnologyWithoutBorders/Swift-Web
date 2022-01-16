@@ -222,16 +222,20 @@ class _DetailScreenState extends State<UserManagementScreen> {
 
                             return Draggable<Node>(
                               data: node,
-                              feedback: OutlinedButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15)), onPressed: () => {}),
+                              feedback: Card(child: Text(_nameMap[id], style: TextStyle(fontSize: 15))),
                               child: DragTarget<Node>(
                                 builder: (context, candidateItems, rejectedItems) {
-                                  return Row(
+                                  return Card(child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      OutlinedButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, fontWeight: candidateItems.isNotEmpty ? FontWeight.bold : FontWeight.normal)), onPressed: () => {}),
-                                      OutlinedButton(child: Text("add"), onPressed: () => _addUnit(node.key.value)),
+                                      TextButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, fontWeight: candidateItems.isNotEmpty ? FontWeight.bold : FontWeight.normal)), onPressed: () => {}),
+                                      ButtonBar(mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key.value)),
+                                          TextButton(child: Icon(Icons.delete), onPressed: () => {})
+                                      ],)
                                     ]
-                                  );
+                                  ));
                                 },
                                 onAccept: (item) {
                                   if(item.key.value != 1 && item.key.value != node.key.value) {
