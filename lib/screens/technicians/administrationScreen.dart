@@ -252,7 +252,9 @@ class _DetailScreenState extends State<UserManagementScreen> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         TextButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)), onPressed: () => {}),
-                                        ButtonBar(mainAxisSize: MainAxisSize.min,
+                                        ButtonBar(
+                                          mainAxisSize: MainAxisSize.min,
+                                          buttonPadding: EdgeInsets.zero,
                                           children: [
                                             TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key.value)),
                                             id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key.value)) : null
