@@ -132,25 +132,58 @@ class _DetailScreenState extends State<UserManagementScreen> {
   }
 
   void _addUnit(int parent) {
-    int maxId = 1;
+    //TODO: should those be disposed?
+    TextEditingController nameController = TextEditingController();
 
-    for(Node node in _graph.nodes) {
-      if(node.key.value > maxId) {
-        maxId = node.key.value;
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          contentPadding: const EdgeInsets.all(16.0),
+          content: new Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TextField(
+                controller: nameController,
+                decoration: new InputDecoration(
+                  labelText: 'Name'),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+            ElevatedButton(
+                child: const Text('Create'),
+                onPressed: () {
+                  int maxId = 1;
+
+                  for(Node node in _graph.nodes) {
+                    if(node.key.value > maxId) {
+                      maxId = node.key.value;
+                    }
+                  }
+
+                  int newId = maxId+1;
+
+                  Node node = Node.Id(newId);
+
+                  //TODO: magic
+                  setState(() {
+                    _graph.addNode(node);
+                    _graph.addEdge(_graph.getNodeUsingId(parent), node);
+                    _nameMap[newId] = nameController.text;
+                  });
+
+                  Navigator.pop(context);
+                })
+          ],
+        );
       }
-    }
-
-    int newId = maxId+1;
-    String name = "Test";
-
-    Node node = Node.Id(newId);
-
-    //TODO: magic
-    setState(() {
-      _graph.addNode(node);
-      _graph.addEdge(_graph.getNodeUsingId(parent), node);
-      _nameMap[newId] = name;
-    });
+    );
   }
 
   @override
