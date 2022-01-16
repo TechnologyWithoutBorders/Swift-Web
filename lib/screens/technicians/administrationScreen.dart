@@ -132,16 +132,24 @@ class _DetailScreenState extends State<UserManagementScreen> {
   }
 
   void _addUnit(int parent) {
-    int id = 10;//TODO: new id
+    int maxId = 1;
+
+    for(Node node in _graph.nodes) {
+      if(node.key.value > maxId) {
+        maxId = node.key.value;
+      }
+    }
+
+    int newId = maxId+1;
     String name = "Test";
 
-    Node node = Node.Id(id);
+    Node node = Node.Id(newId);
 
     //TODO: magic
     setState(() {
       _graph.addNode(node);
       _graph.addEdge(_graph.getNodeUsingId(parent), node);
-      _nameMap[id] = name;
+      _nameMap[newId] = name;
     });
   }
 
