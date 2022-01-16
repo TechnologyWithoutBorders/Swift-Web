@@ -122,13 +122,22 @@ class _DetailScreenState extends State<UserManagementScreen> {
     );
   }
 
-  void _refreshOrgUnits(int id, int parent) {
-    //TODO: magic
-    setState(() {
-      _graph.removeEdges(_graph.getInEdges(_graph.getNodeUsingId(id)));
+  void _reOrganizeUnit(int id, int parentId) {
+    Node parent = _graph.getNodeUsingId(parentId);
+    Node child = _graph.getNodeUsingId(id);
 
-      _graph.addEdge(_graph.getNodeUsingId(parent), _graph.getNodeUsingId(id));
-    });
+    List<Node> successors = _graph.successorsOf(child);
+
+    if(!successors.contains(parent)) {
+      setState(() {
+        _graph.removeEdges(_graph.getInEdges(child));
+
+        _graph.addEdge(parent, child);
+      });
+    } else {
+      final snackBar = SnackBar(content: Text("cannot set a node as its own successor"));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 
   void _addUnit(int parent) {
@@ -147,6 +156,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
                 controller: nameController,
                 decoration: new InputDecoration(
                   labelText: 'Name'),
+                autofocus: true,
               ),
             ],
           ),
@@ -184,6 +194,17 @@ class _DetailScreenState extends State<UserManagementScreen> {
         );
       }
     );
+  }
+
+  void _removeUnit(int id) {
+    Node node = _graph.getNodeUsingId(id);
+    List<Node> successors = _graph.successorsOf(node);
+
+    setState(() {
+      _graph.removeNodes(successors);
+      _graph.removeNode(node);
+      _nameMap.remove(id);
+    });
   }
 
   @override
@@ -232,14 +253,14 @@ class _DetailScreenState extends State<UserManagementScreen> {
                                       ButtonBar(mainAxisSize: MainAxisSize.min,
                                         children: [
                                           TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key.value)),
-                                          TextButton(child: Icon(Icons.delete), onPressed: () => {})
+                                          id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key.value)) : null
                                       ],)
                                     ]
                                   ));
                                 },
                                 onAccept: (item) {
                                   if(item.key.value != 1 && item.key.value != node.key.value) {
-                                    _refreshOrgUnits(item.key.value, node.key.value);
+                                    _reOrganizeUnit(item.key.value, node.key.value);
                                   }
                                 },
                               )
