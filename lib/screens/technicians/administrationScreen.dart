@@ -96,13 +96,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
       context: context,
       builder: (BuildContext context) {
         return new AlertDialog(
-          contentPadding: const EdgeInsets.all(16.0),
-          content: new Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text("Are you sure you want to delete this user? (Does nothing at the moment)"),
-            ],
-          ),
+          title: Text("Are you sure you want to delete this user? (Does nothing at the moment)"),
           actions: <Widget>[
             ElevatedButton(
                 child: const Text('Cancel'),
@@ -148,6 +142,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
       context: context,
       builder: (BuildContext context) {
         return new AlertDialog(
+          title: Text("Add child unit to \"" + _nameMap[parent] + "\""),
           contentPadding: const EdgeInsets.all(16.0),
           content: new Column(
             mainAxisSize: MainAxisSize.min,
@@ -155,7 +150,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
               TextField(
                 controller: nameController,
                 decoration: new InputDecoration(
-                  labelText: 'Name'),
+                  labelText: 'Name of child unit'),
                 autofocus: true,
               ),
             ],
@@ -199,14 +194,36 @@ class _DetailScreenState extends State<UserManagementScreen> {
   }
 
   void _removeUnit(int id) {
-    Node node = _graph.getNodeUsingId(id);
-    List<Node> successors = _graph.successorsOf(node);
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          title: Text("Delete unit \"" + _nameMap[id] + "\"?"),
+          content: Text("This will also delete all subunits.", style: TextStyle(color: Colors.red)),
+          actions: <Widget>[
+            ElevatedButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+            ElevatedButton(
+                child: const Text('Delete'),
+                onPressed: () {
+                  Node node = _graph.getNodeUsingId(id);
+                  List<Node> successors = _graph.successorsOf(node);
 
-    setState(() {
-      _graph.removeNodes(successors);
-      _graph.removeNode(node);
-      _nameMap.remove(id);
-    });
+                  setState(() {
+                    _graph.removeNodes(successors);
+                    _graph.removeNode(node);
+                    _nameMap.remove(id);
+                  });
+
+                  Navigator.pop(context);
+                })
+          ],
+        );
+      }
+    );
   }
 
   @override
