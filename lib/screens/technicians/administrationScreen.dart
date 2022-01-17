@@ -199,7 +199,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
       builder: (BuildContext context) {
         return new AlertDialog(
           title: Text("Delete unit \"" + _nameMap[id] + "\"?"),
-          content: Text("This will also delete all subunits.", style: TextStyle(color: Colors.red)),
+          content: Text("This will also delete all child units.", style: TextStyle(color: Colors.red)),
           actions: <Widget>[
             ElevatedButton(
                 child: const Text('Cancel'),
