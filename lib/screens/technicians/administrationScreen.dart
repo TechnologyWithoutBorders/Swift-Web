@@ -169,26 +169,28 @@ class _DetailScreenState extends State<UserManagementScreen> {
             ElevatedButton(
                 child: const Text('Create'),
                 onPressed: () {
-                  int maxId = 1;
+                  if(nameController.text.isNotEmpty) {
+                    int maxId = 1;
 
-                  for(Node node in _graph.nodes) {
-                    if(node.key.value > maxId) {
-                      maxId = node.key.value;
+                    for(Node node in _graph.nodes) {
+                      if(node.key.value > maxId) {
+                        maxId = node.key.value;
+                      }
                     }
+
+                    int newId = maxId+1;
+
+                    Node node = Node.Id(newId);
+
+                    //TODO: magic
+                    setState(() {
+                      _graph.addNode(node);
+                      _graph.addEdge(_graph.getNodeUsingId(parent), node);
+                      _nameMap[newId] = nameController.text;
+                    });
+
+                    Navigator.pop(context);
                   }
-
-                  int newId = maxId+1;
-
-                  Node node = Node.Id(newId);
-
-                  //TODO: magic
-                  setState(() {
-                    _graph.addNode(node);
-                    _graph.addEdge(_graph.getNodeUsingId(parent), node);
-                    _nameMap[newId] = nameController.text;
-                  });
-
-                  Navigator.pop(context);
                 })
           ],
         );
