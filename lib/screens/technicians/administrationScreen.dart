@@ -9,6 +9,7 @@ import 'package:teog_swift/utilities/organizationalUnit.dart';
 import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/hospital.dart';
 import 'package:teog_swift/utilities/messageException.dart';
+import 'package:teog_swift/screens/technicians/organizationScreen.dart';
 
 class UserManagementScreen extends StatefulWidget {
   UserManagementScreen({Key key}) : super(key: key);
@@ -254,43 +255,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
                             html.window.open('https://www.openstreetmap.org/?mlat=' + _hospital.latitude.toString() + '&mlon=' + _hospital.longitude.toString() + '#map=17/' + _hospital.latitude.toString() + '/' + _hospital.longitude.toString(), 'map')
                           }, child: Text("show on map")),
                         SizedBox(height: 15),
-                        _graph.nodeCount() > 0 ? GraphView(
-                          graph: _graph,
-                          algorithm: BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
-                          builder: (Node node) {
-                            int id = node.key.value;
-
-                            return Draggable<Node>(
-                              data: node,
-                              feedback: Card(color: Colors.grey[100], child: Padding(padding: EdgeInsets.all(15), child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)))),
-                              child: DragTarget<Node>(
-                                builder: (context, candidateItems, rejectedItems) {
-                                  return Card(
-                                    color: candidateItems.isNotEmpty ? Colors.grey[300] : Colors.grey[100],
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        TextButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)), onPressed: () => {}),
-                                        ButtonBar(
-                                          mainAxisSize: MainAxisSize.min,
-                                          buttonPadding: EdgeInsets.zero,
-                                          children: [
-                                            TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key.value)),
-                                            id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key.value)) : null
-                                        ],)
-                                      ]
-                                    )
-                                  );
-                                },
-                                onAccept: (item) {
-                                  if(item.key.value != 1 && item.key.value != node.key.value) {
-                                    _reOrganizeUnit(item.key.value, node.key.value);
-                                  }
-                                },
-                              )
-                            );
-                          }
-                          ) : Text("loading organizational units..."),
+                        OrganizationScreen(),
                       ],
                     ),
                   ),
