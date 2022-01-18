@@ -6,7 +6,6 @@ import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/hospital.dart';
 import 'package:teog_swift/utilities/messageException.dart';
-import 'package:teog_swift/screens/technicians/organizationScreen.dart';
 
 class UserManagementScreen extends StatefulWidget {
   UserManagementScreen({Key key}) : super(key: key);
@@ -112,8 +111,6 @@ class _DetailScreenState extends State<UserManagementScreen> {
                         _hospital == null ? Text("") : TextButton(onPressed: () => {
                             html.window.open('https://www.openstreetmap.org/?mlat=' + _hospital.latitude.toString() + '&mlon=' + _hospital.longitude.toString() + '#map=17/' + _hospital.latitude.toString() + '/' + _hospital.longitude.toString(), 'map')
                           }, child: Text("show on map")),
-                        SizedBox(height: 15),
-                        OrganizationScreen(),
                       ],
                     ),
                   ),

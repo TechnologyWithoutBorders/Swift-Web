@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:teog_swift/main.dart';
 import 'package:teog_swift/screens/technicians/dashBoardScreen.dart';
 import 'package:teog_swift/screens/technicians/inventoryScreen.dart';
+import 'package:teog_swift/screens/technicians/organizationScreen.dart';
 import 'package:teog_swift/screens/technicians/userManagementScreen.dart';
 import 'package:teog_swift/screens/technicians/maintenanceScreen.dart';
 
@@ -21,7 +22,7 @@ class TabScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 5,
       child: Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
@@ -45,7 +46,8 @@ class TabScreen extends StatelessWidget {
               Tab(text: "Dashboard", icon: Icon(Icons.chair)),
               Tab(text: "Maintenance", icon: Icon(Icons.calendar_today)),
               Tab(text: "Inventory", icon: Icon(Icons.inventory)),
-              Tab(text: "Administration", icon: Icon(Icons.person)),
+              Tab(text: "Organization", icon: Icon(Icons.account_tree_outlined)),
+              Tab(text: "People", icon: Icon(Icons.person)),
             ],
           ),
         ),
@@ -54,6 +56,7 @@ class TabScreen extends StatelessWidget {
             DashboardScreen(),
             MaintenanceScreen(),
             InventoryScreen(),
+            OrganizationScreen(),
             UserManagementScreen(),
           ],
         ),

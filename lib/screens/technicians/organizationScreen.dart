@@ -16,8 +16,6 @@ class OrganizationScreen extends StatefulWidget {
 }
 
 class _OrganizationScreenState extends State<OrganizationScreen> {
-  final _scrollController = ScrollController();
-
   Graph _graph = Graph();
   Map<int, String> _nameMap = Map();
 
@@ -165,42 +163,56 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   Widget build(BuildContext context) {
     BuchheimWalkerConfiguration builder = BuchheimWalkerConfiguration();
 
-    return _graph.nodeCount() > 0 ? GraphView(
-      graph: _graph,
-      algorithm: BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
-      builder: (Node node) {
-        int id = node.key.value;
+    return Scaffold(
+      backgroundColor: Colors.grey[200],
+      body: Container(alignment: Alignment.center,
+        child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
+          child: Card(
+            child: Padding(
+              padding: EdgeInsets.all(25.0),
+              child: Center(
+                child: _graph.nodeCount() > 0 ? GraphView(
+                  graph: _graph,
+                  algorithm: BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
+                  builder: (Node node) {
+                    int id = node.key.value;
 
-        return Draggable<Node>(
-          data: node,
-          feedback: Card(color: Colors.grey[100], child: Padding(padding: EdgeInsets.all(15), child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)))),
-          child: DragTarget<Node>(
-            builder: (context, candidateItems, rejectedItems) {
-              return Card(
-                color: candidateItems.isNotEmpty ? Colors.grey[300] : Colors.grey[100],
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)), onPressed: () => {}),
-                    ButtonBar(
-                      mainAxisSize: MainAxisSize.min,
-                      buttonPadding: EdgeInsets.zero,
-                      children: [
-                        TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key.value)),
-                        id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key.value)) : null
-                    ],)
-                  ]
-                )
-              );
-            },
-            onAccept: (item) {
-              if(item.key.value != 1 && item.key.value != node.key.value) {
-                _reOrganizeUnit(item.key.value, node.key.value);
-              }
-            },
+                    return Draggable<Node>(
+                      data: node,
+                      feedback: Card(color: Colors.grey[100], child: Padding(padding: EdgeInsets.all(15), child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)))),
+                      child: DragTarget<Node>(
+                        builder: (context, candidateItems, rejectedItems) {
+                          return Card(
+                            color: candidateItems.isNotEmpty ? Colors.grey[300] : Colors.grey[100],
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)), onPressed: () => {}),
+                                ButtonBar(
+                                  mainAxisSize: MainAxisSize.min,
+                                  buttonPadding: EdgeInsets.zero,
+                                  children: [
+                                    TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key.value)),
+                                    id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key.value)) : null
+                                ],)
+                              ]
+                            )
+                          );
+                        },
+                        onAccept: (item) {
+                          if(item.key.value != 1 && item.key.value != node.key.value) {
+                            _reOrganizeUnit(item.key.value, node.key.value);
+                          }
+                        },
+                      )
+                    );
+                  }
+                ) : Text("loading organizational units...")
+              )
+            )
           )
-        );
-      }
-    ) : Text("loading organizational units...");
+        )
+      )
+    );
   }
 }
