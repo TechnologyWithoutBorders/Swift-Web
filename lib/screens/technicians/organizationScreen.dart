@@ -192,8 +192,8 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                   mainAxisSize: MainAxisSize.min,
                                   buttonPadding: EdgeInsets.zero,
                                   children: [
-                                    TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key.value)),
-                                    id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key.value)) : null
+                                    id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key.value)) : null,
+                                    TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key.value))
                                 ],)
                               ]
                             )
