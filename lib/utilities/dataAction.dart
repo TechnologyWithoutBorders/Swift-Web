@@ -12,4 +12,5 @@ class DataAction {
   static const String getCountries = "get_countries";
   static const String uploadDocument = "upload_document";
   static const String editDevice = "edit_device";
+  static const String getOrganizationalUnits = "get_organizational_units";
 }

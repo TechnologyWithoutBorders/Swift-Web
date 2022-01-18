@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:teog_swift/utilities/country.dart';
 import 'package:teog_swift/utilities/dataAction.dart';
 import 'package:teog_swift/utilities/deviceInfo.dart';
+import 'package:teog_swift/utilities/organizationalRelation.dart';
+import 'package:teog_swift/utilities/organizationalUnit.dart';
 import 'package:teog_swift/utilities/previewDeviceInfo.dart';
 
 import 'package:teog_swift/utilities/swiftResponse.dart';
@@ -440,6 +442,40 @@ Future<List<String>> uploadDocument(String manufacturer, String model, String na
   }
 }
 
+Future<OrganizationalInfo> getOrganizationalInfo() async {
+  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+
+  final response = await http.post(
+    uri,
+    headers: _headers,
+    body: jsonEncode(await _generateParameterMap(action: DataAction.getOrganizationalUnits, authentication: true),
+    ),
+  );
+
+  if(response.statusCode == 200) {
+    SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
+
+    if(swiftResponse.responseCode == 0) {
+      List<OrganizationalUnit> units = [];
+      List<OrganizationalRelation> relations = [];
+
+      for(var jsonUnit in swiftResponse.data['orgUnits']) {
+        units.add(OrganizationalUnit.fromJson(jsonUnit));
+      }
+
+      for(var jsonRelation in swiftResponse.data['orgRelations']) {
+        relations.add(OrganizationalRelation.fromJson(jsonRelation));
+      }
+
+      return OrganizationalInfo(units: units, relations: relations);
+    } else {
+      throw MessageException(swiftResponse.data);
+    }
+  } else {
+    throw MessageException(Constants.generic_error_message);
+  }
+}
+
 Future<Map<String, dynamic>> _generateParameterMap({final String action = "", final bool authentication = false, final Map<String, dynamic> additional = const {}}) async {
   final Map<String, dynamic> parameterMap = Map();
 
@@ -464,5 +500,12 @@ Future<Map<String, dynamic>> _generateParameterMap({final String action = "", fi
   });
 
   return parameterMap;
+}
+
+class OrganizationalInfo {
+  final List<OrganizationalUnit> units;
+  final List<OrganizationalRelation> relations;
+
+  OrganizationalInfo({this.units, this.relations});
 }
   
