@@ -62,7 +62,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
         _graph.addEdge(parent, child);
       });
     } else {
-      final snackBar = SnackBar(content: Text("cannot set a node as its own successor"));
+      final snackBar = SnackBar(content: Text("cannot set a department as its own child"));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -75,7 +75,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
       context: context,
       builder: (BuildContext context) {
         return new AlertDialog(
-          title: Text("Add child unit to \"" + _nameMap[parent] + "\""),
+          title: Text("Add child department to \"" + _nameMap[parent] + "\""),
           contentPadding: const EdgeInsets.all(16.0),
           content: new Column(
             mainAxisSize: MainAxisSize.min,
@@ -83,7 +83,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
               TextField(
                 controller: nameController,
                 decoration: new InputDecoration(
-                  labelText: 'Name of child unit'),
+                  labelText: 'Name of child department'),
                 autofocus: true,
               ),
             ],
@@ -131,8 +131,8 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
       context: context,
       builder: (BuildContext context) {
         return new AlertDialog(
-          title: Text("Delete unit \"" + _nameMap[id] + "\"?"),
-          content: Text("This will also delete all child units.", style: TextStyle(color: Colors.red)),
+          title: Text("Delete department \"" + _nameMap[id] + "\"?"),
+          content: Text("This will also delete all child departments.", style: TextStyle(color: Colors.red)),
           actions: <Widget>[
             ElevatedButton(
                 child: const Text('Cancel'),
@@ -207,7 +207,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                       )
                     );
                   }
-                ) : Text("loading organizational units...")
+                ) : Text("loading departments...")
               )
             )
           )
