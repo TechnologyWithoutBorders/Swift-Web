@@ -2,9 +2,9 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter/material.dart';
 
-import 'package:pdf/pdf.dart';
+/*import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pdfLib;
-import 'package:printing/printing.dart';
+import 'package:printing/printing.dart';*/
 
 class CodeGenerationScreen extends StatefulWidget {
   CodeGenerationScreen({Key key}) : super(key: key);
@@ -24,7 +24,7 @@ class _DetailScreenState extends State<CodeGenerationScreen> {
       int firstNumber = int.parse(_firstNumberTextController.text);
       int lastNumber = int.parse(_lastNumberTextController.text);
 
-      final font = await rootBundle.load("OpenSans-Regular.ttf");
+      /*final font = await rootBundle.load("OpenSans-Regular.ttf");
       final ttf = pdfLib.Font.ttf(font);
       final fontBold = await rootBundle.load("OpenSans-Bold.ttf");
       final ttfBold = pdfLib.Font.ttf(fontBold);
@@ -56,7 +56,7 @@ class _DetailScreenState extends State<CodeGenerationScreen> {
         )
       );
 
-      await Printing.sharePdf(bytes: await pdf.save(), filename: 'barcodes.pdf');
+      await Printing.sharePdf(bytes: await pdf.save(), filename: 'barcodes.pdf');*/
     }
   }
 
