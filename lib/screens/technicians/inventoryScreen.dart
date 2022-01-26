@@ -40,17 +40,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
     });
   }
 
-  void _openDeviceById(int id) {
-    Comm.fetchDevice(id).then((deviceInfo) {//TODO: catch Exception
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => TechnicianDeviceScreen(deviceInfo: deviceInfo),
-        )
-      );
-    });
-  }
-
   void _showAllDevices() {
     Comm.getDevices().then((devices) {//TODO: catch Exception
       setState(() {
@@ -199,7 +188,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
                             title: Text(deviceInfo.device.type),
                             subtitle: Text(deviceInfo.device.manufacturer + " " + deviceInfo.device.model),
                             trailing: Text(deviceInfo.device.location),
-                            onTap: () => _openDeviceById(deviceInfo.device.id)
+                            onTap: () => {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: deviceInfo.device.id)))
+                            }
                           );
                         },
                         separatorBuilder: (BuildContext context, int index) => const Divider(),
