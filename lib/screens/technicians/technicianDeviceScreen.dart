@@ -101,8 +101,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                   Comm.editDevice(
                     HospitalDevice(id: this._deviceInfo.device.id, type: type, manufacturer: manufacturer, model: model, location: location)).then((modifiedDeviceInfo) {
                     
-                    //_updateDeviceInfo(modifiedDeviceInfo);
-                    //TODO: skdlf
+                    _updateDeviceInfo(modifiedDeviceInfo);
                   });
 
                   Navigator.pop(context);
@@ -371,7 +370,6 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
     if (_formKey.currentState.validate()) {
       Comm.queueRepair(479, _reportTitleController.text, _problemTextController.text).then((newReport) {
         //widget.updateDeviceInfo(DeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData));
-        //TODO:
       }).onError((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.toString()));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
