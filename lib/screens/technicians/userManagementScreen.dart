@@ -5,6 +5,7 @@ import 'dart:html' as html;
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/hospital.dart';
+import 'package:teog_swift/utilities/messageException.dart';
 
 class UserManagementScreen extends StatefulWidget {
   UserManagementScreen({Key key}) : super(key: key);
@@ -41,16 +42,22 @@ class _DetailScreenState extends State<UserManagementScreen> {
   void initState() {
     super.initState();
 
-    Comm.getHospitalInfo().then((hospital) {//TODO: catch Exception
+    Comm.getHospitalInfo().then((hospital) {
       setState(() {
         _hospital = hospital;
       });
+    }).onError<MessageException>((error, stackTrace) {
+        final snackBar = SnackBar(content: Text(error.message));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
 
-    Comm.getUsers().then((users) {//TODO: catch Exception
+    Comm.getUsers().then((users) {
       setState(() {
         _users = users;
       });
+    }).onError<MessageException>((error, stackTrace) {
+        final snackBar = SnackBar(content: Text(error.message));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
   }
 
@@ -59,13 +66,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
       context: context,
       builder: (BuildContext context) {
         return new AlertDialog(
-          contentPadding: const EdgeInsets.all(16.0),
-          content: new Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text("Are you sure you want to delete this user? (Does nothing at the moment)"),
-            ],
-          ),
+          title: Text("Are you sure you want to delete this user? (Does nothing at the moment)"),
           actions: <Widget>[
             ElevatedButton(
                 child: const Text('Cancel'),

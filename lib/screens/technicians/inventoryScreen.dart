@@ -69,7 +69,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
       _filterTextController.clear();
       _preFilteredDevices.clear();
       _displayedDevices.clear();
-      _listTitle = "Number of devices without manuals: ";
+      _listTitle = "Number of devices with no manual attached: ";
     });
 
     int counter = 0;
@@ -151,12 +151,13 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   ButtonBar(
                     alignment: MainAxisAlignment.center,
                     children: [
+                      Text("Select devices: "),
                       ElevatedButton(
-                        child: Text("Show all devices"),
+                        child: Text("All"),
                         onPressed: _manualButtonDisabled ? null : () => _showAllDevices(),
                       ),
                       ElevatedButton(
-                        child: Text("Show devices without manuals"),
+                        child: Text("No manual attached"),
                         onPressed: _manualButtonDisabled ? null : () => _checkManuals(),
                       ),
                     ],
