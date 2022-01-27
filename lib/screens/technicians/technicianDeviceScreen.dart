@@ -7,7 +7,7 @@ import 'package:teog_swift/utilities/hospitalDevice.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/deviceInfo.dart';
-import 'package:teog_swift/utilities/report.dart';
+import 'package:teog_swift/utilities/detailedReport.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
 import 'package:teog_swift/utilities/messageException.dart';
 
@@ -115,7 +115,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
   @override
   Widget build(BuildContext context) {
     HospitalDevice device = _deviceInfo.device;
-    List<Report> reports = _deviceInfo.reports;
+    List<DetailedReport> reports = _deviceInfo.reports;
 
     return Scaffold(
       backgroundColor: Colors.grey[200],
@@ -179,8 +179,11 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                                 controller: _scrollController,
                                 itemCount: reports.length,
                                 itemBuilder: (BuildContext context, int index) {
+                                  DetailedReport report = reports[index];
+
                                   return ListTile(
-                                    title: Text(reports[index].currentState.toString()),
+                                    title: Text(report.title),
+                                    subtitle: Text(report.description),
                                   );
                                 },
                                 separatorBuilder: (BuildContext context, int index) => const Divider(),
@@ -324,8 +327,8 @@ class _StateScreenState extends State<StateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<Report> reports = widget.deviceInfo.reports;
-    Report lastReport = reports[reports.length-1];
+    List<DetailedReport> reports = widget.deviceInfo.reports;
+    DetailedReport lastReport = reports[reports.length-1];
 
     return Column(
       children: [
