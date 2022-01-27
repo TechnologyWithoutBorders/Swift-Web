@@ -7,7 +7,7 @@ import 'package:teog_swift/utilities/hospitalDevice.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/deviceInfo.dart';
-import 'package:teog_swift/utilities/report.dart';
+import 'package:teog_swift/utilities/detailedReport.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
 import 'package:teog_swift/utilities/messageException.dart';
 
@@ -115,7 +115,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
   @override
   Widget build(BuildContext context) {
     HospitalDevice device = _deviceInfo.device;
-    List<Report> reports = _deviceInfo.reports;
+    List<DetailedReport> reports = _deviceInfo.reports;
 
     return Scaffold(
       backgroundColor: Colors.grey[200],
@@ -179,8 +179,20 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                                 controller: _scrollController,
                                 itemCount: reports.length,
                                 itemBuilder: (BuildContext context, int index) {
+                                  DetailedReport report = reports[index];
+
                                   return ListTile(
-                                    title: Text(reports[index].currentState.toString()),
+                                    leading: Container(width: 30, height: 30, color: DeviceState.getColor(report.currentState),
+                                      child: Padding(padding: EdgeInsets.all(3.0),
+                                        child: Row(children: [
+                                            Icon(DeviceState.getIconData(report.currentState))
+                                          ]
+                                        )
+                                      )
+                                    ),
+                                    title: Text(report.title),
+                                    subtitle: Text(report.description),
+                                    trailing: Text(report.author),
                                   );
                                 },
                                 separatorBuilder: (BuildContext context, int index) => const Divider(),
@@ -324,19 +336,19 @@ class _StateScreenState extends State<StateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<Report> reports = widget.deviceInfo.reports;
-    Report lastReport = reports[reports.length-1];
+    List<DetailedReport> reports = widget.deviceInfo.reports;
+    DetailedReport latestReport = reports[0];
 
     return Column(
       children: [
         Text("Current State:", style: TextStyle(fontSize: 25)),
         SizedBox(height: 10),
-          Container(color: DeviceState.getColor(lastReport.currentState),
+          Container(color: DeviceState.getColor(latestReport.currentState),
           child: Padding(padding: EdgeInsets.all(3.0),
             child: Row(children: [
-                Icon(DeviceState.getIconData(lastReport.currentState)),
+                Icon(DeviceState.getIconData(latestReport.currentState)),
               SizedBox(width: 5),
-              Text(DeviceState.getStateString(lastReport.currentState),
+              Text(DeviceState.getStateString(latestReport.currentState),
                 style: TextStyle(fontSize: 25)
               ),
               ]
@@ -344,7 +356,7 @@ class _StateScreenState extends State<StateScreen> {
           )
         ),
         SizedBox(height: 5),
-        Text(DateTime.now().difference(lastReport.created).inDays.toString() + " days"),
+        Text(DateTime.now().difference(latestReport.created).inDays.toString() + " days"),
       ]
     );
   }
