@@ -115,6 +115,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
   @override
   Widget build(BuildContext context) {
     HospitalDevice device = _deviceInfo.device;
+    List<Report> reports = _deviceInfo.reports;
 
     return Scaffold(
       backgroundColor: Colors.grey[200],
@@ -176,10 +177,10 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                               controller: _scrollController,
                               child: ListView.separated(
                                 controller: _scrollController,
-                                itemCount: 2,
+                                itemCount: reports.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   return ListTile(
-                                    title: Text("test"),
+                                    title: Text(reports[index].currentState.toString()),
                                   );
                                 },
                                 separatorBuilder: (BuildContext context, int index) => const Divider(),
