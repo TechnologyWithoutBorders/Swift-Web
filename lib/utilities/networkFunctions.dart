@@ -129,7 +129,7 @@ Future<DeviceInfo> getDeviceInfo(final int deviceId) async {
   }
 }
 
-Future<ShortDeviceInfo> editDevice(HospitalDevice device) async {
+Future<DeviceInfo> editDevice(HospitalDevice device) async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
   final response = await http.post(
@@ -144,9 +144,15 @@ Future<ShortDeviceInfo> editDevice(HospitalDevice device) async {
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
 
     if(swiftResponse.responseCode == 0) {
-      return ShortDeviceInfo(
+      List<Report> reports = [];
+
+      for(var jsonReport in swiftResponse.data["reports"]) {
+        reports.add(Report.fromJson(jsonReport));
+      }
+
+      return DeviceInfo(
         device: HospitalDevice.fromJson(swiftResponse.data["device"]),
-        report: Report.fromJson(swiftResponse.data["report"]),
+        reports: reports,
         imageData: swiftResponse.data["image"],
       );
     } else {

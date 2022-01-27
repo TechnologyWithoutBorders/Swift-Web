@@ -6,42 +6,53 @@ import 'package:flutter/material.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
-import 'package:teog_swift/utilities/shortDeviceInfo.dart';
+import 'package:teog_swift/utilities/deviceInfo.dart';
 import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
+import 'package:teog_swift/utilities/messageException.dart';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class TechnicianDeviceScreen extends StatefulWidget {
-  //this one is never modified
-  final ShortDeviceInfo deviceInfo;
+  final int id;
 
-  TechnicianDeviceScreen({Key key, @required this.deviceInfo}) : super(key: key);
+  TechnicianDeviceScreen({Key key, @required this.id}) : super(key: key);
 
   @override
-  _TechnicianDeviceScreenState createState() => _TechnicianDeviceScreenState(deviceInfo: deviceInfo);
+  _TechnicianDeviceScreenState createState() => _TechnicianDeviceScreenState();
 }
 
 class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
-  ShortDeviceInfo deviceInfo;
+  DeviceInfo _deviceInfo;
 
   final _scrollController = ScrollController();
 
-  _TechnicianDeviceScreenState({this.deviceInfo});
+  @override
+  void initState() {
+    super.initState();
 
-  void _updateDeviceInfo(ShortDeviceInfo modifiedDeviceInfo) {
+    Comm.getDeviceInfo(widget.id).then((deviceInfo) {
+      _updateDeviceInfo(deviceInfo);
+    }).onError<MessageException>((error, stackTrace) {
+      print(error.message);
+      final snackBar = SnackBar(content: Text(error.message));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    });
+  }
+
+  void _updateDeviceInfo(DeviceInfo modifiedDeviceInfo) {
     setState(() {
-      this.deviceInfo = modifiedDeviceInfo;
+      this._deviceInfo = modifiedDeviceInfo;
     });
   }
 
   void _editDevice() {
     //TODO: should those be disposed?
-    TextEditingController typeController = TextEditingController(text: this.deviceInfo.device.type);
-    TextEditingController manufacturerController = TextEditingController(text: this.deviceInfo.device.manufacturer);
-    TextEditingController modelController = TextEditingController(text: this.deviceInfo.device.model);
-    TextEditingController locationController = TextEditingController(text: this.deviceInfo.device.location);
+    TextEditingController typeController = TextEditingController(text: this._deviceInfo.device.type);
+    TextEditingController manufacturerController = TextEditingController(text: this._deviceInfo.device.manufacturer);
+    TextEditingController modelController = TextEditingController(text: this._deviceInfo.device.model);
+    TextEditingController locationController = TextEditingController(text: this._deviceInfo.device.location);
 
     showDialog<String>(
       context: context,
@@ -88,7 +99,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                   String location = locationController.text;
 
                   Comm.editDevice(
-                    HospitalDevice(id: this.deviceInfo.device.id, type: type, manufacturer: manufacturer, model: model, location: location)).then((modifiedDeviceInfo) {
+                    HospitalDevice(id: this._deviceInfo.device.id, type: type, manufacturer: manufacturer, model: model, location: location)).then((modifiedDeviceInfo) {
                     
                     _updateDeviceInfo(modifiedDeviceInfo);
                   });
@@ -103,10 +114,13 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    HospitalDevice device = _deviceInfo.device;
+    List<Report> reports = _deviceInfo.reports;
+
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: Text(deviceInfo.device.type),
+        title: Text(device.type),
       ),
       body: Center(child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
         child: Card(
@@ -123,9 +137,9 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SelectableText(deviceInfo.device.manufacturer + " " + deviceInfo.device.model, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                            SelectableText(deviceInfo.device.location, style: TextStyle(fontSize: 25)),
-                            Text("Maintenance interval: " + (deviceInfo.device.maintenanceInterval/4).toString() + " months"),
+                            SelectableText(device.manufacturer + " " + device.model, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                            SelectableText(device.location, style: TextStyle(fontSize: 25)),
+                            Text("Maintenance interval: " + (device.maintenanceInterval/4).toString() + " months"),
                             TextButton(
                               child: Text('edit'),
                               onPressed: () => _editDevice(),
@@ -139,7 +153,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                       children: [
                         Text("You can scan this code using the mobile app."),
                         QrImage(
-                          data: deviceInfo.device.id.toString(),
+                          data: _deviceInfo.device.id.toString(),
                           version: QrVersions.auto,
                           size: 100.0,
                         ),
@@ -151,22 +165,22 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                 Flexible(child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(flex: 3, child: Image.memory(base64Decode(deviceInfo.imageData))),
+                    Expanded(flex: 3, child: Image.memory(base64Decode(_deviceInfo.imageData))),
                     SizedBox(width: 30),
                     Expanded(
                       flex: 2,
                       child: Column(mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          StateScreen(deviceInfo: deviceInfo),
+                          StateScreen(deviceInfo: _deviceInfo),
                           Flexible(
                             child: Scrollbar(isAlwaysShown: true,
                               controller: _scrollController,
                               child: ListView.separated(
                                 controller: _scrollController,
-                                itemCount: 2,
+                                itemCount: reports.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   return ListTile(
-                                    title: Text("test"),
+                                    title: Text(reports[index].currentState.toString()),
                                   );
                                 },
                                 separatorBuilder: (BuildContext context, int index) => const Divider(),
@@ -182,7 +196,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                         children: [
                           Text("Available Documents:", style: TextStyle(fontSize: 25)),
                           SizedBox(height: 10),
-                          Flexible(child: DocumentScreen(deviceInfo: deviceInfo)),
+                          Flexible(child: DocumentScreen(deviceInfo: _deviceInfo)),
                         ],
                       )
                     )
@@ -198,7 +212,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
 }
 
 class DocumentScreen extends StatefulWidget {
-  final ShortDeviceInfo deviceInfo;
+  final DeviceInfo deviceInfo;
 
   DocumentScreen({Key key, @required this.deviceInfo}) : super(key: key);
 
@@ -298,7 +312,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
 }
 
 class StateScreen extends StatefulWidget {
-  final ShortDeviceInfo deviceInfo;
+  final DeviceInfo deviceInfo;
 
   StateScreen({Key key, @required this.deviceInfo}) : super(key: key);
 
@@ -310,18 +324,19 @@ class _StateScreenState extends State<StateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Report report = widget.deviceInfo.report;
+    List<Report> reports = widget.deviceInfo.reports;
+    Report lastReport = reports[reports.length-1];
 
     return Column(
       children: [
         Text("Current State:", style: TextStyle(fontSize: 25)),
         SizedBox(height: 10),
-          Container(color: DeviceState.getColor(report.currentState),
+          Container(color: DeviceState.getColor(lastReport.currentState),
           child: Padding(padding: EdgeInsets.all(3.0),
             child: Row(children: [
-                Icon(DeviceState.getIconData(report.currentState)),
+                Icon(DeviceState.getIconData(lastReport.currentState)),
               SizedBox(width: 5),
-              Text(DeviceState.getStateString(report.currentState),
+              Text(DeviceState.getStateString(lastReport.currentState),
                 style: TextStyle(fontSize: 25)
               ),
               ]
@@ -329,16 +344,16 @@ class _StateScreenState extends State<StateScreen> {
           )
         ),
         SizedBox(height: 5),
-        Text(DateTime.now().difference(report.created).inDays.toString() + " days"),
+        Text(DateTime.now().difference(lastReport.created).inDays.toString() + " days"),
       ]
     );
   }
 }
 
 class ReportProblemForm extends StatefulWidget {
-  final ShortDeviceInfo deviceInfo;
+  final DeviceInfo deviceInfo;
 
-  final ValueChanged<ShortDeviceInfo> updateDeviceInfo;
+  final ValueChanged<DeviceInfo> updateDeviceInfo;
 
   ReportProblemForm({Key key, @required this.deviceInfo, this.updateDeviceInfo}) : super(key: key);
 
@@ -355,7 +370,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
   void _createReport() {
     if (_formKey.currentState.validate()) {
       Comm.queueRepair(479, _reportTitleController.text, _problemTextController.text).then((newReport) {
-        widget.updateDeviceInfo(ShortDeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData));
+        //widget.updateDeviceInfo(DeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData));
       }).onError((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.toString()));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);

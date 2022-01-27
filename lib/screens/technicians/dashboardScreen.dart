@@ -41,17 +41,6 @@ class _DetailScreenState extends State<DashboardScreen> {
     });
   }
 
-  void _openDeviceById(int id) {
-    Comm.fetchDevice(id).then((deviceInfo) {//TODO: catch Exception
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => TechnicianDeviceScreen(deviceInfo: deviceInfo),
-        )
-      );
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     var countList = [0, 0, 0, 0, 0, 0];
@@ -123,7 +112,9 @@ class _DetailScreenState extends State<DashboardScreen> {
                                   title: Text(deviceInfo.device.type),
                                   subtitle: Text(deviceInfo.device.manufacturer + " " + deviceInfo.device.model),
                                   trailing: Text(deviceInfo.device.location),
-                                  onTap: () => _openDeviceById(deviceInfo.device.id)
+                                  onTap: () => {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: deviceInfo.device.id)))
+                                  }
                                 );
                               },
                               separatorBuilder: (BuildContext context, int index) => const Divider(),
