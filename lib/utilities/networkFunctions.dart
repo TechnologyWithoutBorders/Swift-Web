@@ -16,6 +16,7 @@ import 'package:teog_swift/utilities/constants.dart';
 import 'package:teog_swift/utilities/shortDeviceInfo.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
 import 'package:teog_swift/utilities/report.dart';
+import 'package:teog_swift/utilities/detailedReport.dart';
 import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/hospital.dart';
 import 'package:teog_swift/utilities/messageException.dart';
@@ -110,11 +111,13 @@ Future<DeviceInfo> getDeviceInfo(final int deviceId) async {
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
 
     if(swiftResponse.responseCode == 0) {
-      List<Report> reports = [];
+      List<DetailedReport> reports = [];
 
       for(var jsonReport in swiftResponse.data["reports"]) {
-        reports.add(Report.fromJson(jsonReport));
+        reports.add(DetailedReport.fromJson(jsonReport));
       }
+
+      reports.sort((a, b) => b.id.compareTo(a.id));
 
       return DeviceInfo(
         device: HospitalDevice.fromJson(swiftResponse.data["device"]),
@@ -129,7 +132,7 @@ Future<DeviceInfo> getDeviceInfo(final int deviceId) async {
   }
 }
 
-Future<ShortDeviceInfo> editDevice(HospitalDevice device) async {
+Future<DeviceInfo> editDevice(HospitalDevice device) async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
   final response = await http.post(
@@ -144,9 +147,17 @@ Future<ShortDeviceInfo> editDevice(HospitalDevice device) async {
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
 
     if(swiftResponse.responseCode == 0) {
-      return ShortDeviceInfo(
+      List<DetailedReport> reports = [];
+
+      for(var jsonReport in swiftResponse.data["reports"]) {
+        reports.add(DetailedReport.fromJson(jsonReport));
+      }
+
+      reports.sort((a, b) => b.id.compareTo(a.id));
+
+      return DeviceInfo(
         device: HospitalDevice.fromJson(swiftResponse.data["device"]),
-        report: Report.fromJson(swiftResponse.data["report"]),
+        reports: reports,
         imageData: swiftResponse.data["image"],
       );
     } else {

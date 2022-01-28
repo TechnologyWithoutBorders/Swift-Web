@@ -9,7 +9,7 @@ class Hospital {
 
   factory Hospital.fromJson(Map<String, dynamic> json) {
     return Hospital(
-      id: int.parse(json['id']),
+      id: json['id'],
       name: json['name'],
       location: json['location'],
       latitude: json['latitude'],

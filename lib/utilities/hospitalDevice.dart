@@ -10,7 +10,7 @@ class HospitalDevice {
 
   factory HospitalDevice.fromJson(Map<String, dynamic> json) {
     return HospitalDevice(
-      id: int.parse(json['id']),
+      id: json['id'],
       type: json['type'],
       manufacturer: json['manufacturer'],
       model: json['model'],
