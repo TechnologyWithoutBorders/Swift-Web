@@ -22,30 +22,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   void initState() {
     super.initState();
 
-    Comm.getOrganizationalInfo().then((orgInfo) {
-      Graph graph = Graph();
-
-      Map<int, String> nameMap = Map();
-
-      for(OrganizationalUnit orgUnit in orgInfo.units) {
-        Node node = Node.Id(orgUnit.id);
-        graph.addNode(node);
-
-        nameMap[orgUnit.id] = orgUnit.name;
-      }
-
-      for(OrganizationalRelation orgRelation in orgInfo.relations) {
-          graph.addEdge(graph.getNodeUsingId(orgRelation.parent), graph.getNodeUsingId(orgRelation.id));
-      }
-
-      setState(() {
-        _graph = graph;
-        _nameMap = nameMap;
-      });
-    }).onError<MessageException>((error, stackTrace) {
-        final snackBar = SnackBar(content: Text(error.message));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    });
+    _reset();
   }
 
   void _reOrganizeUnit(int id, int parentId) {
@@ -161,8 +138,30 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   }
 
   void _reset() {
-    setState(() {
-      _edited = false;
+    Comm.getOrganizationalInfo().then((orgInfo) {
+      Graph graph = Graph();
+
+      Map<int, String> nameMap = Map();
+
+      for(OrganizationalUnit orgUnit in orgInfo.units) {
+        Node node = Node.Id(orgUnit.id);
+        graph.addNode(node);
+
+        nameMap[orgUnit.id] = orgUnit.name;
+      }
+
+      for(OrganizationalRelation orgRelation in orgInfo.relations) {
+          graph.addEdge(graph.getNodeUsingId(orgRelation.parent), graph.getNodeUsingId(orgRelation.id));
+      }
+
+      setState(() {
+        _graph = graph;
+        _nameMap = nameMap;
+        _edited = false;
+      });
+    }).onError<MessageException>((error, stackTrace) {
+        final snackBar = SnackBar(content: Text(error.message));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
   }
 
