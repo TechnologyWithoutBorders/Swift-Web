@@ -16,6 +16,7 @@ class OrganizationScreen extends StatefulWidget {
 class _OrganizationScreenState extends State<OrganizationScreen> {
   Graph _graph = Graph();
   Map<int, String> _nameMap = Map();
+  bool _edited = false;
 
   @override
   void initState() {
@@ -168,45 +169,55 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
           child: Card(
             child: Padding(
               padding: EdgeInsets.all(25.0),
-              child: Center(
-                child: _graph.nodeCount() > 0 ? GraphView(
-                  graph: _graph,
-                  algorithm: BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
-                  builder: (Node node) {
-                    int id = node.key.value;
+              child: _graph.nodeCount() > 0 ? Column(
+                children: [
+                  ButtonBar(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ElevatedButton(child: Text("Save"), onPressed: !_edited ? null : () => {}),
+                      ElevatedButton(child: Text("Reset"), onPressed: !_edited ? null : () => {})
+                    ],
+                  ),
+                  SizedBox(height: 15),
+                  GraphView(
+                    graph: _graph,
+                    algorithm: BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
+                    builder: (Node node) {
+                      int id = node.key.value;
 
-                    return Draggable<Node>(
-                      data: node,
-                      feedback: Card(color: Colors.grey[100], child: Padding(padding: EdgeInsets.all(15), child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)))),
-                      child: DragTarget<Node>(
-                        builder: (context, candidateItems, rejectedItems) {
-                          return Card(
-                            color: candidateItems.isNotEmpty ? Colors.grey[300] : Colors.grey[100],
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                TextButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)), onPressed: () => {}),
-                                ButtonBar(
-                                  mainAxisSize: MainAxisSize.min,
-                                  buttonPadding: EdgeInsets.zero,
-                                  children: [
-                                    id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key.value)) : null,
-                                    TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key.value))
-                                ],)
-                              ]
-                            )
-                          );
-                        },
-                        onAccept: (item) {
-                          if(item.key.value != 1 && item.key.value != node.key.value) {
-                            _reOrganizeUnit(item.key.value, node.key.value);
-                          }
-                        },
-                      )
-                    );
-                  }
-                ) : Text("loading departments...")
-              )
+                      return Draggable<Node>(
+                        data: node,
+                        feedback: Card(color: Colors.grey[100], child: Padding(padding: EdgeInsets.all(15), child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)))),
+                        child: DragTarget<Node>(
+                          builder: (context, candidateItems, rejectedItems) {
+                            return Card(
+                              color: candidateItems.isNotEmpty ? Colors.grey[300] : Colors.grey[100],
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  TextButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)), onPressed: () => {}),
+                                  ButtonBar(
+                                    mainAxisSize: MainAxisSize.min,
+                                    buttonPadding: EdgeInsets.zero,
+                                    children: [
+                                      id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key.value)) : null,
+                                      TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key.value))
+                                  ],)
+                                ]
+                              )
+                            );
+                          },
+                          onAccept: (item) {
+                            if(item.key.value != 1 && item.key.value != node.key.value) {
+                              _reOrganizeUnit(item.key.value, node.key.value);
+                            }
+                          },
+                        )
+                      );
+                    }
+                  )
+                ]
+              ) : Center(child: Text("loading departments..."))
             )
           )
         )
