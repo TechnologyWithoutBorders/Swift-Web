@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 
-import 'dart:html' as html;
-
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/organizationalRelation.dart';
 import 'package:teog_swift/utilities/organizationalUnit.dart';
