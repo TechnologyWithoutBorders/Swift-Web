@@ -57,8 +57,8 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     if(!successors.contains(parent)) {
       setState(() {
         _graph.removeEdges(_graph.getInEdges(child));
-
         _graph.addEdge(parent, child);
+        _edited = true;
       });
     } else {
       final snackBar = SnackBar(content: Text("cannot set a department as its own child"));
@@ -114,6 +114,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                       _graph.addNode(node);
                       _graph.addEdge(_graph.getNodeUsingId(parent), node);
                       _nameMap[newId] = nameController.text;
+                      _edited = true;
                     });
 
                     Navigator.pop(context);
@@ -148,6 +149,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                     _graph.removeNodes(successors);
                     _graph.removeNode(node);
                     _nameMap.remove(id);
+                    _edited = true;
                   });
 
                   Navigator.pop(context);
@@ -156,6 +158,18 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
         );
       }
     );
+  }
+
+  void _reset() {
+    setState(() {
+      _edited = false;
+    });
+  }
+
+  void _save() {
+    setState(() {
+      _edited = false;
+    });
   }
 
   @override
@@ -174,8 +188,8 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                   ButtonBar(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      ElevatedButton(child: Text("Save"), onPressed: !_edited ? null : () => {}),
-                      ElevatedButton(child: Text("Reset"), onPressed: !_edited ? null : () => {})
+                      ElevatedButton(child: Text("Save"), onPressed: !_edited ? null : () => _save()),
+                      ElevatedButton(child: Text("Reset"), onPressed: !_edited ? null : () => _reset())
                     ],
                   ),
                   SizedBox(height: 15),
