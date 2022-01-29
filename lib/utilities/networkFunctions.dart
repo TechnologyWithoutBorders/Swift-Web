@@ -487,6 +487,47 @@ Future<OrganizationalInfo> getOrganizationalInfo() async {
   }
 }
 
+Future<bool> updateOrganizationalInfo(List<OrganizationalUnit> orgUnits, List<OrganizationalRelation> orgRelations) async {
+  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+
+  final Map<String, dynamic> orgInfo = Map();
+
+  List<Map<String, dynamic>> orgUnitList = [];
+  for(var orgUnit in orgUnits) {
+    orgUnitList.add(orgUnit.toJson());
+  }
+
+  List<Map<String, dynamic>> orgRelationList = [];
+  for(var orgRelation in orgRelations) {
+    orgRelationList.add(orgRelation.toJson());
+  }
+
+  orgInfo['orgUnits'] = orgUnitList;
+  orgInfo['orgRelations'] = orgRelationList;
+
+  print(jsonEncode(orgInfo));
+
+  final response = await http.post(
+    uri,
+    headers: _headers,
+    body: jsonEncode(await _generateParameterMap(action: DataAction.updateOrganizationalUnits, authentication: true,
+      additional: <String, dynamic> {'orgInfo': orgInfo}),
+    ),
+  );
+
+  if(response.statusCode == 200) {
+    SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
+
+    if(swiftResponse.responseCode == 0) {
+      return true;
+    } else {
+      throw MessageException(swiftResponse.data);
+    }
+  } else {
+    throw MessageException(Constants.generic_error_message);
+  }
+}
+
 Future<Map<String, dynamic>> _generateParameterMap({final String action = "", final bool authentication = false, final Map<String, dynamic> additional = const {}}) async {
   final Map<String, dynamic> parameterMap = Map();
 

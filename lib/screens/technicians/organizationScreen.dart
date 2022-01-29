@@ -166,6 +166,29 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   }
 
   void _save() {
+    List<OrganizationalUnit> orgUnits = [];
+    List<OrganizationalRelation> orgRelations = [];
+
+    for(var node in _graph.nodes) {
+      int id = node.key.value;
+
+      orgUnits.add(OrganizationalUnit(id: id, name: _nameMap[id]));
+    }
+
+    for(var edge in _graph.edges) {
+      int parent = edge.source.key.value;
+      int id = edge.destination.key.value;
+
+      orgRelations.add(OrganizationalRelation(id: id, parent: parent));
+    }
+
+    Comm.updateOrganizationalInfo(orgUnits, orgRelations).then((orgInfo) {
+      //TODO:
+    }).onError<MessageException>((error, stackTrace) {
+        final snackBar = SnackBar(content: Text(error.message));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    });
+
     setState(() {
       _edited = false;
     });

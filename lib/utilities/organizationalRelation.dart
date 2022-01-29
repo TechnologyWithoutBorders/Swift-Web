@@ -10,4 +10,9 @@ class OrganizationalRelation {
       parent: json['parent'],
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'parent': parent,
+  };
 }
