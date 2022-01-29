@@ -182,15 +182,15 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
       orgRelations.add(OrganizationalRelation(id: id, parent: parent));
     }
 
-    Comm.updateOrganizationalInfo(orgUnits, orgRelations).then((orgInfo) {
-      //TODO:
+    Comm.updateOrganizationalInfo(orgUnits, orgRelations).then((success) {
+      if(success) {
+        setState(() {
+          _edited = false;
+        });
+      }
     }).onError<MessageException>((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.message));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    });
-
-    setState(() {
-      _edited = false;
     });
   }
 
