@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 
-import 'dart:html' as html;
-
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/organizationalRelation.dart';
 import 'package:teog_swift/utilities/organizationalUnit.dart';
@@ -18,35 +16,13 @@ class OrganizationScreen extends StatefulWidget {
 class _OrganizationScreenState extends State<OrganizationScreen> {
   Graph _graph = Graph();
   Map<int, String> _nameMap = Map();
+  bool _edited = false;
 
   @override
   void initState() {
     super.initState();
 
-    Comm.getOrganizationalInfo().then((orgInfo) {
-      Graph graph = Graph();
-
-      Map<int, String> nameMap = Map();
-
-      for(OrganizationalUnit orgUnit in orgInfo.units) {
-        Node node = Node.Id(orgUnit.id);
-        graph.addNode(node);
-
-        nameMap[orgUnit.id] = orgUnit.name;
-      }
-
-      for(OrganizationalRelation orgRelation in orgInfo.relations) {
-          graph.addEdge(graph.getNodeUsingId(orgRelation.parent), graph.getNodeUsingId(orgRelation.id));
-      }
-
-      setState(() {
-        _graph = graph;
-        _nameMap = nameMap;
-      });
-    }).onError<MessageException>((error, stackTrace) {
-        final snackBar = SnackBar(content: Text(error.message));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    });
+    _reset();
   }
 
   void _reOrganizeUnit(int id, int parentId) {
@@ -58,11 +34,11 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     if(!successors.contains(parent)) {
       setState(() {
         _graph.removeEdges(_graph.getInEdges(child));
-
         _graph.addEdge(parent, child);
+        _edited = true;
       });
     } else {
-      final snackBar = SnackBar(content: Text("cannot set a node as its own successor"));
+      final snackBar = SnackBar(content: Text("cannot set a department as its own child"));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -75,7 +51,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
       context: context,
       builder: (BuildContext context) {
         return new AlertDialog(
-          title: Text("Add child unit to \"" + _nameMap[parent] + "\""),
+          title: Text("Add child department to \"" + _nameMap[parent] + "\""),
           contentPadding: const EdgeInsets.all(16.0),
           content: new Column(
             mainAxisSize: MainAxisSize.min,
@@ -83,7 +59,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
               TextField(
                 controller: nameController,
                 decoration: new InputDecoration(
-                  labelText: 'Name of child unit'),
+                  labelText: 'Name of child department'),
                 autofocus: true,
               ),
             ],
@@ -115,6 +91,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                       _graph.addNode(node);
                       _graph.addEdge(_graph.getNodeUsingId(parent), node);
                       _nameMap[newId] = nameController.text;
+                      _edited = true;
                     });
 
                     Navigator.pop(context);
@@ -131,8 +108,8 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
       context: context,
       builder: (BuildContext context) {
         return new AlertDialog(
-          title: Text("Delete unit \"" + _nameMap[id] + "\"?"),
-          content: Text("This will also delete all child units.", style: TextStyle(color: Colors.red)),
+          title: Text("Delete department \"" + _nameMap[id] + "\"?"),
+          content: Text("This will also delete all child departments.", style: TextStyle(color: Colors.red)),
           actions: <Widget>[
             ElevatedButton(
                 child: const Text('Cancel'),
@@ -149,6 +126,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                     _graph.removeNodes(successors);
                     _graph.removeNode(node);
                     _nameMap.remove(id);
+                    _edited = true;
                   });
 
                   Navigator.pop(context);
@@ -157,6 +135,63 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
         );
       }
     );
+  }
+
+  void _reset() {
+    Comm.getOrganizationalInfo().then((orgInfo) {
+      Graph graph = Graph();
+
+      Map<int, String> nameMap = Map();
+
+      for(OrganizationalUnit orgUnit in orgInfo.units) {
+        Node node = Node.Id(orgUnit.id);
+        graph.addNode(node);
+
+        nameMap[orgUnit.id] = orgUnit.name;
+      }
+
+      for(OrganizationalRelation orgRelation in orgInfo.relations) {
+          graph.addEdge(graph.getNodeUsingId(orgRelation.parent), graph.getNodeUsingId(orgRelation.id));
+      }
+
+      setState(() {
+        _graph = graph;
+        _nameMap = nameMap;
+        _edited = false;
+      });
+    }).onError<MessageException>((error, stackTrace) {
+        final snackBar = SnackBar(content: Text(error.message));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    });
+  }
+
+  void _save() {
+    List<OrganizationalUnit> orgUnits = [];
+    List<OrganizationalRelation> orgRelations = [];
+
+    for(var node in _graph.nodes) {
+      int id = node.key.value;
+
+      orgUnits.add(OrganizationalUnit(id: id, name: _nameMap[id]));
+    }
+
+    for(var edge in _graph.edges) {
+      int parent = edge.source.key.value;
+      int id = edge.destination.key.value;
+
+      orgRelations.add(OrganizationalRelation(id: id, parent: parent));
+    }
+
+    Comm.updateOrganizationalInfo(orgUnits, orgRelations).then((success) {
+      if(success) {
+        setState(() {
+          _edited = false;
+        });
+      }
+    }).onError<MessageException>((error, stackTrace) {
+        final snackBar = SnackBar(content: Text(error.message));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    });
   }
 
   @override
@@ -170,45 +205,58 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
           child: Card(
             child: Padding(
               padding: EdgeInsets.all(25.0),
-              child: Center(
-                child: _graph.nodeCount() > 0 ? GraphView(
-                  graph: _graph,
-                  algorithm: BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
-                  builder: (Node node) {
-                    int id = node.key.value;
+              child: _graph.nodeCount() > 0 ? SingleChildScrollView(
+                child: Column(
+                  children: [
+                    ButtonBar(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ElevatedButton(child: Text("Save"), onPressed: !_edited ? null : () => _save()),
+                        ElevatedButton(child: Text("Reset"), onPressed: !_edited ? null : () => _reset())
+                      ],
+                    ),
+                    SizedBox(height: 15),
+                    GraphView(
+                      graph: _graph,
+                      algorithm: BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
+                      builder: (Node node) {
+                        int id = node.key.value;
 
-                    return Draggable<Node>(
-                      data: node,
-                      feedback: Card(color: Colors.grey[100], child: Padding(padding: EdgeInsets.all(15), child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)))),
-                      child: DragTarget<Node>(
-                        builder: (context, candidateItems, rejectedItems) {
-                          return Card(
-                            color: candidateItems.isNotEmpty ? Colors.grey[300] : Colors.grey[100],
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                TextButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)), onPressed: () => {}),
-                                ButtonBar(
+                        return Draggable<Node>(
+                          data: node,
+                          feedback: Card(color: Colors.grey[100], child: Padding(padding: EdgeInsets.all(15), child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)))),
+                          child: DragTarget<Node>(
+                            builder: (context, candidateItems, rejectedItems) {
+                              return Card(
+                                color: candidateItems.isNotEmpty ? Colors.grey[300] : Colors.grey[100],
+                                child: Column(
                                   mainAxisSize: MainAxisSize.min,
-                                  buttonPadding: EdgeInsets.zero,
                                   children: [
-                                    id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key.value)) : null,
-                                    TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key.value))
-                                ],)
-                              ]
-                            )
-                          );
-                        },
-                        onAccept: (item) {
-                          if(item.key.value != 1 && item.key.value != node.key.value) {
-                            _reOrganizeUnit(item.key.value, node.key.value);
-                          }
-                        },
-                      )
-                    );
-                  }
-                ) : Text("loading organizational units...")
-              )
+                                    TextButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)), onPressed: () => {}),
+                                    ButtonBar(
+                                      mainAxisSize: MainAxisSize.min,
+                                      buttonPadding: EdgeInsets.zero,
+                                      children: [
+                                        id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key.value)) : null,
+                                        TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key.value))
+                                    ],)
+                                  ]
+                                )
+                              );
+                            },
+                            onAccept: (item) {
+                              if(item.key.value != 1 && item.key.value != node.key.value) {
+                                _reOrganizeUnit(item.key.value, node.key.value);
+                              }
+                            },
+                          )
+                        );
+                      }
+                    ),
+                    SizedBox(height: 10)
+                  ]
+                )
+              ) : Center(child: Text("loading departments..."))
             )
           )
         )
