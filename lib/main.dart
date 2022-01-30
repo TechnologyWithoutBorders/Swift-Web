@@ -83,9 +83,9 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
 
-  final _countryScrollController = ScrollController();//TODO: use cookie + get from server
+  final _countryScrollController = ScrollController();//TODO: use cookie
   List<Country> _countries = [];
-  String _selectedCountry;
+  Country _selectedCountry;
 
   final _hospitalScrollController = ScrollController();
   List<Hospital> _hospitals = [];
@@ -98,7 +98,7 @@ class _LoginFormState extends State<LoginForm> {
     if (_formKey.currentState.validate()) {
       String password = _passwordTextController.text;
 
-      Comm.checkCredentials(_selectedCountry, _selectedHospital.id, password).then((role) {
+      Comm.checkCredentials(_selectedCountry.name, _selectedHospital.id, password).then((role) {
         String route;
 
         if(role == Constants.role_technical) {
@@ -110,12 +110,20 @@ class _LoginFormState extends State<LoginForm> {
         List<int> bytes = utf8.encode(password);
         String hash = sha256.convert(bytes).toString();
 
-        Prefs.save(_selectedCountry, _selectedHospital.id, role, hash).then((success) => Navigator.pushNamedAndRemoveUntil(context, route, (r) => false));
+        Prefs.save(_selectedCountry.name, _selectedHospital.id, role, hash).then((success) => Navigator.pushNamedAndRemoveUntil(context, route, (r) => false));
       }).onError<MessageException>((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.message));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       });
     }
+  }
+
+  void _clearSelection() {
+    setState(() {
+      _selectedCountry = null;
+      _selectedHospital = null;
+      _hospitalSelected = false;
+    });
   }
 
   @override
@@ -161,7 +169,7 @@ class _LoginFormState extends State<LoginForm> {
                         onTap: () => {
                           Comm.getHospitals(_countries[index].name).then((hospitals) {
                             setState(() {
-                              _selectedCountry = _countries[index].name;
+                              _selectedCountry = _countries[index];
                               _hospitals = hospitals;
                             });
                           })
@@ -207,18 +215,41 @@ class _LoginFormState extends State<LoginForm> {
         ]
       );
     } else {
-      input = TextFormField(
-        controller: _passwordTextController,
-        decoration: InputDecoration(hintText: 'Password'),
-        obscureText: true,
-        autofocus: true,
-        validator: (value) {
-          if (value.isEmpty) {
-            return 'Please enter some text';
-          }
-          return null;
-        },
-        onFieldSubmitted: (value) => _login(),
+      input = Center(
+        child: Column(
+          children:[
+            SizedBox(height: 10),
+            ButtonBar(
+              alignment: MainAxisAlignment.center,
+              children:[
+                Flag.fromString(_selectedCountry.code, height: 35, width: 35),
+                Text(_selectedCountry.name + ' - ' + _selectedHospital.name, style: TextStyle(fontSize: 20)),
+                IconButton(
+                  onPressed: () => _clearSelection(), 
+                  icon: Icon(Icons.cancel_outlined, color: Colors.red[700]),
+                  iconSize: 20,
+                )
+              ]
+            ),
+            SizedBox(height: 10),
+            FractionallySizedBox(
+              widthFactor: 0.7,
+              child: TextFormField(
+                controller: _passwordTextController,
+                decoration: InputDecoration(hintText: 'Password'),
+                obscureText: true,
+                autofocus: true,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
+                onFieldSubmitted: (value) => _login(),
+              )
+            )
+          ]
+        )
       );
     }
 
