@@ -121,6 +121,7 @@ class _LoginFormState extends State<LoginForm> {
     setState(() {
       _selectedCountry = null;
       _selectedHospital = null;
+      _hospitals.clear();
     });
   }
 
@@ -222,9 +223,9 @@ class _LoginFormState extends State<LoginForm> {
                 Flag.fromString(_selectedCountry.code, height: 35, width: 35),
                 Text(_selectedCountry.name + ' - ' + _selectedHospital.name, style: TextStyle(fontSize: 20)),
                 IconButton(
-                  onPressed: () => _clearSelection(), 
-                  icon: Icon(Icons.cancel_outlined, color: Colors.red[700]),
                   iconSize: 20,
+                  icon: Icon(Icons.cancel_outlined, color: Colors.red[700]),
+                  onPressed: () => _clearSelection(), 
                 )
               ]
             ),
