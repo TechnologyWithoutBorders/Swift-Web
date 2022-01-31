@@ -90,7 +90,6 @@ class _LoginFormState extends State<LoginForm> {
   final _hospitalScrollController = ScrollController();
   List<Hospital> _hospitals = [];
   Hospital _selectedHospital;
-  bool _hospitalSelected = false;
 
   final _passwordTextController = TextEditingController();
 
@@ -122,7 +121,7 @@ class _LoginFormState extends State<LoginForm> {
     setState(() {
       _selectedCountry = null;
       _selectedHospital = null;
-      _hospitalSelected = false;
+      _hospitals.clear();
     });
   }
 
@@ -147,7 +146,7 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     Widget input;
 
-    if(!_hospitalSelected) {
+    if(_selectedHospital == null) {
       input = Row(
         children: [
           Flexible(
@@ -201,7 +200,6 @@ class _LoginFormState extends State<LoginForm> {
                         onTap: () => {
                           setState(() {
                             _selectedHospital = _hospitals[index];
-                            _hospitalSelected = true;
                           })
                         }
                       );
@@ -225,9 +223,9 @@ class _LoginFormState extends State<LoginForm> {
                 Flag.fromString(_selectedCountry.code, height: 35, width: 35),
                 Text(_selectedCountry.name + ' - ' + _selectedHospital.name, style: TextStyle(fontSize: 20)),
                 IconButton(
-                  onPressed: () => _clearSelection(), 
-                  icon: Icon(Icons.cancel_outlined, color: Colors.red[700]),
                   iconSize: 20,
+                  icon: Icon(Icons.cancel_outlined, color: Colors.red[700]),
+                  onPressed: () => _clearSelection(), 
                 )
               ]
             ),
