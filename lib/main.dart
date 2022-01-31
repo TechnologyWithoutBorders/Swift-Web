@@ -90,7 +90,6 @@ class _LoginFormState extends State<LoginForm> {
   final _hospitalScrollController = ScrollController();
   List<Hospital> _hospitals = [];
   Hospital _selectedHospital;
-  bool _hospitalSelected = false;
 
   final _passwordTextController = TextEditingController();
 
@@ -122,7 +121,6 @@ class _LoginFormState extends State<LoginForm> {
     setState(() {
       _selectedCountry = null;
       _selectedHospital = null;
-      _hospitalSelected = false;
     });
   }
 
@@ -147,7 +145,7 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     Widget input;
 
-    if(!_hospitalSelected) {
+    if(_selectedHospital == null) {
       input = Row(
         children: [
           Flexible(
@@ -201,7 +199,6 @@ class _LoginFormState extends State<LoginForm> {
                         onTap: () => {
                           setState(() {
                             _selectedHospital = _hospitals[index];
-                            _hospitalSelected = true;
                           })
                         }
                       );
