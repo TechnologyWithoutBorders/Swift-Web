@@ -423,7 +423,7 @@ Future<Report> queueRepair(int deviceId, String title, String problemDescription
   }
 }
 
-Future<Report> createReport(int deviceId, String title, String description, int currentState) async {
+Future<DetailedReport> createReport(int deviceId, String title, String description, int currentState) async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
   
   final response = await http.post(
@@ -438,7 +438,7 @@ Future<Report> createReport(int deviceId, String title, String description, int 
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
 
     if(swiftResponse.responseCode == 0) {
-      return Report.fromJson(swiftResponse.data);
+      return DetailedReport.fromJson(swiftResponse.data);
     } else {
       throw MessageException(swiftResponse.data);
     }
