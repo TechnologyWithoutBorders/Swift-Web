@@ -333,8 +333,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
     Comm.retrieveDocuments(widget.deviceInfo.device.manufacturer, widget.deviceInfo.device.model).then((documents) {
       setState(() { _documents = documents; });
     }).onError<MessageException>((error, stackTrace) {
-      final snackBar = SnackBar(content: Text(error.message));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      //ignore
     });
   }
 
