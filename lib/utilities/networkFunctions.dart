@@ -423,6 +423,30 @@ Future<Report> queueRepair(int deviceId, String title, String problemDescription
   }
 }
 
+Future<Report> createReport(int deviceId, String title, String description, int currentState) async {
+  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  
+  final response = await http.post(
+    uri,
+    headers: _headers,
+    body: jsonEncode(await _generateParameterMap(action: DataAction.createReport, authentication: true,
+        additional: <String, dynamic> {'device_id': deviceId, 'title': title, 'description': description, 'currentState': currentState}),
+    ),
+  );
+
+  if(response.statusCode == 200) {
+    SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
+
+    if(swiftResponse.responseCode == 0) {
+      return Report.fromJson(swiftResponse.data);
+    } else {
+      throw MessageException(swiftResponse.data);
+    }
+  } else {
+    throw MessageException(Constants.generic_error_message);
+  }
+}
+
 Future<List<String>> uploadDocument(String manufacturer, String model, String name, Uint8List bytes) async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
   

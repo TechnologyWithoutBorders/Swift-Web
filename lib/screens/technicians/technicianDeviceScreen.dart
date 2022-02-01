@@ -116,7 +116,9 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
   }
 
   void _createReport() {
-
+    Comm.createReport(_deviceInfo.device.id, _titleTextController.text, _descriptionTextController.text, 0).then((report) => {//TODO: currentState
+      //TODO: add report to deviceInfo
+    });
   }
 
   @override
@@ -423,90 +425,6 @@ class _StateScreenState extends State<StateScreen> {
         SizedBox(height: 5),
         Text(DateTime.now().difference(latestReport.created).inDays.toString() + " days"),
       ]
-    );
-  }
-}
-
-class ReportProblemForm extends StatefulWidget {
-  final DeviceInfo deviceInfo;
-
-  final ValueChanged<DeviceInfo> updateDeviceInfo;
-
-  ReportProblemForm({Key key, @required this.deviceInfo, this.updateDeviceInfo}) : super(key: key);
-
-  @override
-  _ReportProblemFormState createState() => _ReportProblemFormState();
-}
-
-class _ReportProblemFormState extends State<ReportProblemForm> {
-  final _formKey = GlobalKey<FormState>();
-
-  final _reportTitleController = TextEditingController();
-  final _problemTextController = TextEditingController();
-
-  void _createReport() {
-    if (_formKey.currentState.validate()) {
-      Comm.queueRepair(479, _reportTitleController.text, _problemTextController.text).then((newReport) {
-        //widget.updateDeviceInfo(DeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData));
-      }).onError<MessageException>((error, stackTrace) {
-      final snackBar = SnackBar(content: Text(error.message));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Container(width: 400,
-          padding: const EdgeInsets.all(3.0),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.blueAccent)
-          ),
-          child: Column(mainAxisSize: MainAxisSize.min,
-          children: [
-            Text("Report a problem", style: Theme
-                .of(context)
-                .textTheme
-                .headline5),
-            TextFormField(
-              controller: _reportTitleController,
-              decoration: InputDecoration(hintText: "Title"),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return "Please give your report a title.";
-                }
-                return null;
-              },
-              onFieldSubmitted: (value) => _createReport(),
-            ),
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: _problemTextController,
-                decoration: InputDecoration(hintText: "Problem description"),
-                maxLines: 4,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "Please describe the problem in a few sentences.";
-                  }
-                  return null;
-                },
-                onFieldSubmitted: (value) => _createReport(),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  _createReport();
-                }
-              },
-              child: Padding(padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8.0), child: Text('Request repair')),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
