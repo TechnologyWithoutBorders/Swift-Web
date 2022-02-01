@@ -28,6 +28,10 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
 
   final _scrollController = ScrollController();
 
+  final _formKey = GlobalKey<FormState>();
+  final _titleTextController = TextEditingController();
+  final _descriptionTextController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -35,7 +39,6 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
     Comm.getDeviceInfo(widget.id).then((deviceInfo) {
       _updateDeviceInfo(deviceInfo);
     }).onError<MessageException>((error, stackTrace) {
-      print(error.message);
       final snackBar = SnackBar(content: Text(error.message));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
@@ -110,6 +113,10 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
         );
       }
     );
+  }
+
+  void _createReport() {
+
   }
 
   @override
@@ -204,6 +211,57 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                               ),
                             ),
                           ),
+                          Form(
+                            key: _formKey,
+                            child: Container(width: 400,
+                                padding: const EdgeInsets.all(3.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.blueAccent)
+                                ),
+                                child: Column(mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text("Create a report", style: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .headline6),
+                                  TextFormField(
+                                    controller: _titleTextController,
+                                    decoration: InputDecoration(hintText: "Title"),
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return "Please give your report a title.";
+                                      }
+                                      return null;
+                                    },
+                                    onFieldSubmitted: (value) => _createReport(),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: TextFormField(
+                                      controller: _descriptionTextController,
+                                      decoration: InputDecoration(hintText: "Description"),
+                                      maxLines: 4,
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return "Please describe your changes in a few sentences.";
+                                        }
+                                        return null;
+                                      },
+                                      onFieldSubmitted: (value) => _createReport(),
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      if (_formKey.currentState.validate()) {
+                                        _createReport();
+                                      }
+                                    },
+                                    child: Padding(padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8.0), child: Text('Create')),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
                         ]
                       )
                     ),
@@ -272,8 +330,11 @@ class _DocumentScreenState extends State<DocumentScreen> {
   }
 
   void _retrieveDocuments() {
-    Comm.retrieveDocuments(widget.deviceInfo.device.manufacturer, widget.deviceInfo.device.model).then((documents) {//TODO catch Exception
+    Comm.retrieveDocuments(widget.deviceInfo.device.manufacturer, widget.deviceInfo.device.model).then((documents) {
       setState(() { _documents = documents; });
+    }).onError<MessageException>((error, stackTrace) {
+      final snackBar = SnackBar(content: Text(error.message));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
   }
 
@@ -388,10 +449,10 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
     if (_formKey.currentState.validate()) {
       Comm.queueRepair(479, _reportTitleController.text, _problemTextController.text).then((newReport) {
         //widget.updateDeviceInfo(DeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData));
-      }).onError((error, stackTrace) {
-        final snackBar = SnackBar(content: Text(error.toString()));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      });
+      }).onError<MessageException>((error, stackTrace) {
+      final snackBar = SnackBar(content: Text(error.message));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    });
     }
   }
 
