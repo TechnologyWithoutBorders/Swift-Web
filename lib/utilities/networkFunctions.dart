@@ -430,7 +430,7 @@ Future<DetailedReport> createReport(int deviceId, String title, String descripti
     uri,
     headers: _headers,
     body: jsonEncode(await _generateParameterMap(action: DataAction.createReport, authentication: true,
-        additional: <String, dynamic> {'device_id': deviceId, 'title': title, 'description': description, 'currentState': currentState}),
+        additional: <String, dynamic> {'device_id': deviceId, 'title': title, 'description': description, 'current_state': currentState}),
     ),
   );
 
