@@ -31,6 +31,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleTextController = TextEditingController();
   final _descriptionTextController = TextEditingController();
+  int _selectedState = 0;
 
   @override
   void initState() {
@@ -116,7 +117,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
   }
 
   void _createReport() {
-    Comm.createReport(_deviceInfo.device.id, _titleTextController.text, _descriptionTextController.text, 0).then((report) => {//TODO: currentState
+    Comm.createReport(_deviceInfo.device.id, _titleTextController.text, _descriptionTextController.text, _selectedState).then((report) => {//TODO: currentState
       setState(() {
          _deviceInfo.reports.add(report);
       })
@@ -131,6 +132,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
     if(_deviceInfo != null) {
       device = _deviceInfo.device;
       reports = _deviceInfo.reports;
+      _selectedState = reports[0].currentState;
     }
 
     return Scaffold(
@@ -253,6 +255,27 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                                       },
                                       onFieldSubmitted: (value) => _createReport(),
                                     ),
+                                  ),
+                                  DropdownButtonFormField<int>(
+                                    value: _deviceInfo.reports[0].currentState,
+                                    items: <int>[0, 1, 2, 3, 4, 5]//TODO: das sollte aus DeviceStates kommen
+                                      .map<DropdownMenuItem<int>>((int state) {
+                                        return DropdownMenuItem<int>(
+                                          value: state,
+                                          child: Container(
+                                            color: DeviceState.getColor(state),
+                                            child: Row(
+                                              children: [
+                                                Icon(DeviceState.getIconData(state)),
+                                                SizedBox(width: 5),
+                                                Text(DeviceState.getStateString(state)),
+                                              ]
+                                            )
+                                          ),
+                                        );
+                                      }
+                                    ).toList(),
+                                    onChanged: (newValue) => _selectedState = newValue,
                                   ),
                                   ElevatedButton(
                                     onPressed: () {
@@ -412,7 +435,7 @@ class _StateScreenState extends State<StateScreen> {
       children: [
         Text("Current State:", style: TextStyle(fontSize: 25)),
         SizedBox(height: 10),
-          Container(color: DeviceState.getColor(latestReport.currentState),
+        Container(color: DeviceState.getColor(latestReport.currentState),
           child: Padding(padding: EdgeInsets.all(3.0),
             child: Row(children: [
                 Icon(DeviceState.getIconData(latestReport.currentState)),
