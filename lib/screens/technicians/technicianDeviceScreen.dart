@@ -114,18 +114,23 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    HospitalDevice device = _deviceInfo.device;
-    List<DetailedReport> reports = _deviceInfo.reports;
+    HospitalDevice device;
+    List<DetailedReport> reports;
+
+    if(_deviceInfo != null) {
+      device = _deviceInfo.device;
+      reports = _deviceInfo.reports;
+    }
 
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: Text(device.type),
+        title: Text(_deviceInfo != null ? device.type : "loading..."),
       ),
       body: Center(child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
         child: Card(
           child: Padding(padding: EdgeInsets.all(10.0),
-            child: Column(
+            child: _deviceInfo != null ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Row(
@@ -215,7 +220,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                   ]
                 )), 
               ]
-            )
+            ) : Center(child: CircularProgressIndicator())
           ),
         )
       ))
