@@ -62,7 +62,7 @@ class LoginScreen extends StatelessWidget {
             children: [
               Padding(padding: EdgeInsets.all(10.0), child: Image(image: AssetImage('graphics/logo.png'))),
               SizedBox(height: 10),
-              Card(child: Padding(padding: EdgeInsets.all(10.0), child: LoginForm())),
+              Flexible(child: Card(child: Padding(padding: EdgeInsets.all(10.0), child: LoginForm()))),
               SizedBox(height: 30),
               TextButton(onPressed: () => Navigator.of(context).pushNamed(AboutScreen.route),
                 child: Text('About'),),
@@ -151,31 +151,35 @@ class _LoginFormState extends State<LoginForm> {
         children: [
           Flexible(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text("Country",
                   style: Theme.of(context)
                     .textTheme
                     .headline5),
                 Flexible(
-                  child: ListView.separated(
+                  child: Scrollbar(
                     controller: _countryScrollController,
-                    padding: const EdgeInsets.all(5),
-                    itemCount: _countries.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return ListTile(
-                        leading: Flag.fromString(_countries[index].code, height: 35, width: 35),
-                        title: Text(_countries[index].name),
-                        onTap: () => {
-                          Comm.getHospitals(_countries[index].name).then((hospitals) {
-                            setState(() {
-                              _selectedCountry = _countries[index];
-                              _hospitals = hospitals;
-                            });
-                          })
-                        }
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) => const Divider(),
+                    child: ListView.separated(
+                      controller: _countryScrollController,
+                      padding: const EdgeInsets.all(5),
+                      itemCount: _countries.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ListTile(
+                          leading: Flag.fromString(_countries[index].code, height: 35, width: 35),
+                          title: Text(_countries[index].name),
+                          onTap: () => {
+                            Comm.getHospitals(_countries[index].name).then((hospitals) {
+                              setState(() {
+                                _selectedCountry = _countries[index];
+                                _hospitals = hospitals;
+                              });
+                            })
+                          }
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) => const Divider(),
+                    )
                   )
                 )
               ]
@@ -183,28 +187,32 @@ class _LoginFormState extends State<LoginForm> {
           ),
           Flexible(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text("Hospital",
                   style: Theme.of(context)
                     .textTheme
                     .headline5),
                 Flexible(
-                  child: ListView.separated(
+                  child: Scrollbar(
                     controller: _hospitalScrollController,
-                    padding: const EdgeInsets.all(5),
-                    itemCount: _hospitals.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return ListTile(
-                        title: Text(_hospitals[index].name),
-                        subtitle: Text(_hospitals[index].location),
-                        onTap: () => {
-                          setState(() {
-                            _selectedHospital = _hospitals[index];
-                          })
-                        }
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) => const Divider(),
+                    child: ListView.separated(
+                      controller: _hospitalScrollController,
+                      padding: const EdgeInsets.all(5),
+                      itemCount: _hospitals.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ListTile(
+                          title: Text(_hospitals[index].name),
+                          subtitle: Text(_hospitals[index].location),
+                          onTap: () => {
+                            setState(() {
+                              _selectedHospital = _hospitals[index];
+                            })
+                          }
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) => const Divider(),
+                    )
                   )
                 )
               ]
@@ -261,8 +269,8 @@ class _LoginFormState extends State<LoginForm> {
               .textTheme
               .headline6),
           SizedBox(height: 15),
-          SizedBox(height: 300,
-            child: input
+          Flexible(
+            child: Center(child: input)
           ),
           SizedBox(height: 10),
             ElevatedButton(//TODO: auch erst im letzten Step anzeigen
