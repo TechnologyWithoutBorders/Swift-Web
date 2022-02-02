@@ -26,29 +26,28 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   bool _manualButtonDisabled = false;
 
+  static const int filterNone = 0;
+  static const int filterMissingManuals = 1;
+
+  int _filterType = filterNone;
+
   @override
   void initState() {
     super.initState();
 
-    Comm.getDevices().then((devices) {//TODO: catch Exception
-      setState(() {
-        _listTitle = "Number of devices: ";
-        _devices = devices;
-        _preFilteredDevices = List.from(_devices);
-        _displayedDevices = List.from(_devices);
-      });
-    });
+    _showAllDevices();
   }
 
-  void _showAllDevices() {
-    Comm.getDevices().then((devices) {//TODO: catch Exception
-      setState(() {
-        _filterTextController.clear();
-        _listTitle = "Number of devices: ";
-        _devices = devices;
-        _preFilteredDevices = List.from(_devices);
-        _displayedDevices = List.from(_devices);
-      });
+  Future<void> _showAllDevices() async {
+    List<ShortDeviceInfo> devices = await Comm.getDevices();//TODO: catch Exception
+    
+    setState(() {
+      _filterTextController.clear();
+      _filterType = filterNone;
+      _listTitle = "Number of devices: ";
+      _devices = devices;
+      _preFilteredDevices = List.from(_devices);
+      _displayedDevices = List.from(_devices);
     });
   }
 
@@ -56,6 +55,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
     setState(() {
       _manualButtonDisabled = true;
       _filterTextController.clear();
+      _filterType = filterMissingManuals;
       _preFilteredDevices.clear();
       _displayedDevices.clear();
       _listTitle = "Number of devices with no manual attached: ";
@@ -189,7 +189,13 @@ class _InventoryScreenState extends State<InventoryScreen> {
                             subtitle: Text(deviceInfo.device.manufacturer + " " + deviceInfo.device.model),
                             trailing: Text(deviceInfo.device.location),
                             onTap: () => {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: deviceInfo.device.id)))
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: deviceInfo.device.id))).then((value) => {
+                                if(_filterType == filterMissingManuals) {
+                                  _showAllDevices().then((value) => _checkManuals())
+                                } else {
+                                  _showAllDevices()
+                                }
+                              })
                             }
                           );
                         },

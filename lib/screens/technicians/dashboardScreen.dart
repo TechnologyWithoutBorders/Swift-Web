@@ -24,6 +24,10 @@ class _DetailScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
 
+    _updateDevices();
+  }
+
+  void _updateDevices() {
     Comm.getDevices().then((devices) {//TODO: catch Exception
       setState(() {
         _devices = devices;
@@ -113,7 +117,10 @@ class _DetailScreenState extends State<DashboardScreen> {
                                   subtitle: Text(deviceInfo.device.manufacturer + " " + deviceInfo.device.model),
                                   trailing: Text(deviceInfo.device.location),
                                   onTap: () => {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: deviceInfo.device.id)))
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: deviceInfo.device.id))).then((value) => {
+                                      //this is called when the newly created route returns
+                                      _updateDevices()
+                                    })
                                   }
                                 );
                               },
