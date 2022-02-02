@@ -28,11 +28,6 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
 
   final _scrollController = ScrollController();
 
-  final _formKey = GlobalKey<FormState>();
-  final _titleTextController = TextEditingController();
-  final _descriptionTextController = TextEditingController();
-  int _selectedState = 0;
-
   @override
   void initState() {
     super.initState();
@@ -116,12 +111,113 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
     );
   }
 
+  /*Form(
+            DropdownButtonFormField<int>(
+              value: _deviceInfo.reports[0].currentState,
+              items: <int>[0, 1, 2, 3, 4, 5]//TODO: das sollte aus DeviceStates kommen
+                .map<DropdownMenuItem<int>>((int state) {
+                  return DropdownMenuItem<int>(
+                    value: state,
+                    child: Container(
+                      color: DeviceState.getColor(state),
+                      child: Row(
+                        children: [
+                          Icon(DeviceState.getIconData(state)),
+                          SizedBox(width: 5),
+                          Text(DeviceState.getStateString(state)),
+                        ]
+                      )
+                    ),
+                  );
+                }
+              ).toList(),
+              onChanged: (newValue) => _selectedState = newValue,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState.validate()) {
+                  _createReport();
+                }
+              },
+              child: Padding(padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8.0), child: Text('Create')),
+            ),
+          ],
+        ),
+      ),
+    )*/
+
   void _createReport() {
-    Comm.createReport(_deviceInfo.device.id, _titleTextController.text, _descriptionTextController.text, _selectedState).then((report) => {//TODO: currentState
-      setState(() {
-         _deviceInfo.reports.insert(0, report);
-      })
-    });
+    final titleTextController = TextEditingController();
+    final descriptionTextController = TextEditingController();
+    int selectedState = _deviceInfo.reports[0].currentState;
+
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          title: Text("Create a report"),
+          contentPadding: const EdgeInsets.all(16.0),
+          content: new Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TextField(
+                controller: titleTextController,
+                decoration: new InputDecoration(
+                  labelText: 'Title'),
+              ),
+              TextField(
+                controller: descriptionTextController,
+                decoration: new InputDecoration(
+                  labelText: 'Description'),
+              ),
+              DropdownButton<int>(
+                hint: Text("Current state"),
+                value: _deviceInfo.reports[0].currentState,
+                items: <int>[0, 1, 2, 3, 4, 5]//TODO: das sollte aus DeviceStates kommen
+                  .map<DropdownMenuItem<int>>((int state) {
+                    return DropdownMenuItem<int>(
+                      value: state,
+                      child: Container(
+                        color: DeviceState.getColor(state),
+                        child: Row(
+                          children: [
+                            Icon(DeviceState.getIconData(state)),
+                            SizedBox(width: 5),
+                            Text(DeviceState.getStateString(state)),
+                          ]
+                        )
+                      ),
+                    );
+                  }
+                ).toList(),
+                onChanged: (newValue) => selectedState = newValue,
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+            ElevatedButton(
+                child: const Text('Save'),
+                onPressed: () {
+                  String title = titleTextController.text;
+                  String description = descriptionTextController.text;
+
+                  Comm.createReport(_deviceInfo.device.id, title, description, selectedState).then((report) => {
+                    setState(() {
+                      _deviceInfo.reports.insert(0, report);
+                    })
+                  });
+
+                  Navigator.pop(context);
+                })
+          ],
+        );
+      }
+    );
   }
 
   @override
@@ -132,7 +228,6 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
     if(_deviceInfo != null) {
       device = _deviceInfo.device;
       reports = _deviceInfo.reports;
-      _selectedState = reports[0].currentState;
     }
 
     return Scaffold(
@@ -217,78 +312,11 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                               ),
                             ),
                           ),
-                          Form(
-                            key: _formKey,
-                            child: Container(width: 400,
-                                padding: const EdgeInsets.all(3.0),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.blueAccent)
-                                ),
-                                child: Column(mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text("Create a report", style: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .headline6),
-                                  TextFormField(
-                                    controller: _titleTextController,
-                                    decoration: InputDecoration(hintText: "Title"),
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return "Please give your report a title.";
-                                      }
-                                      return null;
-                                    },
-                                    onFieldSubmitted: (value) => _createReport(),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: TextFormField(
-                                      controller: _descriptionTextController,
-                                      decoration: InputDecoration(hintText: "Description"),
-                                      maxLines: 4,
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return "Please describe your changes in a few sentences.";
-                                        }
-                                        return null;
-                                      },
-                                      onFieldSubmitted: (value) => _createReport(),
-                                    ),
-                                  ),
-                                  DropdownButtonFormField<int>(
-                                    value: _deviceInfo.reports[0].currentState,
-                                    items: <int>[0, 1, 2, 3, 4, 5]//TODO: das sollte aus DeviceStates kommen
-                                      .map<DropdownMenuItem<int>>((int state) {
-                                        return DropdownMenuItem<int>(
-                                          value: state,
-                                          child: Container(
-                                            color: DeviceState.getColor(state),
-                                            child: Row(
-                                              children: [
-                                                Icon(DeviceState.getIconData(state)),
-                                                SizedBox(width: 5),
-                                                Text(DeviceState.getStateString(state)),
-                                              ]
-                                            )
-                                          ),
-                                        );
-                                      }
-                                    ).toList(),
-                                    onChanged: (newValue) => _selectedState = newValue,
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      if (_formKey.currentState.validate()) {
-                                        _createReport();
-                                      }
-                                    },
-                                    child: Padding(padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8.0), child: Text('Create')),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
+                          SizedBox(height: 10,),
+                          ElevatedButton(
+                            child: const Text('Create report'),
+                            onPressed: () => _createReport()
+                          ),
                         ]
                       )
                     ),
