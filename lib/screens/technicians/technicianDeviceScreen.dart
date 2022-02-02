@@ -137,7 +137,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
               ),
               DropdownButton<int>(
                 hint: Text("Current state"),
-                value: _deviceInfo.reports[0].currentState,
+                value: selectedState,
                 items: <int>[0, 1, 2, 3, 4, 5]//TODO: das sollte aus DeviceStates kommen
                   .map<DropdownMenuItem<int>>((int state) {
                     return DropdownMenuItem<int>(
@@ -155,7 +155,11 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                     );
                   }
                 ).toList(),
-                onChanged: (newValue) => selectedState = newValue,
+                onChanged: (newValue) => {
+                  setState(() {
+                    selectedState = newValue;
+                  })
+                },
               ),
             ],
           ),
