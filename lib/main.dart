@@ -60,13 +60,14 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(height: 10),
               Padding(padding: EdgeInsets.all(10.0), child: Image(image: AssetImage('graphics/logo.png'))),
               SizedBox(height: 10),
               Flexible(child: Card(child: Padding(padding: EdgeInsets.all(10.0), child: LoginForm()))),
               SizedBox(height: 30),
               TextButton(onPressed: () => Navigator.of(context).pushNamed(AboutScreen.route),
                 child: Text('About'),),
-              SizedBox(height: 100),
+              SizedBox(height: 50),
             ],
           ),
         ),
@@ -159,6 +160,7 @@ class _LoginFormState extends State<LoginForm> {
                     .headline5),
                 Flexible(
                   child: Scrollbar(
+                    isAlwaysShown: true,
                     controller: _countryScrollController,
                     child: ListView.separated(
                       controller: _countryScrollController,
@@ -195,6 +197,7 @@ class _LoginFormState extends State<LoginForm> {
                     .headline5),
                 Flexible(
                   child: Scrollbar(
+                    isAlwaysShown: true,
                     controller: _hospitalScrollController,
                     child: ListView.separated(
                       controller: _hospitalScrollController,
