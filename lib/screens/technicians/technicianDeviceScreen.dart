@@ -35,7 +35,6 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
     Comm.getDeviceInfo(widget.id).then((deviceInfo) {
       _updateDeviceInfo(deviceInfo);
     }).onError<MessageException>((error, stackTrace) {
-      print(error.message);
       final snackBar = SnackBar(content: Text(error.message));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
@@ -112,20 +111,107 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
     );
   }
 
+  void _createReport() async {
+    final titleTextController = TextEditingController();
+    final descriptionTextController = TextEditingController();
+    int selectedState = _deviceInfo.reports[0].currentState;
+
+    await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          title: Text("Create a report"),
+          contentPadding: const EdgeInsets.all(16.0),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    controller: titleTextController,
+                    decoration: new InputDecoration(
+                      labelText: 'Title'),
+                  ),
+                  TextField(
+                    controller: descriptionTextController,
+                    decoration: new InputDecoration(
+                      labelText: 'Description'),
+                  ),
+                  DropdownButton<int>(
+                    hint: Text("Current state"),
+                    value: selectedState,
+                    items: <int>[0, 1, 2, 3, 4, 5]//TODO: das sollte aus DeviceStates kommen
+                      .map<DropdownMenuItem<int>>((int state) {
+                        return DropdownMenuItem<int>(
+                          value: state,
+                          child: Container(
+                            color: DeviceState.getColor(state),
+                            child: Row(
+                              children: [
+                                Icon(DeviceState.getIconData(state)),
+                                SizedBox(width: 5),
+                                Text(DeviceState.getStateString(state)),
+                              ]
+                            )
+                          ),
+                        );
+                      }
+                    ).toList(),
+                    onChanged: (newValue) => {
+                      setState(() {
+                        selectedState = newValue;
+                      })
+                    },
+                  ),
+                ],
+              );
+            }
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+            ElevatedButton(
+                child: const Text('Save'),
+                onPressed: () {
+                  String title = titleTextController.text;
+                  String description = descriptionTextController.text;
+
+                  Comm.createReport(_deviceInfo.device.id, title, description, selectedState).then((report) => {
+                    setState(() {
+                      _deviceInfo.reports.insert(0, report);
+                    })
+                  });
+
+                  Navigator.pop(context);
+                })
+          ],
+        );
+      }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    HospitalDevice device = _deviceInfo.device;
-    List<DetailedReport> reports = _deviceInfo.reports;
+    HospitalDevice device;
+    List<DetailedReport> reports;
+
+    if(_deviceInfo != null) {
+      device = _deviceInfo.device;
+      reports = _deviceInfo.reports;
+    }
 
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: Text(device.type),
+        title: Text(_deviceInfo != null ? device.type : "loading..."),
       ),
       body: Center(child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
         child: Card(
           child: Padding(padding: EdgeInsets.all(10.0),
-            child: Column(
+            child: _deviceInfo != null ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Row(
@@ -199,6 +285,11 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                               ),
                             ),
                           ),
+                          SizedBox(height: 10,),
+                          ElevatedButton(
+                            child: const Text('Create report'),
+                            onPressed: () => _createReport()
+                          ),
                         ]
                       )
                     ),
@@ -215,7 +306,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                   ]
                 )), 
               ]
-            )
+            ) : Center(child: CircularProgressIndicator())
           ),
         )
       ))
@@ -267,8 +358,10 @@ class _DocumentScreenState extends State<DocumentScreen> {
   }
 
   void _retrieveDocuments() {
-    Comm.retrieveDocuments(widget.deviceInfo.device.manufacturer, widget.deviceInfo.device.model).then((documents) {//TODO catch Exception
+    Comm.retrieveDocuments(widget.deviceInfo.device.manufacturer, widget.deviceInfo.device.model).then((documents) {
       setState(() { _documents = documents; });
+    }).onError<MessageException>((error, stackTrace) {
+      //ignore
     });
   }
 
@@ -343,7 +436,7 @@ class _StateScreenState extends State<StateScreen> {
       children: [
         Text("Current State:", style: TextStyle(fontSize: 25)),
         SizedBox(height: 10),
-          Container(color: DeviceState.getColor(latestReport.currentState),
+        Container(color: DeviceState.getColor(latestReport.currentState),
           child: Padding(padding: EdgeInsets.all(3.0),
             child: Row(children: [
                 Icon(DeviceState.getIconData(latestReport.currentState)),
@@ -358,90 +451,6 @@ class _StateScreenState extends State<StateScreen> {
         SizedBox(height: 5),
         Text(DateTime.now().difference(latestReport.created).inDays.toString() + " days"),
       ]
-    );
-  }
-}
-
-class ReportProblemForm extends StatefulWidget {
-  final DeviceInfo deviceInfo;
-
-  final ValueChanged<DeviceInfo> updateDeviceInfo;
-
-  ReportProblemForm({Key key, @required this.deviceInfo, this.updateDeviceInfo}) : super(key: key);
-
-  @override
-  _ReportProblemFormState createState() => _ReportProblemFormState();
-}
-
-class _ReportProblemFormState extends State<ReportProblemForm> {
-  final _formKey = GlobalKey<FormState>();
-
-  final _reportTitleController = TextEditingController();
-  final _problemTextController = TextEditingController();
-
-  void _createReport() {
-    if (_formKey.currentState.validate()) {
-      Comm.queueRepair(479, _reportTitleController.text, _problemTextController.text).then((newReport) {
-        //widget.updateDeviceInfo(DeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData));
-      }).onError((error, stackTrace) {
-        final snackBar = SnackBar(content: Text(error.toString()));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Container(width: 400,
-          padding: const EdgeInsets.all(3.0),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.blueAccent)
-          ),
-          child: Column(mainAxisSize: MainAxisSize.min,
-          children: [
-            Text("Report a problem", style: Theme
-                .of(context)
-                .textTheme
-                .headline5),
-            TextFormField(
-              controller: _reportTitleController,
-              decoration: InputDecoration(hintText: "Title"),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return "Please give your report a title.";
-                }
-                return null;
-              },
-              onFieldSubmitted: (value) => _createReport(),
-            ),
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: _problemTextController,
-                decoration: InputDecoration(hintText: "Problem description"),
-                maxLines: 4,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "Please describe the problem in a few sentences.";
-                  }
-                  return null;
-                },
-                onFieldSubmitted: (value) => _createReport(),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  _createReport();
-                }
-              },
-              child: Padding(padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8.0), child: Text('Request repair')),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
