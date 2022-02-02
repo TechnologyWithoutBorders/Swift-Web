@@ -111,57 +111,61 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
     );
   }
 
-  void _createReport() {
+  void _createReport() async {
     final titleTextController = TextEditingController();
     final descriptionTextController = TextEditingController();
     int selectedState = _deviceInfo.reports[0].currentState;
 
-    showDialog<String>(
+    await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
         return new AlertDialog(
           title: Text("Create a report"),
           contentPadding: const EdgeInsets.all(16.0),
-          content: new Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              TextField(
-                controller: titleTextController,
-                decoration: new InputDecoration(
-                  labelText: 'Title'),
-              ),
-              TextField(
-                controller: descriptionTextController,
-                decoration: new InputDecoration(
-                  labelText: 'Description'),
-              ),
-              DropdownButton<int>(
-                hint: Text("Current state"),
-                value: selectedState,
-                items: <int>[0, 1, 2, 3, 4, 5]//TODO: das sollte aus DeviceStates kommen
-                  .map<DropdownMenuItem<int>>((int state) {
-                    return DropdownMenuItem<int>(
-                      value: state,
-                      child: Container(
-                        color: DeviceState.getColor(state),
-                        child: Row(
-                          children: [
-                            Icon(DeviceState.getIconData(state)),
-                            SizedBox(width: 5),
-                            Text(DeviceState.getStateString(state)),
-                          ]
-                        )
-                      ),
-                    );
-                  }
-                ).toList(),
-                onChanged: (newValue) => {
-                  setState(() {
-                    selectedState = newValue;
-                  })
-                },
-              ),
-            ],
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    controller: titleTextController,
+                    decoration: new InputDecoration(
+                      labelText: 'Title'),
+                  ),
+                  TextField(
+                    controller: descriptionTextController,
+                    decoration: new InputDecoration(
+                      labelText: 'Description'),
+                  ),
+                  DropdownButton<int>(
+                    hint: Text("Current state"),
+                    value: selectedState,
+                    items: <int>[0, 1, 2, 3, 4, 5]//TODO: das sollte aus DeviceStates kommen
+                      .map<DropdownMenuItem<int>>((int state) {
+                        return DropdownMenuItem<int>(
+                          value: state,
+                          child: Container(
+                            color: DeviceState.getColor(state),
+                            child: Row(
+                              children: [
+                                Icon(DeviceState.getIconData(state)),
+                                SizedBox(width: 5),
+                                Text(DeviceState.getStateString(state)),
+                              ]
+                            )
+                          ),
+                        );
+                      }
+                    ).toList(),
+                    onChanged: (newValue) => {
+                      setState(() {
+                        selectedState = newValue;
+                      })
+                    },
+                  ),
+                ],
+              );
+            }
           ),
           actions: <Widget>[
             ElevatedButton(
