@@ -111,41 +111,6 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
     );
   }
 
-  /*Form(
-            DropdownButtonFormField<int>(
-              value: _deviceInfo.reports[0].currentState,
-              items: <int>[0, 1, 2, 3, 4, 5]//TODO: das sollte aus DeviceStates kommen
-                .map<DropdownMenuItem<int>>((int state) {
-                  return DropdownMenuItem<int>(
-                    value: state,
-                    child: Container(
-                      color: DeviceState.getColor(state),
-                      child: Row(
-                        children: [
-                          Icon(DeviceState.getIconData(state)),
-                          SizedBox(width: 5),
-                          Text(DeviceState.getStateString(state)),
-                        ]
-                      )
-                    ),
-                  );
-                }
-              ).toList(),
-              onChanged: (newValue) => _selectedState = newValue,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  _createReport();
-                }
-              },
-              child: Padding(padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8.0), child: Text('Create')),
-            ),
-          ],
-        ),
-      ),
-    )*/
-
   void _createReport() {
     final titleTextController = TextEditingController();
     final descriptionTextController = TextEditingController();
