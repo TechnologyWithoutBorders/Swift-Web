@@ -134,7 +134,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                 ]
               )
             ),
-          )     
+          )
         )
       )
     );
