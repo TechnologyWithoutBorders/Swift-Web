@@ -45,6 +45,10 @@ class _DetailScreenState extends State<DashboardScreen> {
     });
   }
 
+  void _registerDevice() {
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     var countList = [0, 0, 0, 0, 0, 0];
@@ -128,6 +132,11 @@ class _DetailScreenState extends State<DashboardScreen> {
                             ),
                           ),
                         )),
+                        SizedBox(height: 15),
+                        ElevatedButton(
+                          onPressed: () => _registerDevice(),
+                          child: Text("Register new device")
+                        )
                       ]
                     )
                   )
