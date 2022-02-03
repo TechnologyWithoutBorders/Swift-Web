@@ -53,6 +53,8 @@ class _DetailScreenState extends State<UserManagementScreen> {
 
     Comm.getUsers().then((users) {
       setState(() {
+        users.sort((a, b) => a.name.compareTo(b.name));
+
         _users = users;
       });
     }).onError<MessageException>((error, stackTrace) {
