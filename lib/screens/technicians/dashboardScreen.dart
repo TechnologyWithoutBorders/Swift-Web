@@ -111,7 +111,7 @@ class _DetailScreenState extends State<DashboardScreen> {
           ],
         );
       }
-    );
+    ).then((value) => _updateDevices());
   }
 
   @override
