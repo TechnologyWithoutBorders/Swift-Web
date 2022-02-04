@@ -46,46 +46,83 @@ class _DetailScreenState extends State<DashboardScreen> {
   }
 
   void _registerDevice() {
+    int selectedState = DeviceState.working;
+
     //TODO: should those be disposed?
     TextEditingController idController = TextEditingController();
     TextEditingController typeController = TextEditingController();
     TextEditingController manufacturerController = TextEditingController();
     TextEditingController modelController = TextEditingController();
+    TextEditingController stateController = TextEditingController();
 
     showDialog<String>(
       context: context,
       builder: (BuildContext context) {
         return new AlertDialog(
           contentPadding: const EdgeInsets.all(16.0),
-          content: new Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: idController,
-                decoration: new InputDecoration(
-                  helperText: "Leave empty to determine ID automatically.",//TODO: make user select explicitly
-                  labelText: 'ID',
-                ),
-              ),
-              TextField(
-                controller: typeController,
-                decoration: new InputDecoration(
-                  labelText: 'Type'),
-              ),
-              TextField(
-                controller: manufacturerController,
-                decoration: new InputDecoration(
-                  labelText: 'Manufacturer'),
-              ),
-              TextField(
-                controller: modelController,
-                decoration: new InputDecoration(
-                  labelText: 'Model'),
-              ),
-              SizedBox(height: 10,),
-              ElevatedButton(onPressed: () {}, child: Text("Choose location..."))
-              //TODO: select location via organizational chart
-            ],
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) { 
+              return new Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: idController,
+                    decoration: new InputDecoration(
+                      helperText: "Leave empty to determine ID automatically.",//TODO: make user select explicitly
+                      labelText: 'ID',
+                    ),
+                  ),
+                  TextField(
+                    controller: typeController,
+                    decoration: new InputDecoration(
+                      labelText: 'Type'),
+                  ),
+                  TextField(
+                    controller: manufacturerController,
+                    decoration: new InputDecoration(
+                      labelText: 'Manufacturer'),
+                  ),
+                  TextField(
+                    controller: modelController,
+                    decoration: new InputDecoration(
+                      labelText: 'Model'),
+                  ),
+                  Padding(padding: EdgeInsets.all(10), child: ElevatedButton(onPressed: () {}, child: Text("Choose location..."))),
+                  //TODO: select location via organizational chart
+                  DropdownButton<int>(
+                    hint: Text("Current state"),
+                    value: selectedState,
+                    items: <int>[0, 1, 2, 3, 4, 5]//TODO: das sollte aus DeviceStates kommen
+                      .map<DropdownMenuItem<int>>((int state) {
+                        return DropdownMenuItem<int>(
+                          value: state,
+                          child: Container(
+                            color: DeviceState.getColor(state),
+                            child: Row(
+                              children: [
+                                Icon(DeviceState.getIconData(state)),
+                                SizedBox(width: 5),
+                                Text(DeviceState.getStateString(state)),
+                              ]
+                            )
+                          ),
+                        );
+                      }
+                    ).toList(),
+                    onChanged: (newValue) => {
+                      setState(() {
+                        selectedState = newValue;
+                      })
+                    },
+                  ),
+                  selectedState != DeviceState.working ? TextField(
+                    controller: stateController,
+                    decoration: new InputDecoration(
+                      labelText: 'Description'),
+                  ) : SizedBox.shrink()
+                ],
+              );
+            }
           ),
           actions: [
             ElevatedButton(
