@@ -46,7 +46,72 @@ class _DetailScreenState extends State<DashboardScreen> {
   }
 
   void _registerDevice() {
-    
+    //TODO: should those be disposed?
+    TextEditingController idController = TextEditingController();
+    TextEditingController typeController = TextEditingController();
+    TextEditingController manufacturerController = TextEditingController();
+    TextEditingController modelController = TextEditingController();
+
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          contentPadding: const EdgeInsets.all(16.0),
+          content: new Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: idController,
+                decoration: new InputDecoration(
+                  helperText: "Leave empty to determine ID automatically.",//TODO: make user select explicitly
+                  labelText: 'ID',
+                ),
+              ),
+              TextField(
+                controller: typeController,
+                decoration: new InputDecoration(
+                  labelText: 'Type'),
+              ),
+              TextField(
+                controller: manufacturerController,
+                decoration: new InputDecoration(
+                  labelText: 'Manufacturer'),
+              ),
+              TextField(
+                controller: modelController,
+                decoration: new InputDecoration(
+                  labelText: 'Model'),
+              ),
+              SizedBox(height: 10,),
+              ElevatedButton(onPressed: () {}, child: Text("Choose location..."))
+              //TODO: select location via organizational chart
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+            ElevatedButton(
+                child: const Text('Register'),
+                onPressed: () {
+                  String type = typeController.text;
+                  String manufacturer = manufacturerController.text;
+                  String model = modelController.text;
+
+                  /*Comm.editDevice(
+                    HospitalDevice(id: this._deviceInfo.device.id, type: type, manufacturer: manufacturer, model: model, location: location)).then((modifiedDeviceInfo) {
+                    
+                    _updateDeviceInfo(modifiedDeviceInfo);
+                  });*/ //TODO:
+
+                  Navigator.pop(context);
+                })
+          ],
+        );
+      }
+    );
   }
 
   @override
