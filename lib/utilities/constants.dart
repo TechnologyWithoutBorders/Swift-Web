@@ -5,6 +5,7 @@ class Constants {
   static const String key_country = "country";
   static const String key_hospital = "hospital";
   static const String key_role = "role";
+  static const String key_user = "user";
 
   static const String role_medical = "medical";
   static const String role_technical = "technical";
