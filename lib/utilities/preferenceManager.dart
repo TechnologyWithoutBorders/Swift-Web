@@ -37,6 +37,14 @@ Future<bool> save(String country, int hospital, String role, String password) as
   return true;
 }
 
+Future<bool> selectUser(int user) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  await prefs.setInt(Constants.key_user, user);
+
+  return true;
+}
+
 Future<void> clear() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   
@@ -65,4 +73,10 @@ Future<String> getRole() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   return prefs.getString(Constants.key_role);
+}
+
+Future<int> getUser() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  return prefs.getInt(Constants.key_user);
 }

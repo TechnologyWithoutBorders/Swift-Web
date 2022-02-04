@@ -181,7 +181,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
 
                   Comm.createReport(_deviceInfo.device.id, title, description, selectedState).then((report) => {
                     setState(() {
-                      _deviceInfo.reports.insert(0, report);
+                      _deviceInfo.reports.insert(0, report);//TODO: get reports from server
                     })
                   });
 
