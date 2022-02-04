@@ -68,7 +68,7 @@ class _TabScreenState extends State<TabScreen> {
 
                   return ListTile(
                     title: Text(user.name),
-                    subtitle: Text(user.position + "\n" + user.mail + "\n" + user.phone),
+                    subtitle: Text(user.position),
                     onTap: () => _saveUser(user),
                   );
                 },
