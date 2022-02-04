@@ -65,12 +65,18 @@ class _DetailScreenState extends State<DashboardScreen> {
               return new Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  TextField(
-                    controller: idController,
-                    decoration: new InputDecoration(
-                      helperText: "Leave empty to determine ID automatically.",//TODO: make user select explicitly
-                      labelText: 'ID',
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey)
                     ),
+                    child: Padding(padding: EdgeInsets.all(10), child: TextField(
+                      controller: idController,
+                      decoration: new InputDecoration(
+                        helperMaxLines: 2,
+                        helperText: "Leave empty to determine ID automatically.",//TODO: make user select explicitly
+                        labelText: 'ID',
+                      ),
+                    ))
                   ),
                   TextField(
                     controller: typeController,
