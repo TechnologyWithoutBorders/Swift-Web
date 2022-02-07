@@ -17,4 +17,6 @@ class Constants {
 
   static const int teog_blue = 0xff01265d;
   static const int teog_blue_light = 0xff667d9d;
+
+  static const String logo_path = 'graphics/logo.png';
 }

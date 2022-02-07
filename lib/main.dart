@@ -62,7 +62,7 @@ class LoginScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Spacer(),
-              Flexible(flex: 6, child: Padding(padding: EdgeInsets.all(10.0), child: Image(image: AssetImage('graphics/logo.png')))),
+              Flexible(flex: 6, child: Padding(padding: EdgeInsets.all(10.0), child: Image(image: AssetImage(Constants.logo_path)))),
               Spacer(),
               Flexible(flex: 20, child: Card(child: Padding(padding: EdgeInsets.all(10.0), child: LoginForm()))),
               Spacer(),
