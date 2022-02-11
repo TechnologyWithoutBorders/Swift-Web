@@ -16,11 +16,7 @@ import 'package:teog_swift/utilities/messageException.dart';
 
 import 'package:flag/flag.dart';
 
-void main() async{
-  WidgetsFlutterBinding.ensureInitialized();
-
-  runApp(SwiftApp());
-}
+void main() => runApp(SwiftApp());
 
 class SwiftApp extends StatelessWidget {
   static const String route = '/';
