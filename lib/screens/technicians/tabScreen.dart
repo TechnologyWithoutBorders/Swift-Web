@@ -27,7 +27,7 @@ class _TabScreenState extends State<TabScreen> {
   User _user;
 
   void _logout(BuildContext context) async {
-    await Prefs.clear();
+    await Prefs.logout();
     Navigator.pushNamedAndRemoveUntil(context, SwiftApp.route, (r) => false);
   }
 

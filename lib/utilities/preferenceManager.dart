@@ -51,6 +51,13 @@ Future<void> clear() async {
   prefs.clear();
 }
 
+Future<void> logout() async{
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  prefs.remove(Constants.key_role);
+  prefs.remove(Constants.key_pw);
+}
+
 Future<String> getPassword() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
