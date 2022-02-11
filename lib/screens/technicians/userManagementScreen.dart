@@ -15,11 +15,6 @@ class UserManagementScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<UserManagementScreen> {
-  final _formKey = GlobalKey<FormState>();
-
-  final _nameTextController = TextEditingController();
-  final _mailTextController = TextEditingController();
-
   final _scrollController = ScrollController();
 
   Hospital _hospital;
