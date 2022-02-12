@@ -144,7 +144,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center, 
                 children: [
-                  OutlinedButton(onPressed: () => {}, child: Text("Select location...")),
+                  OutlinedButton(onPressed: () => {}, child: Text("Select department...")),
                   ButtonBar(
                     alignment: MainAxisAlignment.center,
                     children: [

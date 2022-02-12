@@ -210,7 +210,7 @@ class _FilterFormState extends State<FilterForm> {
               .textTheme
               .headline5),
           SizedBox(height: 10),
-          OutlinedButton(onPressed: () => {}, child: Text("Select location...")),
+          OutlinedButton(onPressed: () => {}, child: Text("Select department...")),
           TextFormField(
             controller: _typeController,
             decoration: InputDecoration(labelText: 'Device type (e.g. "Ventilator")'),
