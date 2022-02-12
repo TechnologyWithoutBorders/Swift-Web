@@ -274,15 +274,18 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                                   itemCount: reports.length,
                                   itemBuilder: (BuildContext context, int index) {
                                     DetailedReport report = reports[index];
+                                    // Flutter does not support date formatting without libraries
+                                    String dateStamp = report.created.toString().substring(0, report.created.toString().length-7);
 
                                     return Column(
                                       children: [
-                                        Text(report.created.toString()),
+                                        Text(dateStamp),
                                         Card(
                                           color: report.authorId == _userId ? Color(Constants.teog_blue_lighter) : Colors.white,
                                           child: Padding(
                                             padding: EdgeInsets.all(5.0),
                                             child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Row(
                                                   children: [
@@ -292,7 +295,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                                                     )
                                                   ]
                                                 ),
-                                                Text(report.title),
+                                                Text(report.title, style: TextStyle(fontWeight: FontWeight.bold)),
                                                 Text(report.description)
                                               ]
                                             )
