@@ -332,6 +332,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
     FilePickerResult result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
+      allowMultiple: true,
     );
 
     if(result != null) {
@@ -342,13 +343,13 @@ class _DocumentScreenState extends State<DocumentScreen> {
       List<PlatformFile> files = result.files;
 
       for(PlatformFile file in files) {
-        //TODO: check pdf extension
+        if(file.extension == 'pdf') {
+          List<String> documents = await Comm.uploadDocument(widget.deviceInfo.device.manufacturer, widget.deviceInfo.device.model, file.name, file.bytes);
 
-        List<String> documents = await Comm.uploadDocument(widget.deviceInfo.device.manufacturer, widget.deviceInfo.device.model, file.name, file.bytes);
-
-        setState(() {
-          _documents = documents;
-        });
+          setState(() {
+            _documents = documents;
+          });
+        }
       }
     }
 
