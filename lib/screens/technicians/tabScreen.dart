@@ -118,11 +118,7 @@ class _TabScreenState extends State<TabScreen> {
                     );
                   }
                 ).toList(),
-                onChanged: (user) => {
-                  setState(() => {
-                    _user = user
-                  })
-                },
+                onChanged: (user) => _saveUser(user),
               ),
               Padding(padding: EdgeInsets.only(right: 20.0),
                 child: TextButton(
