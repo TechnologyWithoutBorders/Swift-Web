@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
@@ -7,6 +8,7 @@ import 'package:teog_swift/utilities/constants.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
 import 'package:teog_swift/utilities/deviceInfo.dart';
 import 'package:teog_swift/utilities/detailedReport.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
@@ -25,6 +27,7 @@ class TechnicianDeviceScreen extends StatefulWidget {
 }
 
 class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
+  int _userId = -1;
   DeviceInfo _deviceInfo;
 
   final _scrollController = ScrollController();
@@ -39,6 +42,8 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
       final snackBar = SnackBar(content: Text(error.message));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
+
+    Prefs.getUser().then((userId) => _userId = userId);
   }
 
   void _updateDeviceInfo(DeviceInfo modifiedDeviceInfo) {
@@ -212,7 +217,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
       body: Center(child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
         child: Card(
           child: Padding(padding: EdgeInsets.all(10.0),
-            child: _deviceInfo != null ? Column(
+            child: (_deviceInfo != null && _userId >= 0) ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Row(
@@ -274,7 +279,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                                       children: [
                                         Text(report.created.toString()),
                                         Card(
-                                          color: Color(Constants.teog_blue_lighter),
+                                          color: report.authorId == _userId ? Color(Constants.teog_blue_lighter) : Colors.white,
                                           child: Padding(
                                             padding: EdgeInsets.all(5.0),
                                             child: Column(
