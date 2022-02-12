@@ -292,7 +292,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                                                 children: [
                                                   Row(
                                                     children: [
-                                                      Expanded(child: Text(report.author + ":")),
+                                                      Expanded(child: Text(report.authorId == _userId ? "You:" : report.author + ":")),
                                                       Icon(DeviceState.getIconData(report.currentState),
                                                         color: DeviceState.getColor(report.currentState)
                                                       )
