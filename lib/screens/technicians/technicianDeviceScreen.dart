@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:html' as html;
 
 import 'package:flutter/material.dart';
+import 'package:teog_swift/utilities/constants.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
@@ -259,31 +260,46 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                         children: [
                           StateScreen(deviceInfo: _deviceInfo),
                           Flexible(
-                            child: Scrollbar(isAlwaysShown: true,
-                              controller: _scrollController,
-                              child: ListView.separated(
+                            child: Container(
+                              color: Colors.grey[200],
+                              child: Scrollbar(isAlwaysShown: true,
                                 controller: _scrollController,
-                                itemCount: reports.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  DetailedReport report = reports[index];
+                                child: ListView.separated(
+                                  controller: _scrollController,
+                                  itemCount: reports.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    DetailedReport report = reports[index];
 
-                                  return ListTile(
-                                    leading: Container(width: 30, height: 30, color: DeviceState.getColor(report.currentState),
-                                      child: Padding(padding: EdgeInsets.all(3.0),
-                                        child: Row(children: [
-                                            Icon(DeviceState.getIconData(report.currentState))
-                                          ]
+                                    return Column(
+                                      children: [
+                                        Text(report.created.toString()),
+                                        Card(
+                                          color: Color(Constants.teog_blue_lighter),
+                                          child: Padding(
+                                            padding: EdgeInsets.all(5.0),
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Expanded(child: Text(report.author + ":")),
+                                                    Icon(DeviceState.getIconData(report.currentState),
+                                                      color: DeviceState.getColor(report.currentState)
+                                                    )
+                                                  ]
+                                                ),
+                                                Text(report.title),
+                                                Text(report.description)
+                                              ]
+                                            )
+                                          )
                                         )
-                                      )
-                                    ),
-                                    title: Text(report.title),
-                                    subtitle: Text(report.description),
-                                    trailing: Text(report.author),
-                                  );
-                                },
-                                separatorBuilder: (BuildContext context, int index) => const Divider(),
+                                      ]
+                                    );
+                                  },
+                                  separatorBuilder: (BuildContext context, int index) => SizedBox(height: 15),
+                                ),
                               ),
-                            ),
+                            )
                           ),
                           SizedBox(height: 10,),
                           ElevatedButton(
