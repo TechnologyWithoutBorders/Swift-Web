@@ -144,6 +144,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center, 
                 children: [
+                  OutlinedButton(onPressed: () => {}, child: Text("Select location...")),
                   ButtonBar(
                     alignment: MainAxisAlignment.center,
                     children: [
@@ -164,7 +165,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     controller: _filterTextController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: 'filter...'
+                      labelText: 'filter...'
                     ),
                     onChanged: (text) => _filter(text.trim().toLowerCase()),
                     enabled: !_manualButtonDisabled
