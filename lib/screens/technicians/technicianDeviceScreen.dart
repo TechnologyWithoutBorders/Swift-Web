@@ -277,34 +277,38 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                                     // Flutter does not support date formatting without libraries
                                     String dateStamp = report.created.toString().substring(0, report.created.toString().length-7);
 
-                                    return Column(
-                                      children: [
-                                        Text(dateStamp),
-                                        Card(
-                                          color: report.authorId == _userId ? Color(Constants.teog_blue_lighter) : Colors.white,
-                                          child: Padding(
-                                            padding: EdgeInsets.all(5.0),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Expanded(child: Text(report.author + ":")),
-                                                    Icon(DeviceState.getIconData(report.currentState),
-                                                      color: DeviceState.getColor(report.currentState)
-                                                    )
-                                                  ]
-                                                ),
-                                                Text(report.title, style: TextStyle(fontWeight: FontWeight.bold)),
-                                                Text(report.description)
-                                              ]
+                                    return Padding(
+                                      padding: EdgeInsets.all(15.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                                        children: [
+                                          Text(dateStamp, textAlign: report.authorId == _userId ? TextAlign.right : TextAlign.left),
+                                          Card(
+                                            color: report.authorId == _userId ? Color(Constants.teog_blue_lighter) : Colors.white,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(5.0),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Expanded(child: Text(report.author + ":")),
+                                                      Icon(DeviceState.getIconData(report.currentState),
+                                                        color: DeviceState.getColor(report.currentState)
+                                                      )
+                                                    ]
+                                                  ),
+                                                  Text(report.title, style: TextStyle(fontWeight: FontWeight.bold)),
+                                                  Text(report.description)
+                                                ]
+                                              )
                                             )
                                           )
-                                        )
-                                      ]
+                                        ]
+                                      )
                                     );
                                   },
-                                  separatorBuilder: (BuildContext context, int index) => SizedBox(height: 15),
+                                  separatorBuilder: (BuildContext context, int index) => Container(),
                                 ),
                               ),
                             )
@@ -459,22 +463,21 @@ class _StateScreenState extends State<StateScreen> {
 
     return Column(
       children: [
-        Text("Current State:", style: TextStyle(fontSize: 25)),
-        SizedBox(height: 10),
         Container(color: DeviceState.getColor(latestReport.currentState),
-          child: Padding(padding: EdgeInsets.all(3.0),
+          child: Padding(padding: EdgeInsets.all(7.0),
             child: Row(children: [
                 Icon(DeviceState.getIconData(latestReport.currentState)),
-              SizedBox(width: 5),
-              Text(DeviceState.getStateString(latestReport.currentState),
-                style: TextStyle(fontSize: 25)
-              ),
+                SizedBox(width: 5),
+                Text(DeviceState.getStateString(latestReport.currentState),
+                  style: TextStyle(fontSize: 25)
+                ),
+                Spacer(),
+                Text(DateTime.now().difference(latestReport.created).inDays.toString() + " days",
+                  style: TextStyle(fontSize: 25))
               ]
             )
           )
         ),
-        SizedBox(height: 5),
-        Text(DateTime.now().difference(latestReport.created).inDays.toString() + " days"),
       ]
     );
   }
