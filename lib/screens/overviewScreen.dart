@@ -209,20 +209,21 @@ class _FilterFormState extends State<FilterForm> {
               .of(context)
               .textTheme
               .headline5),
+          SizedBox(height: 10),
+          OutlinedButton(onPressed: () => {}, child: Text("Select location...")),
           TextFormField(
             controller: _typeController,
-            decoration: InputDecoration(hintText: 'Device type (e.g. "Ventilator")'),
+            decoration: InputDecoration(labelText: 'Device type (e.g. "Ventilator")'),
             autofocus: true,
             validator: (value) => validateDeviceID(value),
             onFieldSubmitted: (value) => _processInput(),
           ),
           TextFormField(
             controller: _manufacturerController,
-            decoration: InputDecoration(hintText: 'Manufacturer'),
+            decoration: InputDecoration(labelText: 'Manufacturer'),
             validator: (value) => validateDeviceID(value),
             onFieldSubmitted: (value) => _processInput(),
           ),
-          TextFormField(decoration: InputDecoration(hintText: 'Location (not working yet)')),//TODO: nur für Sortierung, da oft nicht hinterlegt
           SizedBox(height: 10),
           ElevatedButton(
             onPressed: () => _processInput(),
