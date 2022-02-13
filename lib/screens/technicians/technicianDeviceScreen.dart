@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
@@ -57,7 +56,6 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
     TextEditingController typeController = TextEditingController(text: this._deviceInfo.device.type);
     TextEditingController manufacturerController = TextEditingController(text: this._deviceInfo.device.manufacturer);
     TextEditingController modelController = TextEditingController(text: this._deviceInfo.device.model);
-    TextEditingController locationController = TextEditingController(text: this._deviceInfo.device.location);
 
     showDialog<String>(
       context: context,
@@ -82,11 +80,6 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                 decoration: new InputDecoration(
                   labelText: 'Model'),
               ),
-              TextField(
-                controller: locationController,
-                decoration: new InputDecoration(
-                  labelText: 'Location'),
-              ),
             ],
           ),
           actions: <Widget>[
@@ -101,10 +94,9 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                   String type = typeController.text;
                   String manufacturer = manufacturerController.text;
                   String model = modelController.text;
-                  String location = locationController.text;
 
                   Comm.editDevice(
-                    HospitalDevice(id: this._deviceInfo.device.id, type: type, manufacturer: manufacturer, model: model, location: location)).then((modifiedDeviceInfo) {
+                    HospitalDevice(id: this._deviceInfo.device.id, type: type, manufacturer: manufacturer, model: model, orgUnitId: this._deviceInfo.device.orgUnitId, orgUnit: this._deviceInfo.device.orgUnit)).then((modifiedDeviceInfo) {
                     
                     _updateDeviceInfo(modifiedDeviceInfo);
                   });
@@ -230,7 +222,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SelectableText(device.manufacturer + " " + device.model, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                            SelectableText(device.location, style: TextStyle(fontSize: 25)),
+                            SelectableText(device.orgUnit, style: TextStyle(fontSize: 25)),
                             Text("Maintenance interval: " + (device.maintenanceInterval/4).toString() + " months"),
                             TextButton(
                               child: Text('edit'),
