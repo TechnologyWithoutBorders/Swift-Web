@@ -1,11 +1,14 @@
 import 'dart:convert';
+import 'dart:developer';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
 import 'package:flutter/material.dart';
+import 'package:teog_swift/utilities/constants.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
 import 'package:teog_swift/utilities/deviceInfo.dart';
 import 'package:teog_swift/utilities/detailedReport.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
@@ -24,6 +27,7 @@ class TechnicianDeviceScreen extends StatefulWidget {
 }
 
 class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
+  int _userId = -1;
   DeviceInfo _deviceInfo;
 
   final _scrollController = ScrollController();
@@ -38,6 +42,8 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
       final snackBar = SnackBar(content: Text(error.message));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
+
+    Prefs.getUser().then((userId) => _userId = userId);
   }
 
   void _updateDeviceInfo(DeviceInfo modifiedDeviceInfo) {
@@ -211,7 +217,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
       body: Center(child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
         child: Card(
           child: Padding(padding: EdgeInsets.all(10.0),
-            child: _deviceInfo != null ? Column(
+            child: (_deviceInfo != null && _userId >= 0) ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Row(
@@ -259,31 +265,53 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                         children: [
                           StateScreen(deviceInfo: _deviceInfo),
                           Flexible(
-                            child: Scrollbar(isAlwaysShown: true,
-                              controller: _scrollController,
-                              child: ListView.separated(
+                            child: Container(
+                              color: Colors.grey[200],
+                              child: Scrollbar(isAlwaysShown: true,
                                 controller: _scrollController,
-                                itemCount: reports.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  DetailedReport report = reports[index];
+                                child: ListView.separated(
+                                  controller: _scrollController,
+                                  itemCount: reports.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    DetailedReport report = reports[index];
+                                    // Flutter does not support date formatting without libraries
+                                    String dateStamp = report.created.toString().substring(0, report.created.toString().length-7);
 
-                                  return ListTile(
-                                    leading: Container(width: 30, height: 30, color: DeviceState.getColor(report.currentState),
-                                      child: Padding(padding: EdgeInsets.all(3.0),
-                                        child: Row(children: [
-                                            Icon(DeviceState.getIconData(report.currentState))
-                                          ]
-                                        )
+                                    return Padding(
+                                      padding: EdgeInsets.all(15.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                                        children: [
+                                          Text(dateStamp, textAlign: report.authorId == _userId ? TextAlign.right : TextAlign.left),
+                                          Card(
+                                            color: report.authorId == _userId ? Color(Constants.teog_blue_lighter) : Colors.white,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(5.0),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Expanded(child: Text(report.authorId == _userId ? "You:" : report.author + ":")),
+                                                      Icon(DeviceState.getIconData(report.currentState),
+                                                        color: DeviceState.getColor(report.currentState)
+                                                      )
+                                                    ]
+                                                  ),
+                                                  Text(report.title, style: TextStyle(fontWeight: FontWeight.bold)),
+                                                  Text(report.description)
+                                                ]
+                                              )
+                                            )
+                                          )
+                                        ]
                                       )
-                                    ),
-                                    title: Text(report.title),
-                                    subtitle: Text(report.description),
-                                    trailing: Text(report.author),
-                                  );
-                                },
-                                separatorBuilder: (BuildContext context, int index) => const Divider(),
+                                    );
+                                  },
+                                  separatorBuilder: (BuildContext context, int index) => Container(),
+                                ),
                               ),
-                            ),
+                            )
                           ),
                           SizedBox(height: 10,),
                           ElevatedButton(
@@ -435,22 +463,21 @@ class _StateScreenState extends State<StateScreen> {
 
     return Column(
       children: [
-        Text("Current State:", style: TextStyle(fontSize: 25)),
-        SizedBox(height: 10),
         Container(color: DeviceState.getColor(latestReport.currentState),
-          child: Padding(padding: EdgeInsets.all(3.0),
+          child: Padding(padding: EdgeInsets.all(7.0),
             child: Row(children: [
                 Icon(DeviceState.getIconData(latestReport.currentState)),
-              SizedBox(width: 5),
-              Text(DeviceState.getStateString(latestReport.currentState),
-                style: TextStyle(fontSize: 25)
-              ),
+                SizedBox(width: 5),
+                Text(DeviceState.getStateString(latestReport.currentState),
+                  style: TextStyle(fontSize: 25)
+                ),
+                Spacer(),
+                Text(DateTime.now().difference(latestReport.created).inDays.toString() + " days",
+                  style: TextStyle(fontSize: 25))
               ]
             )
           )
         ),
-        SizedBox(height: 5),
-        Text(DateTime.now().difference(latestReport.created).inDays.toString() + " days"),
       ]
     );
   }
