@@ -96,7 +96,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                   String model = modelController.text;
 
                   Comm.editDevice(
-                    HospitalDevice(id: this._deviceInfo.device.id, type: type, manufacturer: manufacturer, model: model, orgUnit: "")).then((modifiedDeviceInfo) {
+                    HospitalDevice(id: this._deviceInfo.device.id, type: type, manufacturer: manufacturer, model: model, orgUnitId: this._deviceInfo.device.orgUnitId, orgUnit: this._deviceInfo.device.orgUnit)).then((modifiedDeviceInfo) {
                     
                     _updateDeviceInfo(modifiedDeviceInfo);
                   });
