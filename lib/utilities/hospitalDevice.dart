@@ -3,10 +3,10 @@ class HospitalDevice {
   final String type;
   final String manufacturer;
   final String model;
-  final String location;
+  final String orgUnit;
   final int maintenanceInterval;
 
-  HospitalDevice({this.id, this.type, this.manufacturer, this.model, this.location, this.maintenanceInterval});
+  HospitalDevice({this.id, this.type, this.manufacturer, this.model, this.orgUnit, this.maintenanceInterval});
 
   factory HospitalDevice.fromJson(Map<String, dynamic> json) {
     return HospitalDevice(
@@ -14,7 +14,7 @@ class HospitalDevice {
       type: json['type'],
       manufacturer: json['manufacturer'],
       model: json['model'],
-      location: json['location'],
+      orgUnit: json['orgUnit'],
       maintenanceInterval: json['maintenanceInterval']
     );
   }
@@ -24,7 +24,7 @@ class HospitalDevice {
     'type': type,
     'manufacturer': manufacturer,
     'model': model,
-    'location': location,
+    'orgUnit': orgUnit,
     'maintenanceInterval': maintenanceInterval
   };
 }

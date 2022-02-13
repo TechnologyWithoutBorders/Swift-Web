@@ -197,7 +197,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                             ),
                             title: Text(deviceInfo.device.type),
                             subtitle: Text(deviceInfo.device.manufacturer + " " + deviceInfo.device.model),
-                            trailing: Text(deviceInfo.device.location),
+                            trailing: Text(deviceInfo.device.orgUnit),
                             onTap: () => {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: deviceInfo.device.id))).then((value) => {
                                 if(_filterType == filterMissingManuals) {
