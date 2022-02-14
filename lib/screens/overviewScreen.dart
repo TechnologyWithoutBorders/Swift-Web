@@ -15,7 +15,7 @@ class OverviewScreen extends StatelessWidget {
   static const String route = '/welcome';
 
   void _logout(BuildContext context) async {
-    await Prefs.clear();
+    await Prefs.logout();
     Navigator.pushNamedAndRemoveUntil(context, SwiftApp.route, (r) => false);
   }
 
