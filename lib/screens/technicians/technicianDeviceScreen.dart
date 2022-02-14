@@ -409,14 +409,13 @@ class _DocumentScreenState extends State<DocumentScreen> {
       uploadWidget = CircularProgressIndicator(value: null);
     } else {
       uploadWidget = ElevatedButton(
-        child: Text("add"),
+        child: Text("upload documents"),
         onPressed: () => _uploadDocuments(),
       );
     }
 
     return Column(
       children: [
-        uploadWidget,
         _documents.length > 0
           ? Flexible(child: Scrollbar(
               isAlwaysShown: true,
@@ -432,7 +431,8 @@ class _DocumentScreenState extends State<DocumentScreen> {
               separatorBuilder: (BuildContext context, int index) => const Divider(),
             )
           ))
-          : Center(child: const Text('No documents found')),
+          : Expanded(child: Center(child: const Text('No documents found'))),
+          uploadWidget,
       ]
     );
   }
