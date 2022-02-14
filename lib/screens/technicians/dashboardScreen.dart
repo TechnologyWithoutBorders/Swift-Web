@@ -115,7 +115,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                                   ),
                                   title: Text(deviceInfo.device.type),
                                   subtitle: Text(deviceInfo.device.manufacturer + " " + deviceInfo.device.model),
-                                  trailing: Text(deviceInfo.device.location),
+                                  trailing: Text(deviceInfo.device.orgUnit),
                                   onTap: () => {
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: deviceInfo.device.id))).then((value) => {
                                       //this is called when the newly created route returns

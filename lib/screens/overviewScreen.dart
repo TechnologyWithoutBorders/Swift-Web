@@ -244,7 +244,7 @@ class _FilterFormState extends State<FilterForm> {
                   leading: deviceInfo.imageData.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData)) : Text("no image"),
                   title: Text(deviceInfo.device.type),
                   subtitle: Text(deviceInfo.device.manufacturer + " " + deviceInfo.device.model),
-                  trailing: Text(deviceInfo.device.location),
+                  trailing: Text(deviceInfo.device.orgUnit),
                   onTap: () => _openDeviceById(deviceInfo.device.id)
                 );
               },
