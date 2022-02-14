@@ -122,7 +122,7 @@ class _SearchFormState extends State with SessionMixin {
           SizedBox(height: 10),
           Text("This is the easiest way. Please look for a barcode like this and enter the marked number:"),
           SizedBox(height: 5),
-          Image(image: AssetImage('graphics/barcode.jpg')),
+          Flexible(child: Image(image: AssetImage('graphics/barcode.jpg'))),
           TextFormField(
             controller: _deviceIDController,
             decoration: InputDecoration(hintText: 'Barcode Number'),
@@ -232,7 +232,7 @@ class _FilterFormState extends State<FilterForm> {
           SizedBox(height: 10),
           Text(_filteredDevices.length.toString() + " device(s) match the filter:"),
           SizedBox(height: 10),
-          SizedBox(height: 300,
+          Flexible(
             child: ListView.separated(
               controller: _scrollController,
               padding: const EdgeInsets.all(5),
