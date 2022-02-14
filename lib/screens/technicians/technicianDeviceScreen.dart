@@ -245,7 +245,8 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                     )
                   ],
                 ),
-                SizedBox(height: 50),
+                Divider(),
+                SizedBox(height: 20),
                 Flexible(child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
