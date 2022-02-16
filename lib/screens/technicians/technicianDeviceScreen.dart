@@ -222,7 +222,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SelectableText(device.manufacturer + " " + device.model, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                            SelectableText(device.orgUnit, style: TextStyle(fontSize: 25)),
+                            device.orgUnit != null ? Text(device.orgUnit, style: TextStyle(fontSize: 25)) : Text(""),
                             Text("Maintenance interval: " + (device.maintenanceInterval/4).toString() + " months"),
                             TextButton(
                               child: Text('edit'),

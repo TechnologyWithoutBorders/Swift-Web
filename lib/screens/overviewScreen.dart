@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:teog_swift/main.dart';
+import 'package:teog_swift/utilities/hospitalDevice.dart';
 import 'package:teog_swift/utilities/previewDeviceInfo.dart';
 import 'package:teog_swift/screens/deviceInfoScreen.dart';
 
@@ -239,13 +240,14 @@ class _FilterFormState extends State<FilterForm> {
               itemCount: _filteredDevices.length,
               itemBuilder: (BuildContext context, int index) {
                 PreviewDeviceInfo deviceInfo = _filteredDevices[index];
+                HospitalDevice device = deviceInfo.device;
 
                 return ListTile(
                   leading: deviceInfo.imageData.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData)) : Text("no image"),
-                  title: Text(deviceInfo.device.type),
-                  subtitle: Text(deviceInfo.device.manufacturer + " " + deviceInfo.device.model),
-                  trailing: Text(deviceInfo.device.orgUnit),
-                  onTap: () => _openDeviceById(deviceInfo.device.id)
+                  title: Text(device.type),
+                  subtitle: Text(device.manufacturer + " " + device.model),
+                  trailing: device.orgUnit != null ? Text(device.orgUnit) : null,
+                  onTap: () => _openDeviceById(device.id)
                 );
               },
               separatorBuilder: (BuildContext context, int index) => const Divider(),
