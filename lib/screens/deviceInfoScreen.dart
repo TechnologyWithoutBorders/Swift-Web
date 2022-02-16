@@ -9,8 +9,6 @@ import 'package:teog_swift/utilities/shortDeviceInfo.dart';
 import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
 
-import 'package:teog_swift/utilities/constants.dart';
-
 class DetailScreen extends StatefulWidget {
   //this one is never modified
   final ShortDeviceInfo deviceInfo;
