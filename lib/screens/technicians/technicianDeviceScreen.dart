@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:html' as html;
 
 import 'package:flutter/material.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:teog_swift/utilities/constants.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
 
@@ -56,31 +57,52 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
     TextEditingController typeController = TextEditingController(text: this._deviceInfo.device.type);
     TextEditingController manufacturerController = TextEditingController(text: this._deviceInfo.device.manufacturer);
     TextEditingController modelController = TextEditingController(text: this._deviceInfo.device.model);
+    int maintenanceInterval = (this._deviceInfo.device.maintenanceInterval/4).ceil();
 
     showDialog<String>(
       context: context,
       builder: (BuildContext context) {
         return new AlertDialog(
           contentPadding: const EdgeInsets.all(16.0),
-          content: new Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              TextField(
-                controller: typeController,
-                decoration: new InputDecoration(
-                  labelText: 'Type'),
-              ),
-              TextField(
-                controller: manufacturerController,
-                decoration: new InputDecoration(
-                  labelText: 'Manufacturer'),
-              ),
-              TextField(
-                controller: modelController,
-                decoration: new InputDecoration(
-                  labelText: 'Model'),
-              ),
-            ],
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return new Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    controller: typeController,
+                    decoration: new InputDecoration(
+                      labelText: 'Type'),
+                  ),
+                  TextField(
+                    controller: manufacturerController,
+                    decoration: new InputDecoration(
+                      labelText: 'Manufacturer'),
+                  ),
+                  TextField(
+                    controller: modelController,
+                    decoration: new InputDecoration(
+                      labelText: 'Model'),
+                  ),
+                  SizedBox(height: 10),
+                  Text("Maintenance interval (months):"),
+                  NumberPicker(
+                    minValue: 1,
+                    maxValue: 24,
+                    value: maintenanceInterval,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.black26),
+                    ),
+                    onChanged: (value) => {
+                      setState(() {
+                        maintenanceInterval = value;
+                      })
+                    }
+                  )
+                ],
+              );
+            }
           ),
           actions: <Widget>[
             ElevatedButton(
@@ -96,7 +118,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                   String model = modelController.text;
 
                   Comm.editDevice(
-                    HospitalDevice(id: this._deviceInfo.device.id, type: type, manufacturer: manufacturer, model: model, orgUnitId: this._deviceInfo.device.orgUnitId, orgUnit: this._deviceInfo.device.orgUnit)).then((modifiedDeviceInfo) {
+                    HospitalDevice(id: this._deviceInfo.device.id, type: type, manufacturer: manufacturer, model: model, orgUnitId: this._deviceInfo.device.orgUnitId, orgUnit: this._deviceInfo.device.orgUnit, maintenanceInterval: maintenanceInterval*4)).then((modifiedDeviceInfo) {
                     
                     _updateDeviceInfo(modifiedDeviceInfo);
                   });
