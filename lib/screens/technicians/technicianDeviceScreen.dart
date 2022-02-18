@@ -84,11 +84,16 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                     decoration: new InputDecoration(
                       labelText: 'Model'),
                   ),
+                  SizedBox(height: 10),
                   Text("Maintenance interval (months):"),
                   NumberPicker(
                     minValue: 1,
                     maxValue: 24,
                     value: maintenanceInterval,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.black26),
+                    ),
                     onChanged: (value) => {
                       setState(() {
                         maintenanceInterval = value;
