@@ -37,6 +37,7 @@ dependencies:
   image: ^3.0.8
   table_calendar: ^3.0.3
   graphview: ^1.1.1
+  numberpicker: ^2.1.1
 
 dev_dependencies:
   flutter_test:

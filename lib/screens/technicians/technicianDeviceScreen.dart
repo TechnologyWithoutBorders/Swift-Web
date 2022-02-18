@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:html' as html;
 
 import 'package:flutter/material.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:teog_swift/utilities/constants.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
 
@@ -56,6 +57,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
     TextEditingController typeController = TextEditingController(text: this._deviceInfo.device.type);
     TextEditingController manufacturerController = TextEditingController(text: this._deviceInfo.device.manufacturer);
     TextEditingController modelController = TextEditingController(text: this._deviceInfo.device.model);
+    int maintenanceInterval = this._deviceInfo.device.maintenanceInterval;
 
     showDialog<String>(
       context: context,
@@ -80,6 +82,14 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                 decoration: new InputDecoration(
                   labelText: 'Model'),
               ),
+              Text("Maintenance interval (months):"),
+              NumberPicker(
+                minValue: 1,
+                maxValue: 24,
+                value: maintenanceInterval,
+                axis: Axis.horizontal,
+                onChanged: (value) {}
+              )
             ],
           ),
           actions: <Widget>[
