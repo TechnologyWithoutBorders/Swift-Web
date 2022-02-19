@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
+import 'package:teog_swift/utilities/constants.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/shortDeviceInfo.dart';
@@ -17,6 +18,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
   final _scrollController = ScrollController();
   double _progress = 0;
   String _listTitle = "";
+  Color _colorManual = Colors.blueGrey;
+  Color _colorAll = Color(Constants.teog_blue);
 
   List<ShortDeviceInfo> _devices = [];
   List<ShortDeviceInfo> _preFilteredDevices = [];
@@ -48,6 +51,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
       _devices = devices;
       _preFilteredDevices = List.from(_devices);
       _displayedDevices = List.from(_devices);
+      _colorManual = Colors.blueGrey;
+      _colorAll = Color(Constants.teog_blue);
     });
   }
 
@@ -59,6 +64,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
       _preFilteredDevices.clear();
       _displayedDevices.clear();
       _listTitle = "Number of devices with no manual attached: ";
+      _colorManual = Color(Constants.teog_blue);
+      _colorAll = Colors.blueGrey;
     });
 
     int counter = 0;
@@ -144,10 +151,12 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       ElevatedButton(
                         child: Text("All"),
                         onPressed: _manualButtonDisabled ? null : () => _showAllDevices(),
+                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_colorAll) )
                       ),
                       ElevatedButton(
                         child: Text("No manual attached"),
                         onPressed: _manualButtonDisabled ? null : () => _checkManuals(),
+                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_colorManual) ),
                       ),
                     ],
                   ),
