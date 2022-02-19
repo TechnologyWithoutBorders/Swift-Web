@@ -12,12 +12,33 @@ import 'package:teog_swift/utilities/sessionMixin.dart';
 
 import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
 
-class OverviewScreen extends StatelessWidget {
+class OverviewScreen extends StatefulWidget {
   static const String route = '/welcome';
+
+  OverviewScreen({Key key}) : super(key: key);
+
+  @override
+  _OverviewScreenState createState() => _OverviewScreenState();
+}
+
+class _OverviewScreenState extends State<OverviewScreen> {
+  String _barTitle = "Swift";
 
   void _logout(BuildContext context) async {
     await Prefs.logout();
     Navigator.pushNamedAndRemoveUntil(context, SwiftApp.route, (r) => false);
+  }
+
+  void _setHospitalInfo() async {
+    String countryName = await Prefs.getCountry();
+    String hospitalName = await Prefs.getHospitalName();
+    _barTitle = "TeoG Swift - "+ hospitalName +  ", " + countryName;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _setHospitalInfo();
   }
 
   @override
@@ -25,7 +46,7 @@ class OverviewScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: Text('Swift'),
+        title: Text(_barTitle),
         actions: [
           Padding(padding: EdgeInsets.only(right: 20.0),
             child: TextButton(

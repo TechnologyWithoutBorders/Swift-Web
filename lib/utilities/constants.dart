@@ -3,6 +3,7 @@ class Constants {
 
   static const String key_pw = "password";
   static const String key_country = "country";
+  static const String key_hospitalName = "hospitalName";
   static const String key_hospital = "hospital";
   static const String key_role = "role";
   static const String key_user = "user";

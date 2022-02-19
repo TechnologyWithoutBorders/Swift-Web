@@ -111,7 +111,7 @@ class _LoginFormState extends State<LoginForm> {
 
         List<int> bytes = utf8.encode(password);
         String hash = sha256.convert(bytes).toString();
-        Prefs.save(_selectedCountry.name, _selectedHospital.id, role, hash).then((success) => Navigator.pushNamedAndRemoveUntil(context, route, (r) => false));
+        Prefs.save(_selectedCountry.name, _selectedHospital.name, _selectedHospital.id, role, hash).then((success) => Navigator.pushNamedAndRemoveUntil(context, route, (r) => false));
       }).onError<MessageException>((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.message));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);

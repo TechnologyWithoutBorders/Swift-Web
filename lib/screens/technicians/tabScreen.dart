@@ -6,6 +6,8 @@ import 'package:teog_swift/screens/technicians/inventoryScreen.dart';
 import 'package:teog_swift/screens/technicians/organizationScreen.dart';
 import 'package:teog_swift/screens/technicians/userManagementScreen.dart';
 import 'package:teog_swift/screens/technicians/maintenanceScreen.dart';
+import 'package:teog_swift/utilities/country.dart';
+import 'package:teog_swift/utilities/hospital.dart';
 
 import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
@@ -26,9 +28,19 @@ class _TabScreenState extends State<TabScreen> {
   List<User> _users = [];
   User _user;
 
+  Country _country;
+  Hospital _hospital;
+  String _barTitle = "Swift blob";
+
   void _logout(BuildContext context) async {
     await Prefs.logout();
     Navigator.pushNamedAndRemoveUntil(context, SwiftApp.route, (r) => false);
+  }
+
+  void _setHospitalInfo() async {
+    String countryName = await Prefs.getCountry();
+    String hospitalName = await Prefs.getHospitalName();
+    _barTitle = "TeoG Swift - "+ hospitalName +  ", " + countryName;
   }
 
   @override
@@ -38,6 +50,7 @@ class _TabScreenState extends State<TabScreen> {
     Comm.getUsers().then((users) => {
       setState(() {
         _users = users;
+        _setHospitalInfo();
       })
     });
   }
@@ -95,7 +108,7 @@ class _TabScreenState extends State<TabScreen> {
         child: Scaffold(
           backgroundColor: Colors.grey[200],
           appBar: AppBar(
-            title: Text('Swift'),
+            title: Text(_barTitle),
             actions: [
               DropdownButton<User>(
                 value: _user,
