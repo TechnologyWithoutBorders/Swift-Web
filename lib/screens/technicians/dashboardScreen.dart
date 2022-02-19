@@ -47,6 +47,118 @@ class _DetailScreenState extends State<DashboardScreen> {
     });
   }
 
+  void _registerDevice() {
+    int selectedState = DeviceState.working;
+
+    //TODO: should those be disposed?
+    TextEditingController idController = TextEditingController();
+    TextEditingController typeController = TextEditingController();
+    TextEditingController manufacturerController = TextEditingController();
+    TextEditingController modelController = TextEditingController();
+    TextEditingController stateController = TextEditingController();
+
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          contentPadding: const EdgeInsets.all(16.0),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) { 
+              return new Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey)
+                    ),
+                    child: Padding(padding: EdgeInsets.all(10), child: TextField(
+                      controller: idController,
+                      decoration: new InputDecoration(
+                        helperMaxLines: 2,
+                        helperText: "Leave empty to determine ID automatically.",//TODO: make user select explicitly
+                        labelText: 'ID',
+                      ),
+                    ))
+                  ),
+                  TextField(
+                    controller: typeController,
+                    decoration: new InputDecoration(
+                      labelText: 'Type'),
+                  ),
+                  TextField(
+                    controller: manufacturerController,
+                    decoration: new InputDecoration(
+                      labelText: 'Manufacturer'),
+                  ),
+                  TextField(
+                    controller: modelController,
+                    decoration: new InputDecoration(
+                      labelText: 'Model'),
+                  ),
+                  Padding(padding: EdgeInsets.all(10), child: ElevatedButton(onPressed: () {}, child: Text("Choose location..."))),
+                  //TODO: select location via organizational chart
+                  DropdownButton<int>(
+                    hint: Text("Current state"),
+                    value: selectedState,
+                    items: <int>[0, 1, 2, 3, 4, 5]//TODO: das sollte aus DeviceStates kommen
+                      .map<DropdownMenuItem<int>>((int state) {
+                        return DropdownMenuItem<int>(
+                          value: state,
+                          child: Container(
+                            color: DeviceState.getColor(state),
+                            child: Row(
+                              children: [
+                                Icon(DeviceState.getIconData(state)),
+                                SizedBox(width: 5),
+                                Text(DeviceState.getStateString(state)),
+                              ]
+                            )
+                          ),
+                        );
+                      }
+                    ).toList(),
+                    onChanged: (newValue) => {
+                      setState(() {
+                        selectedState = newValue;
+                      })
+                    },
+                  ),
+                  selectedState != DeviceState.working ? TextField(
+                    controller: stateController,
+                    decoration: new InputDecoration(
+                      labelText: 'Description'),
+                  ) : SizedBox.shrink()
+                ],
+              );
+            }
+          ),
+          actions: [
+            ElevatedButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+            ElevatedButton(
+                child: const Text('Register'),
+                onPressed: () {
+                  String type = typeController.text;
+                  String manufacturer = manufacturerController.text;
+                  String model = modelController.text;
+
+                  /*Comm.editDevice(
+                    HospitalDevice(id: this._deviceInfo.device.id, type: type, manufacturer: manufacturer, model: model, location: location)).then((modifiedDeviceInfo) {
+                    
+                    _updateDeviceInfo(modifiedDeviceInfo);
+                  });*/ //TODO:
+
+                  Navigator.pop(context);
+                })
+          ],
+        );
+      }
+    ).then((value) => _updateDevices());
+  }
+
   @override
   Widget build(BuildContext context) {
     var countList = [0, 0, 0, 0, 0, 0];
@@ -132,13 +244,18 @@ class _DetailScreenState extends State<DashboardScreen> {
                             ),
                           ),
                         )),
+                        SizedBox(height: 15),
+                        ElevatedButton(
+                          onPressed: () => _registerDevice(),
+                          child: Text("Register new device")
+                        )
                       ]
                     )
                   )
                 ]
               )
             ),
-          )     
+          )
         )
       )
     );

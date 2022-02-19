@@ -26,10 +26,11 @@ Future<String> checkLogin({bool syncWithServer: false}) async {
 }
 
 /// Saves [country], [hospital], [role] and [password] in shared preferences.
-Future<bool> save(String country, int hospital, String role, String password) async {
+Future<bool> save(String country, String hospitalName, int hospital, String role, String password) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   await prefs.setString(Constants.key_country, country);
+  await prefs.setString(Constants.key_hospitalName, hospitalName);
   await prefs.setInt(Constants.key_hospital, hospital);
   await prefs.setString(Constants.key_role, role);
   await prefs.setString(Constants.key_pw, password);
@@ -68,6 +69,12 @@ Future<String> getCountry() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   return prefs.getString(Constants.key_country);
+}
+
+Future<String> getHospitalName() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  return prefs.getString(Constants.key_hospitalName);
 }
 
 Future<int> getHospital() async {
