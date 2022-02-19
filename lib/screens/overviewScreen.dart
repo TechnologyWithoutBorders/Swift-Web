@@ -22,7 +22,7 @@ class OverviewScreen extends StatefulWidget {
 }
 
 class _OverviewScreenState extends State<OverviewScreen> {
-  String _barTitle = "Swift";
+  String _barTitle = "TeoG Swift";
 
   void _logout(BuildContext context) async {
     await Prefs.logout();
@@ -32,12 +32,16 @@ class _OverviewScreenState extends State<OverviewScreen> {
   void _setHospitalInfo() async {
     String countryName = await Prefs.getCountry();
     String hospitalName = await Prefs.getHospitalName();
-    _barTitle = "TeoG Swift - "+ hospitalName +  ", " + countryName;
+
+    setState(() {
+      _barTitle = "TeoG Swift - "+ hospitalName +  ", " + countryName;
+    });
   }
 
   @override
   void initState() {
     super.initState();
+
     _setHospitalInfo();
   }
 

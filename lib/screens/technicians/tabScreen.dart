@@ -30,7 +30,7 @@ class _TabScreenState extends State<TabScreen> {
 
   Country _country;
   Hospital _hospital;
-  String _barTitle = "Swift blob";
+  String _barTitle = "TeoG Swift";
 
   void _logout(BuildContext context) async {
     await Prefs.logout();
@@ -40,17 +40,21 @@ class _TabScreenState extends State<TabScreen> {
   void _setHospitalInfo() async {
     String countryName = await Prefs.getCountry();
     String hospitalName = await Prefs.getHospitalName();
-    _barTitle = "TeoG Swift - "+ hospitalName +  ", " + countryName;
+
+    setState(() {
+      _barTitle = "TeoG Swift - "+ hospitalName +  ", " + countryName;
+    });
   }
 
   @override
   void initState() {
     super.initState();
 
+    _setHospitalInfo();
+
     Comm.getUsers().then((users) => {
       setState(() {
         _users = users;
-        _setHospitalInfo();
       })
     });
   }
