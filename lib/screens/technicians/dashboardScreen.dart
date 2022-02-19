@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:teog_swift/utilities/hospitalDevice.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/shortDeviceInfo.dart';
 import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
+import 'package:teog_swift/utilities/report.dart';
 
 class DashboardScreen extends StatefulWidget {
   DashboardScreen({Key key}) : super(key: key);
@@ -215,21 +217,23 @@ class _DetailScreenState extends State<DashboardScreen> {
                               itemCount: _todoDevices.length,
                               itemBuilder: (BuildContext context, int index) {
                                 ShortDeviceInfo deviceInfo = _todoDevices[index];
+                                HospitalDevice device = deviceInfo.device;
+                                Report report = deviceInfo.report;
 
                                 return ListTile(
-                                  leading: Container(width: 30, height: 30, color: DeviceState.getColor(deviceInfo.report.currentState),
+                                  leading: Container(width: 30, height: 30, color: DeviceState.getColor(report.currentState),
                                     child: Padding(padding: EdgeInsets.all(3.0),
                                       child: Row(children: [
-                                          Icon(DeviceState.getIconData(deviceInfo.report.currentState))
+                                          Icon(DeviceState.getIconData(report.currentState))
                                         ]
                                       )
                                     )
                                   ),
-                                  title: Text(deviceInfo.device.type),
-                                  subtitle: Text(deviceInfo.device.manufacturer + " " + deviceInfo.device.model),
-                                  trailing: Text(deviceInfo.device.location),
+                                  title: Text(device.type),
+                                  subtitle: Text(device.manufacturer + " " + device.model),
+                                  trailing: device.orgUnit != null ? Text(device.orgUnit) : null,
                                   onTap: () => {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: deviceInfo.device.id))).then((value) => {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: device.id))).then((value) => {
                                       //this is called when the newly created route returns
                                       _updateDevices()
                                     })

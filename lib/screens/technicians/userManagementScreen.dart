@@ -15,27 +15,62 @@ class UserManagementScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<UserManagementScreen> {
-  final _formKey = GlobalKey<FormState>();
-
-  final _nameTextController = TextEditingController();
-  final _mailTextController = TextEditingController();
-
   final _scrollController = ScrollController();
 
   Hospital _hospital;
   List<User> _users = [];
 
   void _createUser() {
-    if (_formKey.currentState.validate()) {
-      String name = _nameTextController.text;
-      String mail = _mailTextController.text;
+    //TODO: should those be disposed?
+    TextEditingController nameController = TextEditingController();
+    TextEditingController mailController = TextEditingController();
 
-      Comm.createUser(mail, name).then((users) {
-        setState(() {
-          _users = users;
-        });
-      });
-    }
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          contentPadding: const EdgeInsets.all(16.0),
+          content: new Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TextField(
+                controller: nameController,
+                decoration: new InputDecoration(
+                  labelText: 'Name'),
+              ),
+              TextField(
+                controller: mailController,
+                decoration: new InputDecoration(
+                  labelText: 'Mail Address'),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+            ElevatedButton(
+                child: const Text('Register'),
+                onPressed: () {
+                  String name = nameController.text;
+                  String mail = mailController.text;
+
+                  if (name.isNotEmpty && mail.isNotEmpty) {
+                    Comm.createUser(mail, name).then((users) {
+                      setState(() {
+                        _users = users;
+                      });
+                    });
+                  }
+
+                  Navigator.pop(context);
+                })
+          ],
+        );
+      }
+    );
   }
 
   @override
@@ -143,39 +178,9 @@ class _DetailScreenState extends State<UserManagementScreen> {
                           ),
                         ),
                         SizedBox(height: 15,),
-                        Text('Register a new technician', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-                        Form(key: _formKey,
-                          child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              TextFormField(
-                                controller: _nameTextController,
-                                decoration: InputDecoration(hintText: 'Name'),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'Please enter the name of the user';
-                                  }
-                                  return null;
-                                },
-                                onFieldSubmitted: (value) => _createUser(),
-                              ),
-                              TextFormField(
-                                controller: _mailTextController,
-                                decoration: InputDecoration(hintText: 'Mail Address'),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'Please enter the mail address of the user';
-                                  }
-                                  return null;
-                                },
-                                onFieldSubmitted: (value) => _createUser(),
-                              ),
-                              SizedBox(height: 10,),
-                              ElevatedButton(
-                                onPressed: () => _createUser(),
-                                child: Text('Register user'),
-                              )
-                            ]
-                          )
+                        ElevatedButton(
+                          onPressed: () => _createUser(),
+                          child: Text('Register user'),
                         )
                       ]
                     )

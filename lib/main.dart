@@ -62,7 +62,7 @@ class LoginScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Spacer(),
-              Flexible(flex: 6, child: Padding(padding: EdgeInsets.all(10.0), child: Image(image: AssetImage('graphics/logo.png')))),
+              Flexible(flex: 6, child: Padding(padding: EdgeInsets.all(10.0), child: Image(image: AssetImage(Constants.logo_path)))),
               Spacer(),
               Flexible(flex: 20, child: Card(child: Padding(padding: EdgeInsets.all(10.0), child: LoginForm()))),
               Spacer(),
@@ -111,7 +111,6 @@ class _LoginFormState extends State<LoginForm> {
 
         List<int> bytes = utf8.encode(password);
         String hash = sha256.convert(bytes).toString();
-
         Prefs.save(_selectedCountry.name, _selectedHospital.id, role, hash).then((success) => Navigator.pushNamedAndRemoveUntil(context, route, (r) => false));
       }).onError<MessageException>((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.message));
@@ -128,19 +127,34 @@ class _LoginFormState extends State<LoginForm> {
     });
   }
 
+  void _checkForPreferences() async{
+    List<Country> countries = await Comm.getCountries();
+    for (var i = 0; i < countries.length; i++) {
+      if (countries[i].name == await Prefs.getCountry()) {
+        _selectedCountry = countries[i];
+        List<Hospital> hospitals = await Comm.getHospitals(countries[i].name);
+        for (var j = 0; j < hospitals.length; j++) {
+          if (hospitals[j].id == await Prefs.getHospital()) {
+            _selectedHospital = hospitals[j];
+          }
+        }
+      }
+    }
+    setState(() {
+      _countries = countries;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-
     Prefs.checkLogin(syncWithServer: true).then((role) { 
       if(role == Constants.role_medical) {
         Navigator.pushNamedAndRemoveUntil(context, OverviewScreen.route, (r) => false);
       } else if(role == Constants.role_technical) {
         Navigator.pushNamedAndRemoveUntil(context, TabScreen.route, (r) => false);
       } else {
-        Comm.getCountries().then((countries) {
-          setState(() { _countries = countries; });
-        });
+        _checkForPreferences();
       }
     });
   }

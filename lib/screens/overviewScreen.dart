@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:teog_swift/main.dart';
+import 'package:teog_swift/utilities/hospitalDevice.dart';
 import 'package:teog_swift/utilities/previewDeviceInfo.dart';
 import 'package:teog_swift/screens/deviceInfoScreen.dart';
 
@@ -15,7 +16,7 @@ class OverviewScreen extends StatelessWidget {
   static const String route = '/welcome';
 
   void _logout(BuildContext context) async {
-    await Prefs.clear();
+    await Prefs.logout();
     Navigator.pushNamedAndRemoveUntil(context, SwiftApp.route, (r) => false);
   }
 
@@ -122,7 +123,7 @@ class _SearchFormState extends State with SessionMixin {
           SizedBox(height: 10),
           Text("This is the easiest way. Please look for a barcode like this and enter the marked number:"),
           SizedBox(height: 5),
-          Image(image: AssetImage('graphics/barcode.jpg')),
+          Flexible(child: Image(image: AssetImage('graphics/barcode.jpg'))),
           TextFormField(
             controller: _deviceIDController,
             decoration: InputDecoration(hintText: 'Barcode Number'),
@@ -209,20 +210,21 @@ class _FilterFormState extends State<FilterForm> {
               .of(context)
               .textTheme
               .headline5),
+          SizedBox(height: 10),
+          OutlinedButton(onPressed: () => {}, child: Text("Select department...")),
           TextFormField(
             controller: _typeController,
-            decoration: InputDecoration(hintText: 'Device type (e.g. "Ventilator")'),
+            decoration: InputDecoration(labelText: 'Device type (e.g. "Ventilator")'),
             autofocus: true,
             validator: (value) => validateDeviceID(value),
             onFieldSubmitted: (value) => _processInput(),
           ),
           TextFormField(
             controller: _manufacturerController,
-            decoration: InputDecoration(hintText: 'Manufacturer'),
+            decoration: InputDecoration(labelText: 'Manufacturer'),
             validator: (value) => validateDeviceID(value),
             onFieldSubmitted: (value) => _processInput(),
           ),
-          TextFormField(decoration: InputDecoration(hintText: 'Location (not working yet)')),//TODO: nur für Sortierung, da oft nicht hinterlegt
           SizedBox(height: 10),
           ElevatedButton(
             onPressed: () => _processInput(),
@@ -231,20 +233,21 @@ class _FilterFormState extends State<FilterForm> {
           SizedBox(height: 10),
           Text(_filteredDevices.length.toString() + " device(s) match the filter:"),
           SizedBox(height: 10),
-          SizedBox(height: 300,
+          Flexible(
             child: ListView.separated(
               controller: _scrollController,
               padding: const EdgeInsets.all(5),
               itemCount: _filteredDevices.length,
               itemBuilder: (BuildContext context, int index) {
                 PreviewDeviceInfo deviceInfo = _filteredDevices[index];
+                HospitalDevice device = deviceInfo.device;
 
                 return ListTile(
                   leading: deviceInfo.imageData.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData)) : Text("no image"),
-                  title: Text(deviceInfo.device.type),
-                  subtitle: Text(deviceInfo.device.manufacturer + " " + deviceInfo.device.model),
-                  trailing: Text(deviceInfo.device.location),
-                  onTap: () => _openDeviceById(deviceInfo.device.id)
+                  title: Text(device.type),
+                  subtitle: Text(device.manufacturer + " " + device.model),
+                  trailing: device.orgUnit != null ? Text(device.orgUnit) : null,
+                  onTap: () => _openDeviceById(device.id)
                 );
               },
               separatorBuilder: (BuildContext context, int index) => const Divider(),

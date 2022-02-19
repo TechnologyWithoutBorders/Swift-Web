@@ -3,9 +3,12 @@ import 'dart:convert';
 import 'dart:html' as html;
 
 import 'package:flutter/material.dart';
+import 'package:numberpicker/numberpicker.dart';
+import 'package:teog_swift/utilities/constants.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
 import 'package:teog_swift/utilities/deviceInfo.dart';
 import 'package:teog_swift/utilities/detailedReport.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
@@ -24,6 +27,7 @@ class TechnicianDeviceScreen extends StatefulWidget {
 }
 
 class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
+  int _userId = -1;
   DeviceInfo _deviceInfo;
 
   final _scrollController = ScrollController();
@@ -38,6 +42,8 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
       final snackBar = SnackBar(content: Text(error.message));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
+
+    Prefs.getUser().then((userId) => _userId = userId);
   }
 
   void _updateDeviceInfo(DeviceInfo modifiedDeviceInfo) {
@@ -51,37 +57,52 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
     TextEditingController typeController = TextEditingController(text: this._deviceInfo.device.type);
     TextEditingController manufacturerController = TextEditingController(text: this._deviceInfo.device.manufacturer);
     TextEditingController modelController = TextEditingController(text: this._deviceInfo.device.model);
-    TextEditingController locationController = TextEditingController(text: this._deviceInfo.device.location);
+    int maintenanceInterval = (this._deviceInfo.device.maintenanceInterval/4).ceil();
 
     showDialog<String>(
       context: context,
       builder: (BuildContext context) {
         return new AlertDialog(
           contentPadding: const EdgeInsets.all(16.0),
-          content: new Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              TextField(
-                controller: typeController,
-                decoration: new InputDecoration(
-                  labelText: 'Type'),
-              ),
-              TextField(
-                controller: manufacturerController,
-                decoration: new InputDecoration(
-                  labelText: 'Manufacturer'),
-              ),
-              TextField(
-                controller: modelController,
-                decoration: new InputDecoration(
-                  labelText: 'Model'),
-              ),
-              TextField(
-                controller: locationController,
-                decoration: new InputDecoration(
-                  labelText: 'Location'),
-              ),
-            ],
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return new Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    controller: typeController,
+                    decoration: new InputDecoration(
+                      labelText: 'Type'),
+                  ),
+                  TextField(
+                    controller: manufacturerController,
+                    decoration: new InputDecoration(
+                      labelText: 'Manufacturer'),
+                  ),
+                  TextField(
+                    controller: modelController,
+                    decoration: new InputDecoration(
+                      labelText: 'Model'),
+                  ),
+                  SizedBox(height: 10),
+                  Text("Maintenance interval (months):"),
+                  NumberPicker(
+                    minValue: 1,
+                    maxValue: 24,
+                    value: maintenanceInterval,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.black26),
+                    ),
+                    onChanged: (value) => {
+                      setState(() {
+                        maintenanceInterval = value;
+                      })
+                    }
+                  )
+                ],
+              );
+            }
           ),
           actions: <Widget>[
             ElevatedButton(
@@ -95,10 +116,9 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                   String type = typeController.text;
                   String manufacturer = manufacturerController.text;
                   String model = modelController.text;
-                  String location = locationController.text;
 
                   Comm.editDevice(
-                    HospitalDevice(id: this._deviceInfo.device.id, type: type, manufacturer: manufacturer, model: model, location: location)).then((modifiedDeviceInfo) {
+                    HospitalDevice(id: this._deviceInfo.device.id, type: type, manufacturer: manufacturer, model: model, orgUnitId: this._deviceInfo.device.orgUnitId, orgUnit: this._deviceInfo.device.orgUnit, maintenanceInterval: maintenanceInterval*4)).then((modifiedDeviceInfo) {
                     
                     _updateDeviceInfo(modifiedDeviceInfo);
                   });
@@ -211,7 +231,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
       body: Center(child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
         child: Card(
           child: Padding(padding: EdgeInsets.all(10.0),
-            child: _deviceInfo != null ? Column(
+            child: (_deviceInfo != null && _userId >= 0) ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Row(
@@ -224,7 +244,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SelectableText(device.manufacturer + " " + device.model, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                            SelectableText(device.location, style: TextStyle(fontSize: 25)),
+                            device.orgUnit != null ? Text(device.orgUnit, style: TextStyle(fontSize: 25)) : Text(""),
                             Text("Maintenance interval: " + (device.maintenanceInterval/4).toString() + " months"),
                             TextButton(
                               child: Text('edit'),
@@ -247,7 +267,8 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                     )
                   ],
                 ),
-                SizedBox(height: 50),
+                Divider(),
+                SizedBox(height: 20),
                 Flexible(child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -259,31 +280,53 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                         children: [
                           StateScreen(deviceInfo: _deviceInfo),
                           Flexible(
-                            child: Scrollbar(isAlwaysShown: true,
-                              controller: _scrollController,
-                              child: ListView.separated(
+                            child: Container(
+                              color: Colors.grey[200],
+                              child: Scrollbar(isAlwaysShown: true,
                                 controller: _scrollController,
-                                itemCount: reports.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  DetailedReport report = reports[index];
+                                child: ListView.separated(
+                                  controller: _scrollController,
+                                  itemCount: reports.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    DetailedReport report = reports[index];
+                                    // Flutter does not support date formatting without libraries
+                                    String dateStamp = report.created.toString().substring(0, report.created.toString().length-7);
 
-                                  return ListTile(
-                                    leading: Container(width: 30, height: 30, color: DeviceState.getColor(report.currentState),
-                                      child: Padding(padding: EdgeInsets.all(3.0),
-                                        child: Row(children: [
-                                            Icon(DeviceState.getIconData(report.currentState))
-                                          ]
-                                        )
+                                    return Padding(
+                                      padding: EdgeInsets.all(15.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                                        children: [
+                                          Text(dateStamp, textAlign: report.authorId == _userId ? TextAlign.right : TextAlign.left),
+                                          Card(
+                                            color: report.authorId == _userId ? Color(Constants.teog_blue_lighter) : Colors.white,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(5.0),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Expanded(child: Text(report.authorId == _userId ? "You:" : report.author + ":")),
+                                                      Icon(DeviceState.getIconData(report.currentState),
+                                                        color: DeviceState.getColor(report.currentState)
+                                                      )
+                                                    ]
+                                                  ),
+                                                  Text(report.title, style: TextStyle(fontWeight: FontWeight.bold)),
+                                                  Text(report.description)
+                                                ]
+                                              )
+                                            )
+                                          )
+                                        ]
                                       )
-                                    ),
-                                    title: Text(report.title),
-                                    subtitle: Text(report.description),
-                                    trailing: Text(report.author),
-                                  );
-                                },
-                                separatorBuilder: (BuildContext context, int index) => const Divider(),
+                                    );
+                                  },
+                                  separatorBuilder: (BuildContext context, int index) => Container(),
+                                ),
                               ),
-                            ),
+                            )
                           ),
                           SizedBox(height: 10,),
                           ElevatedButton(
@@ -332,6 +375,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
     FilePickerResult result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
+      allowMultiple: true,
     );
 
     if(result != null) {
@@ -342,13 +386,13 @@ class _DocumentScreenState extends State<DocumentScreen> {
       List<PlatformFile> files = result.files;
 
       for(PlatformFile file in files) {
-        //TODO: check pdf extension
+        if(file.extension == 'pdf') {
+          List<String> documents = await Comm.uploadDocument(widget.deviceInfo.device.manufacturer, widget.deviceInfo.device.model, file.name, file.bytes);
 
-        List<String> documents = await Comm.uploadDocument(widget.deviceInfo.device.manufacturer, widget.deviceInfo.device.model, file.name, file.bytes);
-
-        setState(() {
-          _documents = documents;
-        });
+          setState(() {
+            _documents = documents;
+          });
+        }
       }
     }
 
@@ -387,14 +431,13 @@ class _DocumentScreenState extends State<DocumentScreen> {
       uploadWidget = CircularProgressIndicator(value: null);
     } else {
       uploadWidget = ElevatedButton(
-        child: Text("add"),
+        child: Text("upload documents"),
         onPressed: () => _uploadDocuments(),
       );
     }
 
     return Column(
       children: [
-        uploadWidget,
         _documents.length > 0
           ? Flexible(child: Scrollbar(
               isAlwaysShown: true,
@@ -410,7 +453,8 @@ class _DocumentScreenState extends State<DocumentScreen> {
               separatorBuilder: (BuildContext context, int index) => const Divider(),
             )
           ))
-          : Center(child: const Text('No documents found')),
+          : Expanded(child: Center(child: const Text('No documents found'))),
+          uploadWidget,
       ]
     );
   }
@@ -434,22 +478,21 @@ class _StateScreenState extends State<StateScreen> {
 
     return Column(
       children: [
-        Text("Current State:", style: TextStyle(fontSize: 25)),
-        SizedBox(height: 10),
         Container(color: DeviceState.getColor(latestReport.currentState),
-          child: Padding(padding: EdgeInsets.all(3.0),
+          child: Padding(padding: EdgeInsets.all(7.0),
             child: Row(children: [
                 Icon(DeviceState.getIconData(latestReport.currentState)),
-              SizedBox(width: 5),
-              Text(DeviceState.getStateString(latestReport.currentState),
-                style: TextStyle(fontSize: 25)
-              ),
+                SizedBox(width: 5),
+                Text(DeviceState.getStateString(latestReport.currentState),
+                  style: TextStyle(fontSize: 25)
+                ),
+                Spacer(),
+                Text(DateTime.now().difference(latestReport.created).inDays.toString() + " days",
+                  style: TextStyle(fontSize: 25))
               ]
             )
           )
         ),
-        SizedBox(height: 5),
-        Text(DateTime.now().difference(latestReport.created).inDays.toString() + " days"),
       ]
     );
   }
