@@ -11,6 +11,7 @@ import 'package:teog_swift/utilities/doubleCardLayout.dart';
 import 'package:teog_swift/utilities/sessionMixin.dart';
 
 import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
+import 'package:teog_swift/utilities/hospital.dart';
 
 class OverviewScreen extends StatefulWidget {
   static const String route = '/welcome';
@@ -22,7 +23,8 @@ class OverviewScreen extends StatefulWidget {
 }
 
 class _OverviewScreenState extends State<OverviewScreen> {
-  String _barTitle = "TeoG Swift";
+  String _countryName;
+  Hospital _hospital;
 
   void _logout(BuildContext context) async {
     await Prefs.logout();
@@ -31,10 +33,11 @@ class _OverviewScreenState extends State<OverviewScreen> {
 
   void _setHospitalInfo() async {
     String countryName = await Prefs.getCountry();
-    String hospitalName = await Prefs.getHospitalName();
+    Hospital hospital = await Comm.getHospitalInfo();
 
     setState(() {
-      _barTitle = "TeoG Swift - "+ hospitalName +  ", " + countryName;
+      _countryName = countryName;
+      _hospital = hospital;
     });
   }
 
@@ -50,7 +53,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: Text(_barTitle),
+        title: _hospital != null ? Text("TeoG Swift - "+ _hospital.name +  ", " + _countryName) : Text("TeoG Swift"),
         actions: [
           Padding(padding: EdgeInsets.only(right: 20.0),
             child: TextButton(
