@@ -25,6 +25,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
       context: context,
       builder: (BuildContext context) {
         return new AlertDialog(
+          title: Text("The user will receive his/her password for the mobile app via email.\nPlease check the spam folder if it does not show up."),
           contentPadding: const EdgeInsets.all(16.0),
           content: new Column(
             mainAxisSize: MainAxisSize.min,
