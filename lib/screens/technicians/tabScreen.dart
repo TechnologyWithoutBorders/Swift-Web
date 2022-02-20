@@ -28,8 +28,6 @@ class _TabScreenState extends State<TabScreen> {
   List<User> _users = [];
   User _user;
 
-  Country _country;
-  Hospital _hospital;
   String _barTitle = "TeoG Swift";
 
   void _logout(BuildContext context) async {
