@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/user.dart';
-import 'package:teog_swift/utilities/hospital.dart';
 import 'package:teog_swift/utilities/messageException.dart';
 
 class UserManagementScreen extends StatefulWidget {
@@ -15,7 +14,6 @@ class UserManagementScreen extends StatefulWidget {
 class _DetailScreenState extends State<UserManagementScreen> {
   final _scrollController = ScrollController();
 
-  Hospital _hospital;
   List<User> _users = [];
 
   void _createUser() {
@@ -74,15 +72,6 @@ class _DetailScreenState extends State<UserManagementScreen> {
   @override
   void initState() {
     super.initState();
-
-    Comm.getHospitalInfo().then((hospital) {
-      setState(() {
-        _hospital = hospital;
-      });
-    }).onError<MessageException>((error, stackTrace) {
-        final snackBar = SnackBar(content: Text(error.message));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    });
 
     Comm.getUsers().then((users) {
       setState(() {
