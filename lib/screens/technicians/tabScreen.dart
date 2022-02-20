@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
+
 import 'package:teog_swift/main.dart';
 import 'package:teog_swift/screens/technicians/dashBoardScreen.dart';
 import 'package:teog_swift/screens/technicians/inventoryScreen.dart';
 import 'package:teog_swift/screens/technicians/organizationScreen.dart';
 import 'package:teog_swift/screens/technicians/userManagementScreen.dart';
 import 'package:teog_swift/screens/technicians/maintenanceScreen.dart';
-import 'package:teog_swift/utilities/country.dart';
-import 'package:teog_swift/utilities/hospital.dart';
 
 import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/user.dart';
+import 'package:teog_swift/utilities/hospital.dart';
 
 class TabScreen extends StatefulWidget {
   static const String route = '/tabs';
@@ -24,13 +26,12 @@ class TabScreen extends StatefulWidget {
 
 class _TabScreenState extends State<TabScreen> {
   final _scrollController = ScrollController();
+  
+  String _countryName;
+  Hospital _hospital;
 
   List<User> _users = [];
   User _user;
-
-  Country _country;
-  Hospital _hospital;
-  String _barTitle = "TeoG Swift";
 
   void _logout(BuildContext context) async {
     await Prefs.logout();
@@ -39,11 +40,18 @@ class _TabScreenState extends State<TabScreen> {
 
   void _setHospitalInfo() async {
     String countryName = await Prefs.getCountry();
-    String hospitalName = await Prefs.getHospitalName();
+    Hospital hospital = await Comm.getHospitalInfo();
 
     setState(() {
-      _barTitle = "TeoG Swift - "+ hospitalName +  ", " + countryName;
+      _countryName = countryName;
+      _hospital = hospital;
     });
+  }
+
+  void _openMap() {
+    if(_hospital != null) {
+      html.window.open('https://www.openstreetmap.org/?mlat=' + _hospital.latitude.toString() + '&mlon=' + _hospital.longitude.toString() + '#map=17/' + _hospital.latitude.toString() + '/' + _hospital.longitude.toString(), 'map');
+    }
   }
 
   @override
@@ -112,7 +120,16 @@ class _TabScreenState extends State<TabScreen> {
         child: Scaffold(
           backgroundColor: Colors.grey[200],
           appBar: AppBar(
-            title: Text(_barTitle),
+            title: _hospital != null ? Row(
+              children: [
+                Text("TeoG Swift - "+ _hospital.name +  ", " + _countryName),
+                IconButton(
+                  tooltip: "show on map",
+                  icon: Icon(Icons.map),
+                  onPressed: () => _openMap()
+                )
+              ]
+            ) : Text("TeoG Swift"),
             actions: [
               DropdownButton<User>(
                 value: _user,

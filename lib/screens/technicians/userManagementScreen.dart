@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'dart:html' as html;
-
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/user.dart';
-import 'package:teog_swift/utilities/hospital.dart';
 import 'package:teog_swift/utilities/messageException.dart';
 
 class UserManagementScreen extends StatefulWidget {
@@ -17,7 +14,6 @@ class UserManagementScreen extends StatefulWidget {
 class _DetailScreenState extends State<UserManagementScreen> {
   final _scrollController = ScrollController();
 
-  Hospital _hospital;
   List<User> _users = [];
 
   void _createUser() {
@@ -29,6 +25,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
       context: context,
       builder: (BuildContext context) {
         return new AlertDialog(
+          title: Text("The user will receive his/her password for the mobile app via email.\nPlease check the spam folder if it does not show up."),
           contentPadding: const EdgeInsets.all(16.0),
           content: new Column(
             mainAxisSize: MainAxisSize.min,
@@ -76,15 +73,6 @@ class _DetailScreenState extends State<UserManagementScreen> {
   @override
   void initState() {
     super.initState();
-
-    Comm.getHospitalInfo().then((hospital) {
-      setState(() {
-        _hospital = hospital;
-      });
-    }).onError<MessageException>((error, stackTrace) {
-        final snackBar = SnackBar(content: Text(error.message));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    });
 
     Comm.getUsers().then((users) {
       setState(() {
@@ -134,25 +122,9 @@ class _DetailScreenState extends State<UserManagementScreen> {
               child: Row(mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
-                    flex: 5,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(height: 10),
-                        _hospital == null ? Text("") : Text(_hospital.name, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-                        SizedBox(height: 5),
-                        _hospital == null ? Text("") : Text(_hospital.location, style: TextStyle(fontSize: 20)),
-                        _hospital == null ? Text("") : TextButton(onPressed: () => {
-                            html.window.open('https://www.openstreetmap.org/?mlat=' + _hospital.latitude.toString() + '&mlon=' + _hospital.longitude.toString() + '#map=17/' + _hospital.latitude.toString() + '/' + _hospital.longitude.toString(), 'map')
-                          }, child: Icon(Icons.map)),
-                        _hospital == null ? Text("") : TextButton(onPressed: () => {
-                            html.window.open('https://www.openstreetmap.org/?mlat=' + _hospital.latitude.toString() + '&mlon=' + _hospital.longitude.toString() + '#map=17/' + _hospital.latitude.toString() + '/' + _hospital.longitude.toString(), 'map')
-                          }, child: Text("show on map")),
-                      ],
-                    ),
+                    child: Center(),
                   ),
                   Expanded(
-                    flex: 5,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
