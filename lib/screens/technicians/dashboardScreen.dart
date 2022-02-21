@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:teog_swift/utilities/deviceStats.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/constants.dart';
 import 'package:teog_swift/utilities/shortDeviceInfo.dart';
 import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
@@ -19,7 +21,8 @@ class DashboardScreen extends StatefulWidget {
 class _DetailScreenState extends State<DashboardScreen> {
   final _scrollController = ScrollController();
 
-  List<ShortDeviceInfo> _devices = [];
+  DeviceStats _deviceStats;
+
   List<ShortDeviceInfo> _todoDevices = [];
 
   @override
@@ -30,19 +33,15 @@ class _DetailScreenState extends State<DashboardScreen> {
   }
 
   void _updateDevices() {
-    Comm.getDevices().then((devices) {//TODO: catch Exception
+    Comm.getTodoDevices().then((todoDevices) {
       setState(() {
-        _devices = devices;
+        _todoDevices = todoDevices;
+      });
+    });
 
-        _todoDevices.clear();
-
-        _devices.forEach((deviceInfo) {
-          int currentState = deviceInfo.report.currentState;
-
-          if(currentState == DeviceState.broken || currentState == DeviceState.maintenance || currentState == DeviceState.inProgress) {
-            _todoDevices.add(deviceInfo);
-          }
-        });
+    Comm.getDeviceStats().then((deviceStats) {//TODO: catch Exception
+      setState(() {
+        _deviceStats = deviceStats;
       });
     });
   }
@@ -161,29 +160,29 @@ class _DetailScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var countList = [0, 0, 0, 0, 0, 0];
+    List<charts.Series<CategoryData, String>> seriesList = [];
 
-    _devices.forEach((deviceInfo) {
-      countList[deviceInfo.report.currentState] += 1;
-    });
+    if(_deviceStats != null) {
+      var stateList = [_deviceStats.working, _deviceStats.maintenance, _deviceStats.broken, _deviceStats.progress, _deviceStats.salvage, _deviceStats.limitations];
 
-    final List<CategoryData> data = [];
+      final List<CategoryData> data = [];
 
-    for(int state = 0; state < countList.length; state++) {
-      if(countList[state] > 0) {
-        data.add(new CategoryData(DeviceState.getStateString(state), countList[state], charts.ColorUtil.fromDartColor(DeviceState.getColor(state))));
+      for(int state = 0; state < stateList.length; state++) {
+        if(stateList[state] > 0) {
+          data.add(new CategoryData(DeviceState.getStateString(state), stateList[state], charts.ColorUtil.fromDartColor(DeviceState.getColor(state))));
+        }
       }
-    }
 
-    List<charts.Series<CategoryData, String>> seriesList = [
-      new charts.Series<CategoryData, String>(
-        id: 'Categories',
-        domainFn: (CategoryData categoryData, _) => categoryData.category,
-        measureFn: (CategoryData categoryData, _) => categoryData.count,
-        colorFn: (CategoryData categoryData, _) => categoryData.color,
-        data: data,
-        labelAccessorFn: (CategoryData categoryData, _) => '${categoryData.category}: ${categoryData.count}',
-    )];
+      seriesList = [
+        new charts.Series<CategoryData, String>(
+          id: 'Categories',
+          domainFn: (CategoryData categoryData, _) => categoryData.category,
+          measureFn: (CategoryData categoryData, _) => categoryData.count,
+          colorFn: (CategoryData categoryData, _) => categoryData.color,
+          data: data,
+          labelAccessorFn: (CategoryData categoryData, _) => '${categoryData.category}: ${categoryData.count}',
+      )];
+    }
 
     return Scaffold(
       backgroundColor: Colors.grey[200],
@@ -194,14 +193,14 @@ class _DetailScreenState extends State<DashboardScreen> {
               child: Row(mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Flexible(
-                    child: Column(
+                    child: _deviceStats != null ? Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text("Overview", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                         Flexible(child: Padding(padding: EdgeInsets.all(30.0), child: DatumLegendWithMeasures(seriesList))),
-                        Text("xy devices are due for maintenance", style: TextStyle(fontSize: 20)),
+                        Text(_deviceStats.maintenanceOverdue.toString() + " devices are scheduled for maintenance", style: TextStyle(fontSize: 20, backgroundColor: Color(Constants.light_red))),
                       ]
-                    )
+                    ) : Center(child: Text("loading data...")),
                   ),
                   Flexible(
                     child: Column(

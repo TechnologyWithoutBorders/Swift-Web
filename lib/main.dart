@@ -86,7 +86,7 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
 
-  final _countryScrollController = ScrollController();//TODO: use cookie
+  final _countryScrollController = ScrollController();
   List<Country> _countries = [];
   Country _selectedCountry;
 
