@@ -30,19 +30,15 @@ class _DetailScreenState extends State<DashboardScreen> {
   }
 
   void _updateDevices() {
+    Comm.getTodoDevices().then((todoDevices) {
+      setState(() {
+        _todoDevices = todoDevices;
+      });
+    });
+
     Comm.getDevices().then((devices) {//TODO: catch Exception
       setState(() {
         _devices = devices;
-
-        _todoDevices.clear();
-
-        _devices.forEach((deviceInfo) {
-          int currentState = deviceInfo.report.currentState;
-
-          if(currentState == DeviceState.broken || currentState == DeviceState.maintenance || currentState == DeviceState.inProgress) {
-            _todoDevices.add(deviceInfo);
-          }
-        });
       });
     });
   }
