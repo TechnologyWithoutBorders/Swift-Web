@@ -140,9 +140,9 @@ class _DetailScreenState extends State<UserManagementScreen> {
 
                                 return ListTile(
                                   title: SelectableText(user.name),
-                                  subtitle: SelectableText(user.position + "\n" + user.mail + "\n" + user.phone),
-                                  trailing: TextButton(child: Icon(Icons.delete), onPressed: () =>_deleteUser()),
-                                  //trailing: Text(_users[index].position),
+                                  subtitle: SelectableText(user.mail + "\n" + user.phone),
+                                  //trailing: TextButton(child: Icon(Icons.delete), onPressed: () =>_deleteUser()),
+                                  trailing: Text(_users[index].position),
                                 );
                               },
                               separatorBuilder: (BuildContext context, int index) => const Divider(),
