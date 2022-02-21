@@ -200,7 +200,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                         Flexible(child: Padding(padding: EdgeInsets.all(30.0), child: DatumLegendWithMeasures(seriesList))),
                         Text(_deviceStats.maintenanceOverdue.toString() + " devices are scheduled for maintenance", style: TextStyle(fontSize: 20, backgroundColor: Color(Constants.light_red))),
                       ]
-                    ) : Center(child: Text("loading data...")),
+                    ) : Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator())),
                   ),
                   Flexible(
                     child: Column(
