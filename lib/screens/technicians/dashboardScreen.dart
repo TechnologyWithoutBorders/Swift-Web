@@ -5,6 +5,7 @@ import 'package:teog_swift/utilities/deviceStats.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/constants.dart';
 import 'package:teog_swift/utilities/shortDeviceInfo.dart';
 import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
@@ -197,7 +198,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                       children: [
                         Text("Overview", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                         Flexible(child: Padding(padding: EdgeInsets.all(30.0), child: DatumLegendWithMeasures(seriesList))),
-                        Text(_deviceStats.maintenanceOverdue.toString() + " devices are due for maintenance", style: TextStyle(fontSize: 20)),
+                        Text(_deviceStats.maintenanceOverdue.toString() + " devices are scheduled for maintenance", style: TextStyle(fontSize: 20, backgroundColor: Color(Constants.light_red))),
                       ]
                     ) : Center(child: Text("loading data...")),
                   ),
