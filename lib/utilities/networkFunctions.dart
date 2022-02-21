@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:teog_swift/utilities/country.dart';
 import 'package:teog_swift/utilities/dataAction.dart';
 import 'package:teog_swift/utilities/deviceInfo.dart';
+import 'package:teog_swift/utilities/deviceStats.dart';
 import 'package:teog_swift/utilities/organizationalRelation.dart';
 import 'package:teog_swift/utilities/organizationalUnit.dart';
 import 'package:teog_swift/utilities/previewDeviceInfo.dart';
@@ -256,6 +257,28 @@ Future<List<ShortDeviceInfo>> getTodoDevices() async {
       }
 
       return devices;
+    } else {
+      throw MessageException(swiftResponse.data);
+    }
+  } else {
+    throw MessageException(Constants.generic_error_message);
+  }
+}
+
+Future<DeviceStats> getDeviceStats() async {
+  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+
+  final response = await http.post(
+    uri,
+    headers: _headers,
+    body: jsonEncode(await _generateParameterMap(action: DataAction.getDeviceStats, authentication: true)),
+  );
+
+  if(response.statusCode == 200) {
+    SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
+    
+    if(swiftResponse.responseCode == 0) {
+      return DeviceStats.fromJson(swiftResponse.data);
     } else {
       throw MessageException(swiftResponse.data);
     }
