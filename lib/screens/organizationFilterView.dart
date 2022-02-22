@@ -72,10 +72,10 @@ class _OrganizationFilterViewState extends State<OrganizationFilterView> {
                       child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: widget.orgUnit == null || widget.orgUnit.id != id ? Colors.black : Colors.white, fontWeight: FontWeight.bold)),
                       onPressed: () {
                         //return this unit and all child units
-                        List<OrganizationalUnit> successors = [];
+                        List<int> successors = [];
 
                         for(var node in _graph.successorsOf(node)) {
-                          successors.add(OrganizationalUnit(id: node.key.value, name: _nameMap[node.key.value]));
+                          successors.add(node.key.value);
                         }
 
                         Navigator.pop(context, DepartmentFilter(OrganizationalUnit(id: id, name: _nameMap[id]), successors));
@@ -94,7 +94,7 @@ class _OrganizationFilterViewState extends State<OrganizationFilterView> {
 
 class DepartmentFilter {
   final OrganizationalUnit parent;
-  final List<OrganizationalUnit> successors;
+  final List<int> successors;
 
   DepartmentFilter(this.parent, this.successors);
 }

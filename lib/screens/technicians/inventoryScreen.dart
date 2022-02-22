@@ -5,7 +5,6 @@ import 'package:teog_swift/utilities/hospitalDevice.dart';
 import 'package:teog_swift/utilities/constants.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
-import 'package:teog_swift/utilities/organizationalUnit.dart';
 import 'package:teog_swift/utilities/shortDeviceInfo.dart';
 import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
@@ -106,10 +105,25 @@ class _InventoryScreenState extends State<InventoryScreen> {
       builder: (BuildContext context) {
         return OrganizationFilterView(orgUnit: _departmentFilter != null ? _departmentFilter.parent : null);
       }
-    ).then((departmentFilter) => {
+    ).then((departmentFilter) {
       setState(() {
         _departmentFilter = departmentFilter;
-      })
+        _filterTextController.clear();//TODO: this stuff here has to be in sync with the filter templates
+        _filterType = filterNone;
+        _preFilteredDevices.clear();
+        _displayedDevices.clear();
+        _colorManual = Colors.blueGrey;
+        _colorAll = Color(Constants.teog_blue);
+      });
+
+      for(ShortDeviceInfo deviceInfo in _devices) {
+        if(_departmentFilter.parent.id == deviceInfo.device.orgUnitId || _departmentFilter.successors.contains(deviceInfo.device.orgUnitId)) {
+          _preFilteredDevices.add(deviceInfo);
+          setState(() {
+            _displayedDevices.add(deviceInfo);
+          });
+        }
+      }
     });
   }
 
