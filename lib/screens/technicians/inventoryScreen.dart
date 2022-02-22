@@ -186,7 +186,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     controller: _filterTextController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'filter by searching...'
+                      labelText: "filter by searching...",
                     ),
                     onChanged: (text) => _filter(text.trim().toLowerCase()),
                     enabled: !_manualButtonDisabled
