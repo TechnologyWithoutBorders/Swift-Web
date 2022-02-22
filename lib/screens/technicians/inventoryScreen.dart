@@ -164,8 +164,14 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   ButtonBar(
                     alignment: MainAxisAlignment.center,
                     children: [
-                      _department != null ? Text("Department: " + _department.name) : null,
-                      OutlinedButton(onPressed: () => _filterDepartment(), child: Text("Select department...")),
+                      _department != null ? Text("Department: " + _department.name, style: TextStyle(fontSize: 25)) : null,
+                      _department != null ? IconButton(
+                        iconSize: 25,
+                        icon: Icon(Icons.cancel_outlined, color: Colors.red[700]),
+                        tooltip: "clear selection",
+                        onPressed: () => setState(() => { _department = null }), 
+                      ): null,
+                      ElevatedButton(onPressed: () => _filterDepartment(), child: Text("select department...")),
                     ]
                   ),
                   ButtonBar(
