@@ -34,7 +34,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
   static const int filterNone = 0;
   static const int filterMissingManuals = 1;
 
-  OrganizationalUnit _department;
+  DepartmentFilter _departmentFilter;
   int _filterType = filterNone;
 
   @override
@@ -101,14 +101,14 @@ class _InventoryScreenState extends State<InventoryScreen> {
   }
 
   void _filterDepartment() {
-    showDialog<OrganizationalUnit>(
+    showDialog<DepartmentFilter>(
       context: context,
       builder: (BuildContext context) {
-        return OrganizationFilterView(orgUnit: _department);
+        return OrganizationFilterView(orgUnit: _departmentFilter != null ? _departmentFilter.parent : null);
       }
-    ).then((orgId) => {
+    ).then((departmentFilter) => {
       setState(() {
-        _department = orgId;
+        _departmentFilter = departmentFilter;
       })
     });
   }
@@ -155,12 +155,12 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   ButtonBar(
                     alignment: MainAxisAlignment.center,
                     children: [
-                      _department != null ? Text("Department: " + _department.name, style: TextStyle(fontSize: 25)) : null,
-                      _department != null ? IconButton(
+                      _departmentFilter != null ? Text("Department: " + _departmentFilter.parent.name, style: TextStyle(fontSize: 25)) : null,
+                      _departmentFilter != null ? IconButton(
                         iconSize: 25,
                         icon: Icon(Icons.cancel_outlined, color: Colors.red[700]),
                         tooltip: "clear selection",
-                        onPressed: () => setState(() => { _department = null }), 
+                        onPressed: () => setState(() => { _departmentFilter = null }), 
                       ): null,
                       OutlinedButton(onPressed: () => _filterDepartment(), child: Text("select department...")),
                     ]
