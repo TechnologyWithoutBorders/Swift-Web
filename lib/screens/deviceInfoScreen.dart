@@ -209,6 +209,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
   final _problemTextController = TextEditingController();
 
   void _createReport() {
+    print("im createReport");
     if (_formKey.currentState.validate()) {
       Comm.queueRepair(479, _reportTitleController.text, _problemTextController.text).then((newReport) {
         widget.updateDeviceInfo(ShortDeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData));
@@ -258,28 +259,16 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
                         onFieldSubmitted: (value) => _createReport(),
                       ),
                     ),
-                    /*TextField(
-                      controller: _reportTitleController,
-                      decoration: new InputDecoration(
-                          labelText: 'Title'),
+                    ElevatedButton(
+                      onPressed: (){
+                        _createReport();
+                        Navigator.pop(context);
+                        print("form test");
+                      },
+                      child: Padding(padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8.0), child: Text('Request repair')),
                     ),
-                    TextField(
-                      controller: _problemTextController,
-                      decoration: new InputDecoration(
-                          labelText: 'Problem description'),
-                    ),*/
                   ]
-              ),
-              actions: <Widget>[
-                ElevatedButton(
-                  onPressed: (){
-                    _createReport();
-                    Navigator.pop(context);
-                    print("form test");
-                  },
-                  child: Padding(padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8.0), child: Text('Request repair')),
-                ),
-              ]
+              )
           );
         }
     );
@@ -291,69 +280,5 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
       onPressed: () => _createReportDialog(),
       child: Text('Create report'),
     );
-    /*Container(
-      child: [
-        ElevatedButton(
-          onPressed: () => _createReportDialog(),
-          child: Text('Create report'),
-        )
-      ],
-    )
-    Form(
-      key: _formKey,
-      child: Container(width: 400,
-          padding: const EdgeInsets.all(3.0),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.blueAccent)
-          ),
-          child: Column(mainAxisSize: MainAxisSize.min,
-          children: [
-            ElevatedButton(
-              onPressed: () => _createReportDialog(),
-              child: Text('Create report'),
-            )
-            /*Text("Report a problem", style: Theme
-                .of(context)
-                .textTheme
-                .headline5),
-            TextFormField(
-              controller: _reportTitleController,
-              decoration: InputDecoration(hintText: "Title"),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return "Please give your report a title.";
-                }
-                return null;
-              },
-              onFieldSubmitted: (value) => _createReport(),
-            ),
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: _problemTextController,
-                decoration: InputDecoration(hintText: "Problem description"),
-                maxLines: 4,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "Please describe the problem in a few sentences.";
-                  }
-                  return null;
-                },
-                onFieldSubmitted: (value) => _createReport(),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () =>
-              {
-                if (_formKey.currentState.validate()) {
-                  _createReport()
-                }
-              },
-              child: Padding(padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8.0), child: Text('Request repair')),
-            ),*/
-          ],
-        ),
-      ),
-    );*/
   }
 }
