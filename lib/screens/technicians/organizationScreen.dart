@@ -238,6 +238,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                       buttonPadding: EdgeInsets.zero,
                                       children: [
                                         id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key.value)) : null,
+                                        TextButton(child: Icon(Icons.create_rounded), onPressed: ()=>{}),
                                         TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key.value))
                                     ],)
                                   ]
