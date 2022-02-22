@@ -208,10 +208,9 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
   final _reportTitleController = TextEditingController();
   final _problemTextController = TextEditingController();
 
-  void _createReport() {
-    print("im createReport");
+  Future<void> _createReport() async{
     if (_formKey.currentState.validate()) {
-      Comm.queueRepair(479, _reportTitleController.text, _problemTextController.text).then((newReport) {
+      await Comm.queueRepair(479, _reportTitleController.text, _problemTextController.text).then((newReport) {
         widget.updateDeviceInfo(ShortDeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData));
       }).onError((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.toString()));
@@ -223,10 +222,11 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
   void _createReportDialog(){
     showDialog<String>(
         context: context,
-        builder: (BuildContext context) {
-          return new AlertDialog(
-              contentPadding: const EdgeInsets.all(16.0),
-              content: new Column(
+        builder: (BuildContext context){
+          return Form(key: _formKey,
+              child: AlertDialog(
+                contentPadding: const EdgeInsets.all(16.0),
+                content: new Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Text("Report a problem", style: Theme
@@ -248,7 +248,8 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
                       padding: EdgeInsets.all(8.0),
                       child: TextFormField(
                         controller: _problemTextController,
-                        decoration: InputDecoration(hintText: "Problem description"),
+                        decoration: InputDecoration(
+                            hintText: "Problem description"),
                         maxLines: 4,
                         validator: (value) {
                           if (value.isEmpty) {
@@ -259,15 +260,23 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
                         onFieldSubmitted: (value) => _createReport(),
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: (){
-                        _createReport();
+                  ],
+                ),
+                actions: <Widget>[
+                  ElevatedButton(
+                      child: const Text('Cancel'),
+                      onPressed: () {
                         Navigator.pop(context);
-                        print("form test");
-                      },
-                      child: Padding(padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8.0), child: Text('Request repair')),
-                    ),
-                  ]
+                      }
+                  ),
+                  ElevatedButton(
+                    child: Text('Request repair'),
+                    onPressed: () async {
+                      await _createReport();
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
               )
           );
         }
