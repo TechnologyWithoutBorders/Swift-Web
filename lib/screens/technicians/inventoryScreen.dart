@@ -20,7 +20,6 @@ class InventoryScreen extends StatefulWidget {
 class _InventoryScreenState extends State<InventoryScreen> {
   final _scrollController = ScrollController();
   double _progress = 0;
-  String _listTitle = "";
   Color _colorManual = Colors.blueGrey;
   Color _colorAll = Color(Constants.teog_blue);
 
@@ -51,7 +50,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
     setState(() {
       _filterTextController.clear();
       _filterType = filterNone;
-      _listTitle = "Number of devices: ";
       _devices = devices;
       _preFilteredDevices = List.from(_devices);
       _displayedDevices = List.from(_devices);
@@ -67,7 +65,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
       _filterType = filterMissingManuals;
       _preFilteredDevices.clear();
       _displayedDevices.clear();
-      _listTitle = "Number of devices with no manual attached: ";
       _colorManual = Color(Constants.teog_blue);
       _colorAll = Colors.blueGrey;
     });
@@ -119,12 +116,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
   void _filter(String text) {
     setState(() {
       _displayedDevices.clear();
-
-      if(text.isNotEmpty) {
-        _listTitle = "Number of devices matching the filter: ";
-      } else {
-        _listTitle = "Number of devices: ";
-      }
     });
 
     List<String> filterTexts = text.trim().split(" ");
@@ -171,13 +162,13 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         tooltip: "clear selection",
                         onPressed: () => setState(() => { _department = null }), 
                       ): null,
-                      ElevatedButton(onPressed: () => _filterDepartment(), child: Text("select department...")),
+                      OutlinedButton(onPressed: () => _filterDepartment(), child: Text("select department...")),
                     ]
                   ),
                   ButtonBar(
                     alignment: MainAxisAlignment.center,
                     children: [
-                      Text("Select devices: "),
+                      Text("Select devices by template: ", style: TextStyle(fontSize: 20)),
                       ElevatedButton(
                         child: Text("All"),
                         onPressed: _manualButtonDisabled ? null : () => _showAllDevices(),
@@ -190,11 +181,12 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       ),
                     ],
                   ),
+                  SizedBox(height: 5),
                   TextField(
                     controller: _filterTextController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'filter...'
+                      labelText: 'filter by searching...'
                     ),
                     onChanged: (text) => _filter(text.trim().toLowerCase()),
                     enabled: !_manualButtonDisabled
@@ -204,7 +196,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     value: _progress
                   ),
                   SizedBox(height: 10),
-                  Text(_listTitle + _displayedDevices.length.toString()),
+                  Text("Number of devices matching filter: " + _displayedDevices.length.toString(), style: TextStyle(fontSize: 20)),
                   Flexible(child: Padding(padding: EdgeInsets.all(10.0),
                     child: Scrollbar(isAlwaysShown: true,
                       controller: _scrollController,
