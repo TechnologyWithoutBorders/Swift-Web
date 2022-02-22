@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:teog_swift/screens/organizationFilterView.dart';
 import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
 import 'package:teog_swift/utilities/constants.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/organizationalUnit.dart';
 import 'package:teog_swift/utilities/shortDeviceInfo.dart';
 import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
@@ -33,6 +35,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
   static const int filterNone = 0;
   static const int filterMissingManuals = 1;
 
+  OrganizationalUnit _department;
   int _filterType = filterNone;
 
   @override
@@ -100,6 +103,19 @@ class _InventoryScreenState extends State<InventoryScreen> {
     });
   }
 
+  void _filterDepartment() {
+    showDialog<OrganizationalUnit>(
+      context: context,
+      builder: (BuildContext context) {
+        return OrganizationFilterView(orgUnit: _department);
+      }
+    ).then((orgId) => {
+      setState(() {
+        _department = orgId;
+      })
+    });
+  }
+
   void _filter(String text) {
     setState(() {
       _displayedDevices.clear();
@@ -143,9 +159,15 @@ class _InventoryScreenState extends State<InventoryScreen> {
           child: Card(
             child: Padding(padding: EdgeInsets.all(25.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center, 
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  OutlinedButton(onPressed: () => {}, child: Text("Select department...")),
+                  ButtonBar(
+                    alignment: MainAxisAlignment.center,
+                    children: [
+                      _department != null ? Text("Department: " + _department.name) : null,
+                      OutlinedButton(onPressed: () => _filterDepartment(), child: Text("Select department...")),
+                    ]
+                  ),
                   ButtonBar(
                     alignment: MainAxisAlignment.center,
                     children: [

@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/constants.dart';
 import 'package:teog_swift/utilities/organizationalRelation.dart';
 import 'package:teog_swift/utilities/organizationalUnit.dart';
 import 'package:teog_swift/utilities/messageException.dart';
 
 class OrganizationFilterView extends StatefulWidget {
-  OrganizationFilterView({Key key}) : super(key: key);
+  final OrganizationalUnit orgUnit;
+
+  OrganizationFilterView({Key key, this.orgUnit}) : super(key: key);
 
   @override
   _OrganizationFilterViewState createState() => _OrganizationFilterViewState();
@@ -64,10 +67,12 @@ class _OrganizationFilterViewState extends State<OrganizationFilterView> {
                   int id = node.key.value;
 
                   return Card(
-                    color: Colors.grey[100],
+                    color: widget.orgUnit == null || widget.orgUnit.id != id ? Colors.grey[100] : Color(Constants.teog_blue),
                     child: TextButton(
-                      child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)),
-                      onPressed: () => {}
+                      child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: widget.orgUnit == null || widget.orgUnit.id != id ? Colors.black : Colors.white, fontWeight: FontWeight.bold)),
+                      onPressed: () => {
+                        Navigator.pop(context, OrganizationalUnit(id: id, name: _nameMap[id]))
+                      }
                     ),
                   );
                 }
