@@ -51,31 +51,28 @@ class _OrganizationFilterViewState extends State<OrganizationFilterView> {
   Widget build(BuildContext context) {
     BuchheimWalkerConfiguration builder = BuchheimWalkerConfiguration();
 
-    return Scaffold(
-      backgroundColor: Colors.grey[200],
-      body: Container(alignment: Alignment.center,
-        child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
-          child: Card(
-            child: Padding(
-              padding: EdgeInsets.all(25.0),
-              child: _graph.nodeCount() > 0 ? Center(
-                child: GraphView(
-                  graph: _graph,
-                  algorithm: BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
-                  builder: (Node node) {
-                    int id = node.key.value;
+    return Dialog(alignment: Alignment.center,
+      child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
+        child: Card(
+          child: Padding(
+            padding: EdgeInsets.all(25.0),
+            child: _graph.nodeCount() > 0 ? Center(
+              child: GraphView(
+                graph: _graph,
+                algorithm: BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
+                builder: (Node node) {
+                  int id = node.key.value;
 
-                    return Card(
-                      color: Colors.grey[100],
-                      child: TextButton(
-                        child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)),
-                        onPressed: () => {}
-                      ),
-                    );
-                  }
-                ),
-              ) : Center(child: Text("loading departments..."))
-            )
+                  return Card(
+                    color: Colors.grey[100],
+                    child: TextButton(
+                      child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)),
+                      onPressed: () => {}
+                    ),
+                  );
+                }
+              ),
+            ) : Center(child: Text("loading departments..."))
           )
         )
       )
