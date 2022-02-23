@@ -67,6 +67,8 @@ class _DetailScreenState extends State<DetailScreen> {
               children: [
                 Text(deviceInfo.device.manufacturer + " " + deviceInfo.device.model, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                 deviceInfo.device.orgUnit != null ? Text(deviceInfo.device.orgUnit, style: TextStyle(fontSize: 25)) : Text(""),
+                Divider(),
+                SizedBox(height: 20),
                 SizedBox(height: 20),
                 Flexible(child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
