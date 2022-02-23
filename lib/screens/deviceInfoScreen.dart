@@ -222,14 +222,18 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
   final _reportTitleController = TextEditingController();
   final _problemTextController = TextEditingController();
 
-  Future<void> _createReport() async{
-    if (_formKey.currentState.validate()) {
+  Future<bool> _createReport() async {
+    if(_formKey.currentState.validate()) {
       await Comm.queueRepair(479, _reportTitleController.text, _problemTextController.text).then((newReport) {
         widget.updateDeviceInfo(ShortDeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData));
       }).onError((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.toString()));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       });
+
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -285,8 +289,11 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
                   ElevatedButton(
                     child: Text('Request repair'),
                     onPressed: () async {
-                      await _createReport();
-                      Navigator.pop(context);
+                      bool success = await _createReport();
+                      
+                      if(success) {
+                        Navigator.pop(context);
+                      }
                     },
                   )
                 ],
