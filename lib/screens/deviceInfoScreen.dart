@@ -185,25 +185,21 @@ class _StateScreenState extends State<StateScreen> {
 
     return Column(
       children: [
-        Text("Current state:", style: Theme
-          .of(context)
-          .textTheme
-          .headline5),
-        SizedBox(height: 5),
-          Container(color: DeviceState.getColor(report.currentState),
-          child: Padding(padding: EdgeInsets.all(3.0),
+        Container(color: DeviceState.getColor(report.currentState),
+          child: Padding(padding: EdgeInsets.all(7.0),
             child: Row(children: [
                 Icon(DeviceState.getIconData(report.currentState)),
-              SizedBox(width: 5),
-              Text(DeviceState.getStateString(report.currentState),
-                style: TextStyle(fontSize: 25)
-              ),
+                SizedBox(width: 5),
+                Text(DeviceState.getStateString(report.currentState),
+                  style: TextStyle(fontSize: 25)
+                ),
+                Spacer(),
+                Text(DateTime.now().difference(report.created).inDays.toString() + " days",
+                  style: TextStyle(fontSize: 25))
               ]
             )
           )
         ),
-        SizedBox(height: 5),
-        Text(DateTime.now().difference(report.created).inDays.toString() + " days"),
       ]
     );
   }
