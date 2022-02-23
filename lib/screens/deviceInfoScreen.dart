@@ -235,7 +235,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
                         .headline5),
                     TextFormField(
                       controller: _reportTitleController,
-                      decoration: InputDecoration(hintText: "Title"),
+                      decoration: new InputDecoration(labelText: 'Title'),
                       validator: (value) {
                         if (value.isEmpty) {
                           return "Please give your report a title.";
@@ -248,8 +248,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
                       padding: EdgeInsets.all(8.0),
                       child: TextFormField(
                         controller: _problemTextController,
-                        decoration: InputDecoration(
-                            hintText: "Problem description"),
+                        decoration: new InputDecoration(labelText: 'Problem description'),
                         maxLines: 4,
                         validator: (value) {
                           if (value.isEmpty) {

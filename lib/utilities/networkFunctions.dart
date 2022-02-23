@@ -170,14 +170,14 @@ Future<DeviceInfo> editDevice(HospitalDevice device) async {
   }
 }
 
-Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, String location) async {
+Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, int orgUnitId) async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
   final response = await http.post(
     uri,
     headers: _headers,
     body: jsonEncode(await _generateParameterMap(action: DataAction.searchDevices, authentication: true,
-        additional: <String, dynamic> {'type': type, 'manufacturer': manufacturer, 'location': location,})
+        additional: <String, dynamic> {'type': type, 'manufacturer': manufacturer, 'orgUnitId': orgUnitId,})
     ),
   );
 
