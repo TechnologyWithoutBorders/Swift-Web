@@ -292,10 +292,10 @@ class _LoginFormState extends State<LoginForm> {
             child: Center(child: input)
           ),
           SizedBox(height: 10),
-            ElevatedButton(//TODO: auch erst im letzten Step anzeigen
-              onPressed: () => _login(),
-              child: Text('Login'),
-            ),
+          _selectedHospital != null ? ElevatedButton(
+            onPressed: () => _login(),
+            child: Text('Login'),
+          ) : const SizedBox(),
           SizedBox(height: 5),
         ],
       ),
