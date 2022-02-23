@@ -12,6 +12,7 @@ import 'package:teog_swift/utilities/sessionMixin.dart';
 
 import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
 import 'package:teog_swift/utilities/hospital.dart';
+import 'package:teog_swift/screens/organizationFilterView.dart';
 
 class OverviewScreen extends StatefulWidget {
   static const String route = '/welcome';
@@ -185,6 +186,7 @@ class _FilterFormState extends State<FilterForm> {
 
   final _scrollController = ScrollController();
 
+  DepartmentFilter _departmentFilter;
   List<PreviewDeviceInfo> _filteredDevices = [];
 
   String validateDeviceID(String value) {
@@ -227,6 +229,19 @@ class _FilterFormState extends State<FilterForm> {
     });
   }
 
+  void _filterDepartment() {
+    showDialog<DepartmentFilter>(
+      context: context,
+      builder: (BuildContext context) {
+        return OrganizationFilterView(orgUnit: _departmentFilter != null ? _departmentFilter.parent : null);
+      }
+    ).then((departmentFilter) {
+      setState(() {
+        _departmentFilter = departmentFilter;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(key: _formKey,
@@ -239,7 +254,19 @@ class _FilterFormState extends State<FilterForm> {
               .textTheme
               .headline5),
           SizedBox(height: 10),
-          OutlinedButton(onPressed: () => {}, child: Text("Select department...")),
+          ButtonBar(
+            alignment: MainAxisAlignment.center,
+            children: [
+              _departmentFilter != null ? Text("Department: " + _departmentFilter.parent.name, style: TextStyle(fontSize: 25)) : null,
+              _departmentFilter != null ? IconButton(
+                iconSize: 25,
+                icon: Icon(Icons.cancel_outlined, color: Colors.red[700]),
+                tooltip: "clear selection",
+                onPressed: () => setState(() => { _departmentFilter = null }), 
+              ): null,
+              OutlinedButton(onPressed: () => _filterDepartment(), child: Text("select department...")),
+            ]
+          ),
           TextFormField(
             controller: _typeController,
             decoration: InputDecoration(labelText: 'Device type (e.g. "Ventilator")'),
