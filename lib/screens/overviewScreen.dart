@@ -182,7 +182,6 @@ class _FilterFormState extends State<FilterForm> {
 
   final _typeController = TextEditingController();
   final _manufacturerController = TextEditingController();
-  final _locationController = TextEditingController();
 
   final _scrollController = ScrollController();
 
@@ -206,7 +205,7 @@ class _FilterFormState extends State<FilterForm> {
 
   void _processInput() {
     if (_formKey.currentState.validate()) {
-      Comm.searchDevices(_typeController.text, _manufacturerController.text, _locationController.text).then((devices) {
+      Comm.searchDevices(_typeController.text, _manufacturerController.text, _departmentFilter != null ? _departmentFilter.parent.id : null).then((devices) {
         setState(() { _filteredDevices = devices; });
       }).onError((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.data));
