@@ -135,6 +135,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                     if(nameChanger.text.isNotEmpty) {
                       setState(() {
                         _nameMap[id] = nameChanger.text;
+                        _edited = true;
                       });
 
                       Navigator.pop(context);
