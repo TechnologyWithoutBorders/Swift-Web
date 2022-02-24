@@ -48,9 +48,9 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     TextEditingController nameController = TextEditingController();
 
     showDialog<String>(
-      context: context,
-      builder: (BuildContext context) {
-        return new AlertDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return new AlertDialog(
           title: Text("Add child department to \"" + _nameMap[parent] + "\""),
           contentPadding: const EdgeInsets.all(16.0),
           content: new Column(
@@ -100,6 +100,50 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
           ],
         );
       }
+    );
+  }
+
+  void _editUnit(int id) {
+    TextEditingController nameChanger = TextEditingController();
+    
+    showDialog<String>(
+        context: context,
+        builder: (BuildContext context) {
+          return new AlertDialog(
+            title: Text("Change name of \"" + _nameMap[id] + "\""),
+            contentPadding: const EdgeInsets.all(16.0),
+            content: new Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextField(
+                  controller: nameChanger,
+                  decoration: new InputDecoration(
+                      labelText: 'New name of department'),
+                  autofocus: true,
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                  child: const Text('Cancel'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+              ElevatedButton(
+                  child: const Text('Change'),
+                  onPressed: () {
+                    if(nameChanger.text.isNotEmpty) {
+                      setState(() {
+                        _nameMap[id] = nameChanger.text;
+                        _edited = true;
+                      });
+
+                      Navigator.pop(context);
+                    }
+                  })
+            ],
+          );
+        }
     );
   }
 
@@ -238,6 +282,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                       buttonPadding: EdgeInsets.zero,
                                       children: [
                                         id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key.value)) : null,
+                                        TextButton(child: Icon(Icons.create_rounded), onPressed: ()=> _editUnit(node.key.value)),
                                         TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key.value))
                                     ],)
                                   ]
