@@ -307,7 +307,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
   Widget build(BuildContext context) {
     return  ElevatedButton(
       onPressed: () => _createReportDialog(),
-      child: Text('Create report'),
+      child: Text('Report a problem'),
     );
   }
 }
