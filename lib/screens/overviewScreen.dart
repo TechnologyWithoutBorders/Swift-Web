@@ -187,6 +187,7 @@ class _FilterFormState extends State<FilterForm> {
 
   DepartmentFilter _departmentFilter;
   List<PreviewDeviceInfo> _filteredDevices = [];
+  bool _loading = false;
 
   String validateDeviceID(String value) {
     return null;//TODO:
@@ -205,11 +206,23 @@ class _FilterFormState extends State<FilterForm> {
 
   void _processInput() {
     if (_formKey.currentState.validate()) {
+      setState(() {
+        _filteredDevices = [];
+        _loading = true;
+      });
+
       Comm.searchDevices(_typeController.text, _manufacturerController.text, _departmentFilter != null ? _departmentFilter.parent.id : null).then((devices) {
-        setState(() { _filteredDevices = devices; });
+        setState(() {
+          _filteredDevices = devices;
+          _loading = false;
+        });
       }).onError((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.data));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        
+        setState(() {
+          _loading = false;
+        });
       });
     }
   }
@@ -280,7 +293,7 @@ class _FilterFormState extends State<FilterForm> {
             onFieldSubmitted: (value) => _processInput(),
           ),
           SizedBox(height: 10),
-          ElevatedButton(
+          _loading ? CircularProgressIndicator() : ElevatedButton(
             onPressed: () => _processInput(),
             child: Text('Filter'),
           ),
