@@ -9,6 +9,7 @@ import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/doubleCardLayout.dart';
 
 import 'package:teog_swift/utilities/sessionMixin.dart';
+import 'package:teog_swift/utilities/messageException.dart';
 
 import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
 import 'package:teog_swift/utilities/hospital.dart';
@@ -131,8 +132,8 @@ class _SearchFormState extends State with SessionMixin {
             builder: (context) => DetailScreen(deviceInfo: deviceInfo),
           )
         );
-      }).onError((error, stackTrace) {
-        final snackBar = SnackBar(content: Text(error.data));
+      }).onError<MessageException>((error, stackTrace) {
+        final snackBar = SnackBar(content: Text(error.message));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       });
     }
@@ -187,29 +188,27 @@ class _FilterFormState extends State<FilterForm> {
 
   DepartmentFilter _departmentFilter;
   List<PreviewDeviceInfo> _filteredDevices = [];
-
-  String validateDeviceID(String value) {
-    return null;//TODO:
-    /*if(value.isNotEmpty) {
-      var numeric = int.tryParse(value);
-
-      if(numeric != null && numeric > 0) {
-        return null;
-      } else {
-        return "Please enter a valid barcode number";
-      }
-    } else {
-      return "Please enter a barcode number";
-    }*/
-  }
+  bool _loading = false;
 
   void _processInput() {
     if (_formKey.currentState.validate()) {
+      setState(() {
+        _filteredDevices = [];
+        _loading = true;
+      });
+
       Comm.searchDevices(_typeController.text, _manufacturerController.text, _departmentFilter != null ? _departmentFilter.parent.id : null).then((devices) {
-        setState(() { _filteredDevices = devices; });
+        setState(() {
+          _filteredDevices = devices;
+          _loading = false;
+        });
       }).onError((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.data));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        
+        setState(() {
+          _loading = false;
+        });
       });
     }
   }
@@ -270,17 +269,15 @@ class _FilterFormState extends State<FilterForm> {
             controller: _typeController,
             decoration: InputDecoration(labelText: 'Device type (e.g. "Ventilator")'),
             autofocus: true,
-            validator: (value) => validateDeviceID(value),
             onFieldSubmitted: (value) => _processInput(),
           ),
           TextFormField(
             controller: _manufacturerController,
             decoration: InputDecoration(labelText: 'Manufacturer'),
-            validator: (value) => validateDeviceID(value),
             onFieldSubmitted: (value) => _processInput(),
           ),
           SizedBox(height: 10),
-          ElevatedButton(
+          _loading ? CircularProgressIndicator() : ElevatedButton(
             onPressed: () => _processInput(),
             child: Text('Filter'),
           ),
