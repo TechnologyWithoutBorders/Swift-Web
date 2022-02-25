@@ -9,6 +9,7 @@ import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/doubleCardLayout.dart';
 
 import 'package:teog_swift/utilities/sessionMixin.dart';
+import 'package:teog_swift/utilities/messageException.dart';
 
 import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
 import 'package:teog_swift/utilities/hospital.dart';
@@ -131,8 +132,8 @@ class _SearchFormState extends State with SessionMixin {
             builder: (context) => DetailScreen(deviceInfo: deviceInfo),
           )
         );
-      }).onError((error, stackTrace) {
-        final snackBar = SnackBar(content: Text(error.data));
+      }).onError<MessageException>((error, stackTrace) {
+        final snackBar = SnackBar(content: Text(error.message));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       });
     }
