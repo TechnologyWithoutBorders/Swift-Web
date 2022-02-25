@@ -189,21 +189,6 @@ class _FilterFormState extends State<FilterForm> {
   List<PreviewDeviceInfo> _filteredDevices = [];
   bool _loading = false;
 
-  String validateDeviceID(String value) {
-    return null;//TODO:
-    /*if(value.isNotEmpty) {
-      var numeric = int.tryParse(value);
-
-      if(numeric != null && numeric > 0) {
-        return null;
-      } else {
-        return "Please enter a valid barcode number";
-      }
-    } else {
-      return "Please enter a barcode number";
-    }*/
-  }
-
   void _processInput() {
     if (_formKey.currentState.validate()) {
       setState(() {
@@ -283,13 +268,11 @@ class _FilterFormState extends State<FilterForm> {
             controller: _typeController,
             decoration: InputDecoration(labelText: 'Device type (e.g. "Ventilator")'),
             autofocus: true,
-            validator: (value) => validateDeviceID(value),
             onFieldSubmitted: (value) => _processInput(),
           ),
           TextFormField(
             controller: _manufacturerController,
             decoration: InputDecoration(labelText: 'Manufacturer'),
-            validator: (value) => validateDeviceID(value),
             onFieldSubmitted: (value) => _processInput(),
           ),
           SizedBox(height: 10),
