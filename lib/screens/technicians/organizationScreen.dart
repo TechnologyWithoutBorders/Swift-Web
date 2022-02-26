@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
+import 'package:teog_swift/utilities/hospitalDevice.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/organizationalRelation.dart';
@@ -17,6 +18,8 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   Graph _graph = Graph();
   Map<int, String> _nameMap = Map();
   bool _edited = false;
+
+  List<HospitalDevice> _assignedDevices = [];
 
   @override
   void initState() {
@@ -249,59 +252,91 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
           child: Card(
             child: Padding(
               padding: EdgeInsets.all(25.0),
-              child: _graph.nodeCount() > 0 ? SingleChildScrollView(
-                child: Column(
-                  children: [
-                    ButtonBar(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ElevatedButton(child: Text("Save"), onPressed: !_edited ? null : () => _save()),
-                        ElevatedButton(child: Text("Reset"), onPressed: !_edited ? null : () => _reset())
-                      ],
-                    ),
-                    SizedBox(height: 15),
-                    GraphView(
-                      graph: _graph,
-                      algorithm: BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
-                      builder: (Node node) {
-                        int id = node.key.value;
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Flexible(
+                    flex: 3,
+                    child: _graph.nodeCount() > 0 ? SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          ButtonBar(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ElevatedButton(child: Text("Save"), onPressed: !_edited ? null : () => _save()),
+                              ElevatedButton(child: Text("Reset"), onPressed: !_edited ? null : () => _reset())
+                            ],
+                          ),
+                          SizedBox(height: 15),
+                          GraphView(
+                            graph: _graph,
+                            algorithm: BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
+                            builder: (Node node) {
+                              int id = node.key.value;
 
-                        return Draggable<Node>(
-                          data: node,
-                          feedback: Card(color: Colors.grey[100], child: Padding(padding: EdgeInsets.all(15), child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)))),
-                          child: DragTarget<Node>(
-                            builder: (context, candidateItems, rejectedItems) {
-                              return Card(
-                                color: candidateItems.isNotEmpty ? Colors.grey[300] : Colors.grey[100],
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    TextButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)), onPressed: () => {}),
-                                    ButtonBar(
-                                      mainAxisSize: MainAxisSize.min,
-                                      buttonPadding: EdgeInsets.zero,
-                                      children: [
-                                        id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key.value)) : null,
-                                        id != 1 ? TextButton(child: Icon(Icons.edit), onPressed: ()=> _editUnit(node.key.value)) : null,
-                                        TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key.value))
-                                    ],)
-                                  ]
+                              return Draggable<Node>(
+                                data: node,
+                                feedback: Card(color: Colors.grey[100], child: Padding(padding: EdgeInsets.all(15), child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)))),
+                                child: DragTarget<Node>(
+                                  builder: (context, candidateItems, rejectedItems) {
+                                    return Card(
+                                      color: candidateItems.isNotEmpty ? Colors.grey[300] : Colors.grey[100],
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          TextButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)), onPressed: () => {}),
+                                          ButtonBar(
+                                            mainAxisSize: MainAxisSize.min,
+                                            buttonPadding: EdgeInsets.zero,
+                                            children: [
+                                              id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key.value)) : null,
+                                              id != 1 ? TextButton(child: Icon(Icons.edit), onPressed: ()=> _editUnit(node.key.value)) : null,
+                                              TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key.value))
+                                          ],)
+                                        ]
+                                      )
+                                    );
+                                  },
+                                  onAccept: (item) {
+                                    if(item.key.value != 1 && item.key.value != node.key.value) {
+                                      _reOrganizeUnit(item.key.value, node.key.value);
+                                    }
+                                  },
                                 )
                               );
-                            },
-                            onAccept: (item) {
-                              if(item.key.value != 1 && item.key.value != node.key.value) {
-                                _reOrganizeUnit(item.key.value, node.key.value);
-                              }
-                            },
-                          )
+                            }
+                          ),
+                          SizedBox(height: 10)
+                        ]
+                      )
+                    ) : Center(child: Text("loading departments...")),
+                  ),
+                  Flexible(
+                    child: ListView.separated(
+                      padding: const EdgeInsets.all(3),
+                      itemCount: _assignedDevices.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        HospitalDevice device = _assignedDevices[index];
+
+                        return ListTile(
+                          /*leading: Container(width: 30, height: 30, color: DeviceState.getColor(report.currentState),
+                            child: Padding(padding: EdgeInsets.all(3.0),
+                              child: Row(children: [
+                                  Icon(DeviceState.getIconData(report.currentState))
+                                ]
+                              )
+                            )
+                          ),*/
+                          title: Text(device.type),
+                          subtitle: Text(device.manufacturer + " " + device.model),
+                          trailing: device.orgUnit != null ? Text(device.orgUnit) : null,
                         );
-                      }
+                      },
+                      separatorBuilder: (BuildContext context, int index) => const Divider(),
                     ),
-                    SizedBox(height: 10)
-                  ]
-                )
-              ) : Center(child: Text("loading departments..."))
+                  ),
+                ]
+              )
             )
           )
         )
