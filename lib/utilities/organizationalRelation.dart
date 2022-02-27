@@ -16,3 +16,15 @@ class OrganizationalRelation {
     'parent': parent,
   };
 }
+
+class DeviceRelation {
+  final int deviceId;
+  final int orgUnitId;
+
+  DeviceRelation({this.deviceId, this.orgUnitId});
+
+  Map<String, dynamic> toJson() => {
+    'deviceId': deviceId,
+    'orgUnitId': orgUnitId,
+  };
+}

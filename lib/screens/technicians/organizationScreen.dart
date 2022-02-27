@@ -24,6 +24,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
 
   int _selectedDepartment;
   List<PreviewDeviceInfo> _devices = [];
+  List<DeviceRelation> _modifiedDeviceRelations = [];
   final _scrollController = ScrollController();
 
   @override
@@ -239,7 +240,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
       orgRelations.add(OrganizationalRelation(id: id, parent: parent));
     }
 
-    Comm.updateOrganizationalInfo(orgUnits, orgRelations).then((success) {
+    Comm.updateOrganizationalInfo(orgUnits, orgRelations, _modifiedDeviceRelations).then((success) {
       if(success) {
         setState(() {
           _edited = false;
