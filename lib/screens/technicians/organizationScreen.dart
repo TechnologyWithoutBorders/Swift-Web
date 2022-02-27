@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
@@ -338,9 +339,11 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                               padding: const EdgeInsets.all(3),
                               itemCount: _assignedDevices.length,
                               itemBuilder: (BuildContext context, int index) {
-                                HospitalDevice device = _assignedDevices[index].device;
+                                PreviewDeviceInfo deviceInfo = _assignedDevices[index];
+                                HospitalDevice device = deviceInfo.device;
 
                                 return ListTile(
+                                  leading: deviceInfo.imageData.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData)) : Text("no image"),
                                   title: Text(device.type),
                                   subtitle: Text(device.manufacturer + " " + device.model),
                                 );
