@@ -24,7 +24,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
 
   int _selectedDepartment;
   Map<int, List<PreviewDeviceInfo>> _deviceRelations = Map();
-  List<PreviewDeviceInfoContext> _displayedDevices = [];
+  List<PreviewDeviceInfo> _displayedDevices = [];
   final _scrollController = ScrollController();
 
   @override
@@ -52,9 +52,18 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     }
   }
 
-  void _assignDevice(int deviceId, int orgUnitId) {
+  void _assignDevice(PreviewDeviceInfo deviceInfo, int orgUnitId) {
     setState(() {
-      _edited = true;//TODO: assign device
+      _deviceRelations[deviceInfo.device.orgUnitId].remove(deviceInfo);
+      if(_deviceRelations.containsKey(orgUnitId)) {
+        _deviceRelations[orgUnitId].add(deviceInfo);
+      } else {
+        _deviceRelations[orgUnitId] = [deviceInfo];
+      }
+      deviceInfo.device.orgUnitId = orgUnitId;
+      deviceInfo.device.orgUnit = _nameMap[orgUnitId];
+      _edited = true;
+      _updateAssignedDevices(_selectedDepartment);
     });
   }
 
@@ -289,20 +298,16 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
       _displayedDevices.clear();
     });
 
-    List<PreviewDeviceInfoContext> displayedDevices = [];
+    List<PreviewDeviceInfo> displayedDevices = [];
 
     if(_deviceRelations.containsKey(orgUnitId)) {
-      for(var deviceInfo in _deviceRelations[orgUnitId]) {
-        displayedDevices.add(PreviewDeviceInfoContext(deviceInfo, orgUnitId));
-      }
+      displayedDevices.addAll(_deviceRelations[orgUnitId]);
     }
 
     if(orgUnitId != null) {
       for(var node in _graph.successorsOf(_graph.getNodeUsingId(orgUnitId))) {
         if(_deviceRelations.containsKey(node.key.value)) {
-          for(var deviceInfo in _deviceRelations[node.key.value]) {
-            displayedDevices.add(PreviewDeviceInfoContext(deviceInfo, node.key.value));
-          }
+          displayedDevices.addAll(_deviceRelations[node.key.value]);
         }
       }
     }
@@ -345,10 +350,10 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                             builder: (Node node) {
                               int id = node.key.value;
 
-                              return Draggable<Relation>(
-                                data: Relation(type: Relation.org_unit, childId: id),
+                              return Draggable<Node>(
+                                data: node,
                                 feedback: Card(color: Colors.grey[100], child: Padding(padding: EdgeInsets.all(15), child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)))),
-                                child: DragTarget<Relation>(
+                                child: DragTarget<Object>(
                                   builder: (context, candidateItems, rejectedItems) {
                                     return Card(
                                       shape: id != _selectedDepartment ? RoundedRectangleBorder(
@@ -375,13 +380,19 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                     );
                                   },
                                   onWillAccept: (item) {
-                                    return item is Relation && !(item.type == Relation.org_unit && (item.childId == 1 || item.childId == id));
+                                    if(item is Node) {
+                                      return !(node.key.value == 1 || node.key.value == id);
+                                    } else if(item is PreviewDeviceInfo) {
+                                      return true;
+                                    } else {
+                                      return false;
+                                    }
                                   },
-                                  onAccept: (relation) {
-                                    if(relation.type == Relation.org_unit) {
-                                      _reOrganizeUnit(relation.childId, id);
-                                    } else if(relation.type == Relation.device) {
-                                      _assignDevice(relation.childId, id);
+                                  onAccept: (item) {
+                                    if(item is Node) {
+                                      _reOrganizeUnit(item.key.value, id);
+                                    } else if(item is PreviewDeviceInfo) {
+                                      _assignDevice(item, id);
                                     }
                                   },
                                 )
@@ -409,11 +420,11 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                               padding: const EdgeInsets.all(3),
                               itemCount: _displayedDevices.length,
                               itemBuilder: (BuildContext context, int index) {
-                                PreviewDeviceInfo deviceInfo = _displayedDevices[index].deviceInfo;
+                                PreviewDeviceInfo deviceInfo = _displayedDevices[index];
                                 HospitalDevice device = deviceInfo.device;
 
-                                return Draggable<Relation>(
-                                  data: Relation(type: Relation.device, childId: device.id),
+                                return Draggable<PreviewDeviceInfo>(
+                                  data: deviceInfo,
                                   feedback: Card(
                                     color: Colors.grey[100],
                                     child: Padding(
@@ -430,7 +441,8 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                   child: ListTile(
                                     leading: deviceInfo.imageData.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData)) : Text("no image"),
                                     title: Text(device.type),
-                                    subtitle: Text(device.manufacturer + " " + device.model)
+                                    subtitle: Text(device.manufacturer + " " + device.model),
+                                    trailing: device.orgUnit != null ? Text(device.orgUnit) : Text(""),
                                   )
                                 );
                               },
@@ -449,21 +461,4 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
       )
     );
   }
-}
-
-class PreviewDeviceInfoContext {
-  final PreviewDeviceInfo deviceInfo;
-  final int orgUnitId;
-
-  PreviewDeviceInfoContext(this.deviceInfo, this.orgUnitId);
-}
-
-class Relation {
-  static const int org_unit = 0;
-  static const int device = 1;
-
-  final int type;
-  final int childId;
-
-  Relation({this.type, this.childId});
 }
