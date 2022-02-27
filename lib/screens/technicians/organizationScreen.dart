@@ -24,7 +24,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
 
   int _selectedDepartment;
   Map<int, List<PreviewDeviceInfo>> _deviceRelations = Map();
-  List<PreviewDeviceInfo> _displayedDevices = [];
+  List<PreviewDeviceInfoContext> _displayedDevices = [];
   final _scrollController = ScrollController();
 
   @override
@@ -289,16 +289,20 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
       _displayedDevices.clear();
     });
 
-    List<PreviewDeviceInfo> displayedDevices = [];
+    List<PreviewDeviceInfoContext> displayedDevices = [];
 
     if(_deviceRelations.containsKey(orgUnitId)) {
-      displayedDevices.addAll(_deviceRelations[orgUnitId]);
+      for(var deviceInfo in _deviceRelations[orgUnitId]) {
+        displayedDevices.add(PreviewDeviceInfoContext(deviceInfo, orgUnitId));
+      }
     }
 
     if(orgUnitId != null) {
       for(var node in _graph.successorsOf(_graph.getNodeUsingId(orgUnitId))) {
         if(_deviceRelations.containsKey(node.key.value)) {
-          displayedDevices.addAll(_deviceRelations[node.key.value]);
+          for(var deviceInfo in _deviceRelations[node.key.value]) {
+            displayedDevices.add(PreviewDeviceInfoContext(deviceInfo, node.key.value));
+          }
         }
       }
     }
@@ -405,7 +409,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                               padding: const EdgeInsets.all(3),
                               itemCount: _displayedDevices.length,
                               itemBuilder: (BuildContext context, int index) {
-                                PreviewDeviceInfo deviceInfo = _displayedDevices[index];
+                                PreviewDeviceInfo deviceInfo = _displayedDevices[index].deviceInfo;
                                 HospitalDevice device = deviceInfo.device;
 
                                 return Draggable<Relation>(
@@ -445,6 +449,13 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
       )
     );
   }
+}
+
+class PreviewDeviceInfoContext {
+  final PreviewDeviceInfo deviceInfo;
+  final int orgUnitId;
+
+  PreviewDeviceInfoContext(this.deviceInfo, this.orgUnitId);
 }
 
 class Relation {
