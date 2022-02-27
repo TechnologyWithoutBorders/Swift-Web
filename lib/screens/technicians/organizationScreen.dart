@@ -173,6 +173,21 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     );
   }
 
+  void _recursiveDeleteSuccessors(List<Node> successors) {
+    for(var succ in successors) {
+      int removedUnitId = succ.key.value;
+
+      if(_deviceRelations.containsKey(removedUnitId)) {
+        //put removed devices to unassigned devices
+        _deviceRelations[null].addAll(_deviceRelations.remove(removedUnitId));
+      }
+
+      _recursiveDeleteSuccessors(_graph.successorsOf(succ));
+    }
+
+    _graph.removeNodes(successors);
+  }
+
   void _removeUnit(int id) {
     showDialog<String>(
       context: context,
@@ -193,18 +208,16 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                   List<Node> successors = _graph.successorsOf(node);
 
                   setState(() {
-                    for(var node in successors) {
-                      int removedUnitId = node.key.value;
+                    _recursiveDeleteSuccessors(successors);
 
-                      if(_deviceRelations.containsKey(removedUnitId)) {
-                        //put removed devices to unassigned devices
-                        _deviceRelations[null].addAll(_deviceRelations.remove(removedUnitId));
-                      }
-                    }
-
-                    _graph.removeNodes(successors);//TODO: only direct successors are affected!
                     _graph.removeNode(node);
                     _nameMap.remove(id);
+
+                    if(_deviceRelations.containsKey(id)) {
+                      //put removed devices to unassigned devices
+                      _deviceRelations[null].addAll(_deviceRelations.remove(id));
+                    }
+                    
                     _edited = true;
                   });
 
