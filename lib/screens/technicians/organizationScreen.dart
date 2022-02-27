@@ -35,6 +35,8 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   }
 
   Future<void> initData() async {
+    await _reset();
+
     List<PreviewDeviceInfo> devices = await Comm.searchDevices(null, null, 1);
 
     Map<int, List<PreviewDeviceInfo>> deviceRelations = Map();
@@ -52,8 +54,6 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     setState(() {
       _deviceRelations = deviceRelations;
     });
-
-    await _reset();
 
     _updateAssignedDevices(null);
   }
