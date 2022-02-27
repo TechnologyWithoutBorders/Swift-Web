@@ -22,7 +22,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   Map<int, String> _nameMap = Map();
   bool _edited = false;
 
-  int _selectedDepartment = 1;
+  int _selectedDepartment;
   List<PreviewDeviceInfo> _devices = [];
   final _scrollController = ScrollController();
 
@@ -30,7 +30,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   void initState() {
     super.initState();
 
-    Comm.searchDevices(null, null, _selectedDepartment).then((devices) {
+    Comm.searchDevices(null, null, 1).then((devices) {
       setState(() {
         _devices = devices;
       });
@@ -342,7 +342,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                       children: [
                         ElevatedButton(onPressed: () => _updateAssignedDevices(null), child: Text("Show unassigned devices")),
                         SizedBox(height: 10),
-                        Text(_selectedDepartment != null ? _nameMap[_selectedDepartment] : "Unassigned devices", style: TextStyle(fontSize: 25)),
+                        Text(_selectedDepartment != null && _nameMap[_selectedDepartment] != null ? _nameMap[_selectedDepartment] : "Unassigned devices", style: TextStyle(fontSize: 25)),
                         Flexible(
                           child: Scrollbar(
                             controller: _scrollController,
