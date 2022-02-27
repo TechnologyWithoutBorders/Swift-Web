@@ -8,6 +8,7 @@ import 'package:teog_swift/utilities/organizationalRelation.dart';
 import 'package:teog_swift/utilities/organizationalUnit.dart';
 import 'package:teog_swift/utilities/messageException.dart';
 import 'package:teog_swift/utilities/previewDeviceInfo.dart';
+import 'package:teog_swift/utilities/constants.dart';
 
 class OrganizationScreen extends StatefulWidget {
   OrganizationScreen({Key key}) : super(key: key);
@@ -295,6 +296,12 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                 child: DragTarget<Node>(
                                   builder: (context, candidateItems, rejectedItems) {
                                     return Card(
+                                      shape: id != _selectedDepartment ? RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(4.0),
+                                      ) : RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(4.0),
+                                        side: new BorderSide(color: Color(Constants.teog_blue))
+                                      ),
                                       color: candidateItems.isNotEmpty ? Colors.grey[300] : Colors.grey[100],
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
@@ -326,6 +333,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                       )
                     ) : Center(child: Text("loading departments...")),
                   ),
+                  VerticalDivider(),
                   Expanded(
                     child: Column(
                       children: [
