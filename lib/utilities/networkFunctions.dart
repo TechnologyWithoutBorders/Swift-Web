@@ -632,11 +632,4 @@ Future<Map<String, dynamic>> _generateParameterMap({final String action = "", fi
 
   return parameterMap;
 }
-
-class OrganizationalInfo {
-  final List<OrganizationalUnit> units;
-  final List<OrganizationalRelation> relations;
-
-  OrganizationalInfo({this.units, this.relations});
-}
   

@@ -24,27 +24,38 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
 
   int _selectedDepartment;
   Map<int, List<PreviewDeviceInfo>> _deviceRelations = Map();
+  List<PreviewDeviceInfo> _displayedDevices = [];
   final _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
 
-    Comm.searchDevices(null, null, 1).then((devices) {
-      setState(() {
-        for(PreviewDeviceInfo deviceInfo in devices) {
-          HospitalDevice device = deviceInfo.device;
+    initData();
+  }
 
-          if(_deviceRelations.containsKey(device.orgUnitId)) {
-            _deviceRelations[device.orgUnitId].add(deviceInfo);
-          } else {
-            _deviceRelations[device.orgUnitId] = [deviceInfo];
-          }
-        }
-      });
+  Future<void> initData() async {
+    List<PreviewDeviceInfo> devices = await Comm.searchDevices(null, null, 1);
+
+    Map<int, List<PreviewDeviceInfo>> deviceRelations = Map();
+
+    for(PreviewDeviceInfo deviceInfo in devices) {
+      HospitalDevice device = deviceInfo.device;
+
+      if(deviceRelations.containsKey(device.orgUnitId)) {
+        deviceRelations[device.orgUnitId].add(deviceInfo);
+      } else {
+        deviceRelations[device.orgUnitId] = [deviceInfo];
+      }
+    }
+
+    setState(() {
+      _deviceRelations = deviceRelations;
     });
 
-    _reset();
+    await _reset();
+
+    _updateAssignedDevices(null);
   }
 
   void _reOrganizeUnit(int id, int parentId) {
@@ -211,31 +222,27 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     );
   }
 
-  void _reset() {
-    Comm.getOrganizationalInfo().then((orgInfo) {
-      Graph graph = Graph();
+  Future<void> _reset() async {
+    OrganizationalInfo orgInfo = await Comm.getOrganizationalInfo();
+    Graph graph = Graph();
 
-      Map<int, String> nameMap = Map();
+    Map<int, String> nameMap = Map();
 
-      for(OrganizationalUnit orgUnit in orgInfo.units) {
-        Node node = Node.Id(orgUnit.id);
-        graph.addNode(node);
+    for(OrganizationalUnit orgUnit in orgInfo.units) {
+      Node node = Node.Id(orgUnit.id);
+      graph.addNode(node);
 
-        nameMap[orgUnit.id] = orgUnit.name;
-      }
+      nameMap[orgUnit.id] = orgUnit.name;
+    }
 
-      for(OrganizationalRelation orgRelation in orgInfo.relations) {
-          graph.addEdge(graph.getNodeUsingId(orgRelation.parent), graph.getNodeUsingId(orgRelation.id));
-      }
+    for(OrganizationalRelation orgRelation in orgInfo.relations) {
+        graph.addEdge(graph.getNodeUsingId(orgRelation.parent), graph.getNodeUsingId(orgRelation.id));
+    }
 
-      setState(() {
-        _graph = graph;
-        _nameMap = nameMap;
-        _edited = false;
-      });
-    }).onError<MessageException>((error, stackTrace) {
-        final snackBar = SnackBar(content: Text(error.message));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    setState(() {
+      _graph = graph;
+      _nameMap = nameMap;
+      _edited = false;
     });
   }
 
@@ -278,6 +285,25 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
 
   void _updateAssignedDevices(int orgUnitId) {
     setState(() {
+      _displayedDevices.clear();
+    });
+
+    List<PreviewDeviceInfo> displayedDevices = [];
+
+    if(_deviceRelations.containsKey(orgUnitId)) {
+      displayedDevices.addAll(_deviceRelations[orgUnitId]);
+    }
+
+    if(orgUnitId != null) {
+      for(var node in _graph.successorsOf(_graph.getNodeUsingId(orgUnitId))) {
+        if(_deviceRelations.containsKey(node.key.value)) {
+          displayedDevices.addAll(_deviceRelations[node.key.value]);
+        }
+      }
+    }
+
+    setState(() {
+      _displayedDevices = displayedDevices;
       _selectedDepartment = orgUnitId;
     });
   }
@@ -374,9 +400,9 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                             child: ListView.separated(
                               controller: _scrollController,
                               padding: const EdgeInsets.all(3),
-                              itemCount: _deviceRelations[_selectedDepartment] != null ? _deviceRelations[_selectedDepartment].length : 0,
+                              itemCount: _displayedDevices.length,
                               itemBuilder: (BuildContext context, int index) {
-                                PreviewDeviceInfo deviceInfo = _deviceRelations[_selectedDepartment][index];
+                                PreviewDeviceInfo deviceInfo = _displayedDevices[index];
                                 HospitalDevice device = deviceInfo.device;
 
                                 return Draggable<ListTile>(
