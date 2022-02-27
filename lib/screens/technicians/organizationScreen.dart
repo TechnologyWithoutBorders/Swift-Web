@@ -22,13 +22,19 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   Map<int, String> _nameMap = Map();
   bool _edited = false;
 
-  int _selectedDepartment;
-  List<PreviewDeviceInfo> _assignedDevices = [];
+  int _selectedDepartment = 1;
+  List<PreviewDeviceInfo> _devices = [];
   final _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+
+    Comm.searchDevices(null, null, _selectedDepartment).then((devices) {
+      setState(() {
+        _devices = devices;
+      });
+    });
 
     _reset();
   }
@@ -247,14 +253,8 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   }
 
   void _updateAssignedDevices(int orgUnitId) {
-    Comm.searchDevices(null, null, orgUnitId).then((devices) {
-      setState(() {
-        _selectedDepartment = orgUnitId;
-        _assignedDevices = devices;
-      });
-    }).onError<MessageException>((error, stackTrace) {
-        final snackBar = SnackBar(content: Text(error.message));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    setState(() {
+      _selectedDepartment = orgUnitId;
     });
   }
 
@@ -350,9 +350,9 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                             child: ListView.separated(
                               controller: _scrollController,
                               padding: const EdgeInsets.all(3),
-                              itemCount: _assignedDevices.length,
+                              itemCount: _devices.length,
                               itemBuilder: (BuildContext context, int index) {
-                                PreviewDeviceInfo deviceInfo = _assignedDevices[index];
+                                PreviewDeviceInfo deviceInfo = _devices[index];
                                 HospitalDevice device = deviceInfo.device;
 
                                 return Draggable<ListTile>(
