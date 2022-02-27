@@ -319,6 +319,9 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                       )
                                     );
                                   },
+                                  onWillAccept: (item) {
+                                    return item is Node;
+                                  },
                                   onAccept: (item) {
                                     if(item.key.value != 1 && item.key.value != node.key.value) {
                                       _reOrganizeUnit(item.key.value, node.key.value);
