@@ -310,6 +310,20 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     });
   }
 
+  List<PreviewDeviceInfo> _getAllSuccessingDevices(List<Node> successors) {
+    List<PreviewDeviceInfo> devices = [];
+
+    for(var succ in successors) {
+        if(_deviceRelations.containsKey(succ.key.value)) {
+          devices.addAll(_deviceRelations[succ.key.value]);
+        }
+
+        devices.addAll(_getAllSuccessingDevices(_graph.successorsOf(succ)));
+      }
+
+    return devices;
+  }
+
   void _updateAssignedDevices(int orgUnitId) {
     setState(() {
       _displayedDevices.clear();
@@ -322,11 +336,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     }
 
     if(orgUnitId != null) {
-      for(var node in _graph.successorsOf(_graph.getNodeUsingId(orgUnitId))) {
-        if(_deviceRelations.containsKey(node.key.value)) {
-          displayedDevices.addAll(_deviceRelations[node.key.value]);
-        }
-      }
+      displayedDevices.addAll(_getAllSuccessingDevices(_graph.successorsOf(_graph.getNodeUsingId(orgUnitId))));
     }
 
     setState(() {
