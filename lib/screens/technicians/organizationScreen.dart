@@ -337,7 +337,9 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                   Expanded(
                     child: Column(
                       children: [
-                        _selectedDepartment != null ? Text(_nameMap[_selectedDepartment], style: TextStyle(fontSize: 25)) : Text(""),
+                        ElevatedButton(onPressed: () => _updateAssignedDevices(null), child: Text("Show unassigned devices")),
+                        SizedBox(height: 10),
+                        Text(_selectedDepartment != null ? _nameMap[_selectedDepartment] : "Unassigned devices", style: TextStyle(fontSize: 25)),
                         Flexible(
                           child: Scrollbar(
                             controller: _scrollController,
