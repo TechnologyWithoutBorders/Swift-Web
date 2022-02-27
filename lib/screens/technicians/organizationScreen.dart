@@ -31,31 +31,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   void initState() {
     super.initState();
 
-    initData();
-  }
-
-  Future<void> initData() async {
-    await _reset();
-
-    List<PreviewDeviceInfo> devices = await Comm.searchDevices(null, null, 1);
-
-    Map<int, List<PreviewDeviceInfo>> deviceRelations = Map();
-
-    for(PreviewDeviceInfo deviceInfo in devices) {
-      HospitalDevice device = deviceInfo.device;
-
-      if(deviceRelations.containsKey(device.orgUnitId)) {
-        deviceRelations[device.orgUnitId].add(deviceInfo);
-      } else {
-        deviceRelations[device.orgUnitId] = [deviceInfo];
-      }
-    }
-
-    setState(() {
-      _deviceRelations = deviceRelations;
-    });
-
-    _updateAssignedDevices(null);
+    _reset();
   }
 
   void _reOrganizeUnit(int id, int parentId) {
@@ -244,6 +220,26 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
       _nameMap = nameMap;
       _edited = false;
     });
+
+    List<PreviewDeviceInfo> devices = await Comm.searchDevices(null, null, 1);
+
+    Map<int, List<PreviewDeviceInfo>> deviceRelations = Map();
+
+    for(PreviewDeviceInfo deviceInfo in devices) {
+      HospitalDevice device = deviceInfo.device;
+
+      if(deviceRelations.containsKey(device.orgUnitId)) {
+        deviceRelations[device.orgUnitId].add(deviceInfo);
+      } else {
+        deviceRelations[device.orgUnitId] = [deviceInfo];
+      }
+    }
+
+    setState(() {
+      _deviceRelations = deviceRelations;
+    });
+
+    _updateAssignedDevices(null);
   }
 
   void _save() {
