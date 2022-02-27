@@ -100,7 +100,6 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
 
                     Node node = Node.Id(newId);
 
-                    //TODO: magic
                     setState(() {
                       _graph.addNode(node);
                       _graph.addEdge(_graph.getNodeUsingId(parent), node);
