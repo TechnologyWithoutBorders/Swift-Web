@@ -330,19 +330,23 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                       children: [
                         _selectedDepartment != null ? Text(_nameMap[_selectedDepartment], style: TextStyle(fontSize: 25)) : Text(""),
                         Flexible(
-                          child: ListView.separated(
+                          child: Scrollbar(
                             controller: _scrollController,
-                            padding: const EdgeInsets.all(3),
-                            itemCount: _assignedDevices.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              HospitalDevice device = _assignedDevices[index].device;
+                            isAlwaysShown: true,
+                            child: ListView.separated(
+                              controller: _scrollController,
+                              padding: const EdgeInsets.all(3),
+                              itemCount: _assignedDevices.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                HospitalDevice device = _assignedDevices[index].device;
 
-                              return ListTile(
-                                title: Text(device.type),
-                                subtitle: Text(device.manufacturer + " " + device.model),
-                              );
-                            },
-                            separatorBuilder: (BuildContext context, int index) => const Divider(),
+                                return ListTile(
+                                  title: Text(device.type),
+                                  subtitle: Text(device.manufacturer + " " + device.model),
+                                );
+                              },
+                              separatorBuilder: (BuildContext context, int index) => const Divider(),
+                            )
                           )
                         ),
                       ]
