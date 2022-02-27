@@ -21,6 +21,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   bool _edited = false;
 
   List<PreviewDeviceInfo> _assignedDevices = [];
+  final _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -265,7 +266,6 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
             child: Padding(
               padding: EdgeInsets.all(25.0),
               child: Row(
-                //mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
                     flex: 3,
@@ -325,6 +325,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                   ),
                   Expanded(
                     child: ListView.separated(
+                      controller: _scrollController,
                       padding: const EdgeInsets.all(3),
                       itemCount: _assignedDevices.length,
                       itemBuilder: (BuildContext context, int index) {
