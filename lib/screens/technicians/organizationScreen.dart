@@ -6,6 +6,7 @@ import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/organizationalRelation.dart';
 import 'package:teog_swift/utilities/organizationalUnit.dart';
 import 'package:teog_swift/utilities/messageException.dart';
+import 'package:teog_swift/utilities/previewDeviceInfo.dart';
 
 class OrganizationScreen extends StatefulWidget {
   OrganizationScreen({Key key}) : super(key: key);
@@ -19,7 +20,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   Map<int, String> _nameMap = Map();
   bool _edited = false;
 
-  List<HospitalDevice> _assignedDevices = [];
+  List<PreviewDeviceInfo> _assignedDevices = [];
 
   @override
   void initState() {
@@ -241,6 +242,17 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     });
   }
 
+  void _updateAssignedDevices(int orgUnitId) {
+    Comm.searchDevices(null, null, orgUnitId).then((devices) {
+      setState(() {
+        _assignedDevices = devices;
+      });
+    }).onError<MessageException>((error, stackTrace) {
+        final snackBar = SnackBar(content: Text(error.message));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     BuchheimWalkerConfiguration builder = BuchheimWalkerConfiguration();
@@ -253,15 +265,15 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
             child: Padding(
               padding: EdgeInsets.all(25.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                //mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Flexible(
+                  Expanded(
                     flex: 3,
                     child: _graph.nodeCount() > 0 ? SingleChildScrollView(
                       child: Column(
                         children: [
                           ButtonBar(
-                            mainAxisSize: MainAxisSize.min,
+                            alignment: MainAxisAlignment.center,
                             children: [
                               ElevatedButton(child: Text("Save"), onPressed: !_edited ? null : () => _save()),
                               ElevatedButton(child: Text("Reset"), onPressed: !_edited ? null : () => _reset())
@@ -284,7 +296,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          TextButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)), onPressed: () => {}),
+                                          TextButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)), onPressed: () => _updateAssignedDevices(id)),
                                           ButtonBar(
                                             mainAxisSize: MainAxisSize.min,
                                             buttonPadding: EdgeInsets.zero,
@@ -311,12 +323,12 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                       )
                     ) : Center(child: Text("loading departments...")),
                   ),
-                  Flexible(
+                  Expanded(
                     child: ListView.separated(
                       padding: const EdgeInsets.all(3),
                       itemCount: _assignedDevices.length,
                       itemBuilder: (BuildContext context, int index) {
-                        HospitalDevice device = _assignedDevices[index];
+                        HospitalDevice device = _assignedDevices[index].device;
 
                         return ListTile(
                           /*leading: Container(width: 30, height: 30, color: DeviceState.getColor(report.currentState),
