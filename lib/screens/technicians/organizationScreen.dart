@@ -55,14 +55,18 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   void _assignDevice(PreviewDeviceInfo deviceInfo, int orgUnitId) {
     setState(() {
       _deviceRelations[deviceInfo.device.orgUnitId].remove(deviceInfo);
+
       if(_deviceRelations.containsKey(orgUnitId)) {
         _deviceRelations[orgUnitId].add(deviceInfo);
       } else {
         _deviceRelations[orgUnitId] = [deviceInfo];
       }
+
       deviceInfo.device.orgUnitId = orgUnitId;
       deviceInfo.device.orgUnit = _nameMap[orgUnitId];
+
       _edited = true;
+      
       _updateAssignedDevices(_selectedDepartment);
     });
   }
