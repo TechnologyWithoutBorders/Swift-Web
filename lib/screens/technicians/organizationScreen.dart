@@ -20,6 +20,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   Map<int, String> _nameMap = Map();
   bool _edited = false;
 
+  int _selectedDepartment;
   List<PreviewDeviceInfo> _assignedDevices = [];
   final _scrollController = ScrollController();
 
@@ -246,6 +247,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   void _updateAssignedDevices(int orgUnitId) {
     Comm.searchDevices(null, null, orgUnitId).then((devices) {
       setState(() {
+        _selectedDepartment = orgUnitId;
         _assignedDevices = devices;
       });
     }).onError<MessageException>((error, stackTrace) {
@@ -324,20 +326,27 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                     ) : Center(child: Text("loading departments...")),
                   ),
                   Expanded(
-                    child: ListView.separated(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.all(3),
-                      itemCount: _assignedDevices.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        HospitalDevice device = _assignedDevices[index].device;
+                    child: Column(
+                      children: [
+                        _selectedDepartment != null ? Text(_nameMap[_selectedDepartment], style: TextStyle(fontSize: 25)) : Text(""),
+                        Flexible(
+                          child: ListView.separated(
+                            controller: _scrollController,
+                            padding: const EdgeInsets.all(3),
+                            itemCount: _assignedDevices.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              HospitalDevice device = _assignedDevices[index].device;
 
-                        return ListTile(
-                          title: Text(device.type),
-                          subtitle: Text(device.manufacturer + " " + device.model),
-                        );
-                      },
-                      separatorBuilder: (BuildContext context, int index) => const Divider(),
-                    ),
+                              return ListTile(
+                                title: Text(device.type),
+                                subtitle: Text(device.manufacturer + " " + device.model),
+                              );
+                            },
+                            separatorBuilder: (BuildContext context, int index) => const Divider(),
+                          )
+                        ),
+                      ]
+                    )
                   ),
                 ]
               )
