@@ -259,7 +259,9 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     List<DeviceRelation> deviceRelations = [];
 
     for(var entry in _deviceRelations.entries) {
-      //TODO: deviceRelations.add(DeviceRelation(deviceId: entry.key, orgUnitId: entry.value));
+      for(var deviceInfo in entry.value) {
+        deviceRelations.add(DeviceRelation(deviceId: deviceInfo.device.id, orgUnitId: entry.key));
+      }
     }
 
     Comm.updateOrganizationalInfo(orgUnits, orgRelations, deviceRelations).then((success) {
