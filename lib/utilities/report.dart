@@ -7,7 +7,7 @@ class Report {
   factory Report.fromJson(Map<String, dynamic> json) {
     return Report(
       currentState: json['currentState'],
-      created: DateTime.parse(json['created']),//TODO UTC->local
+      created: DateTime.parse(json['created'] + 'Z'),
     );
   }
 }
