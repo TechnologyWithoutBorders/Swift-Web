@@ -268,7 +268,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
               child: Row(
                 children: [
                   Expanded(
-                    flex: 3,
+                    flex: 4,
                     child: _graph.nodeCount() > 0 ? SingleChildScrollView(
                       child: Column(
                         children: [
@@ -332,17 +332,8 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                         HospitalDevice device = _assignedDevices[index].device;
 
                         return ListTile(
-                          /*leading: Container(width: 30, height: 30, color: DeviceState.getColor(report.currentState),
-                            child: Padding(padding: EdgeInsets.all(3.0),
-                              child: Row(children: [
-                                  Icon(DeviceState.getIconData(report.currentState))
-                                ]
-                              )
-                            )
-                          ),*/
                           title: Text(device.type),
                           subtitle: Text(device.manufacturer + " " + device.model),
-                          trailing: device.orgUnit != null ? Text(device.orgUnit) : null,
                         );
                       },
                       separatorBuilder: (BuildContext context, int index) => const Divider(),
