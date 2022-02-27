@@ -66,7 +66,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
       deviceInfo.device.orgUnit = _nameMap[orgUnitId];
 
       _edited = true;
-      
+
       _updateAssignedDevices(_selectedDepartment);
     });
   }
@@ -202,7 +202,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                       }
                     }
 
-                    _graph.removeNodes(successors);
+                    _graph.removeNodes(successors);//TODO: only direct successors are affected!
                     _graph.removeNode(node);
                     _nameMap.remove(id);
                     _edited = true;
