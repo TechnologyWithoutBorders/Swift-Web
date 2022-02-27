@@ -566,7 +566,7 @@ Future<OrganizationalInfo> getOrganizationalInfo() async {
   }
 }
 
-Future<bool> updateOrganizationalInfo(List<OrganizationalUnit> orgUnits, List<OrganizationalRelation> orgRelations, List<DeviceRelation> modifiedDeviceRelations) async {
+Future<bool> updateOrganizationalInfo(List<OrganizationalUnit> orgUnits, List<OrganizationalRelation> orgRelations, List<DeviceRelation> deviceRelations) async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
   final Map<String, dynamic> orgInfo = Map();

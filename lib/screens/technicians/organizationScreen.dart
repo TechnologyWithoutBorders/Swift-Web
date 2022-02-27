@@ -23,8 +23,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   bool _edited = false;
 
   int _selectedDepartment;
-  List<PreviewDeviceInfo> _devices = [];
-  List<DeviceRelation> _modifiedDeviceRelations = [];
+  Map<int, List<PreviewDeviceInfo>> _deviceRelations = Map();
   final _scrollController = ScrollController();
 
   @override
@@ -33,7 +32,15 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
 
     Comm.searchDevices(null, null, 1).then((devices) {
       setState(() {
-        _devices = devices;
+        for(PreviewDeviceInfo deviceInfo in devices) {
+          HospitalDevice device = deviceInfo.device;
+
+          if(_deviceRelations.containsKey(device.orgUnitId)) {
+            _deviceRelations[device.orgUnitId].add(deviceInfo);
+          } else {
+            _deviceRelations[device.orgUnitId] = [deviceInfo];
+          }
+        }
       });
     });
 
@@ -117,7 +124,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     );
   }
 
-  void _editUnit(int id) {
+  void _renameUnit(int id) {
     TextEditingController nameChanger = TextEditingController(text: _nameMap[id]);
     
     showDialog<String>(
@@ -181,6 +188,15 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                   List<Node> successors = _graph.successorsOf(node);
 
                   setState(() {
+                    for(var node in successors) {
+                      int removedUnitId = node.key.value;
+
+                      if(_deviceRelations.containsKey(removedUnitId)) {
+                        //put removed devices to unassigned devices
+                        _deviceRelations[null].addAll(_deviceRelations.remove(removedUnitId));
+                      }
+                    }
+
                     _graph.removeNodes(successors);
                     _graph.removeNode(node);
                     _nameMap.remove(id);
@@ -240,7 +256,13 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
       orgRelations.add(OrganizationalRelation(id: id, parent: parent));
     }
 
-    Comm.updateOrganizationalInfo(orgUnits, orgRelations, _modifiedDeviceRelations).then((success) {
+    List<DeviceRelation> deviceRelations = [];
+
+    for(var entry in _deviceRelations.entries) {
+      //TODO: deviceRelations.add(DeviceRelation(deviceId: entry.key, orgUnitId: entry.value));
+    }
+
+    Comm.updateOrganizationalInfo(orgUnits, orgRelations, deviceRelations).then((success) {
       if(success) {
         setState(() {
           _edited = false;
@@ -312,7 +334,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                             buttonPadding: EdgeInsets.zero,
                                             children: [
                                               id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key.value)) : null,
-                                              id != 1 ? TextButton(child: Icon(Icons.edit), onPressed: ()=> _editUnit(node.key.value)) : null,
+                                              id != 1 ? TextButton(child: Icon(Icons.edit), onPressed: ()=> _renameUnit(node.key.value)) : null,
                                               TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key.value))
                                           ],)
                                         ]
@@ -350,9 +372,9 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                             child: ListView.separated(
                               controller: _scrollController,
                               padding: const EdgeInsets.all(3),
-                              itemCount: _devices.length,
+                              itemCount: _deviceRelations[_selectedDepartment] != null ? _deviceRelations[_selectedDepartment].length : 0,
                               itemBuilder: (BuildContext context, int index) {
-                                PreviewDeviceInfo deviceInfo = _devices[index];
+                                PreviewDeviceInfo deviceInfo = _deviceRelations[_selectedDepartment][index];
                                 HospitalDevice device = deviceInfo.device;
 
                                 return Draggable<ListTile>(
