@@ -52,8 +52,13 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     }
   }
 
+  void _assignDevice(int deviceId, int orgUnitId) {
+    setState(() {
+      _edited = true;//TODO: assign device
+    });
+  }
+
   void _addUnit(int parent) {
-    //TODO: should those be disposed?
     TextEditingController nameController = TextEditingController();
 
     showDialog<String>(
@@ -336,10 +341,10 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                             builder: (Node node) {
                               int id = node.key.value;
 
-                              return Draggable<Node>(
-                                data: node,
+                              return Draggable<Relation>(
+                                data: Relation(type: Relation.org_unit, childId: id),
                                 feedback: Card(color: Colors.grey[100], child: Padding(padding: EdgeInsets.all(15), child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)))),
-                                child: DragTarget<Node>(
+                                child: DragTarget<Relation>(
                                   builder: (context, candidateItems, rejectedItems) {
                                     return Card(
                                       shape: id != _selectedDepartment ? RoundedRectangleBorder(
@@ -366,11 +371,13 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                     );
                                   },
                                   onWillAccept: (item) {
-                                    return item is Node;
+                                    return item is Relation && !(item.type == Relation.org_unit && (item.childId == 1 || item.childId == id));
                                   },
-                                  onAccept: (item) {
-                                    if(item.key.value != 1 && item.key.value != node.key.value) {
-                                      _reOrganizeUnit(item.key.value, node.key.value);
+                                  onAccept: (relation) {
+                                    if(relation.type == Relation.org_unit) {
+                                      _reOrganizeUnit(relation.childId, id);
+                                    } else if(relation.type == Relation.device) {
+                                      _assignDevice(relation.childId, id);
                                     }
                                   },
                                 )
@@ -401,7 +408,8 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                 PreviewDeviceInfo deviceInfo = _displayedDevices[index];
                                 HospitalDevice device = deviceInfo.device;
 
-                                return Draggable<ListTile>(
+                                return Draggable<Relation>(
+                                  data: Relation(type: Relation.device, childId: device.id),
                                   feedback: Card(
                                     color: Colors.grey[100],
                                     child: Padding(
@@ -437,4 +445,14 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
       )
     );
   }
+}
+
+class Relation {
+  static const int org_unit = 0;
+  static const int device = 1;
+
+  final int type;
+  final int childId;
+
+  Relation({this.type, this.childId});
 }
