@@ -342,10 +342,25 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                 PreviewDeviceInfo deviceInfo = _assignedDevices[index];
                                 HospitalDevice device = deviceInfo.device;
 
-                                return ListTile(
-                                  leading: deviceInfo.imageData.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData)) : Text("no image"),
-                                  title: Text(device.type),
-                                  subtitle: Text(device.manufacturer + " " + device.model),
+                                return Draggable<ListTile>(
+                                  feedback: Card(
+                                    color: Colors.grey[100],
+                                    child: Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: Row(
+                                        children: [
+                                          deviceInfo.imageData.isNotEmpty ? SizedBox(width: 50, child: Image.memory(base64Decode(deviceInfo.imageData))) : Text(""),
+                                          SizedBox(width: 5,),
+                                          Text(device.type,style: TextStyle(fontSize: 15))
+                                        ]
+                                      )
+                                    )
+                                  ),
+                                  child: ListTile(
+                                    leading: deviceInfo.imageData.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData)) : Text("no image"),
+                                    title: Text(device.type),
+                                    subtitle: Text(device.manufacturer + " " + device.model)
+                                  )
                                 );
                               },
                               separatorBuilder: (BuildContext context, int index) => const Divider(),
