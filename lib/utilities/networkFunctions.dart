@@ -566,7 +566,7 @@ Future<OrganizationalInfo> getOrganizationalInfo() async {
   }
 }
 
-Future<bool> updateOrganizationalInfo(List<OrganizationalUnit> orgUnits, List<OrganizationalRelation> orgRelations) async {
+Future<bool> updateOrganizationalInfo(List<OrganizationalUnit> orgUnits, List<OrganizationalRelation> orgRelations, List<DeviceRelation> deviceRelations) async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
   final Map<String, dynamic> orgInfo = Map();
@@ -631,12 +631,5 @@ Future<Map<String, dynamic>> _generateParameterMap({final String action = "", fi
   });
 
   return parameterMap;
-}
-
-class OrganizationalInfo {
-  final List<OrganizationalUnit> units;
-  final List<OrganizationalRelation> relations;
-
-  OrganizationalInfo({this.units, this.relations});
 }
   

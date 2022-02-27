@@ -3,8 +3,8 @@ class HospitalDevice {
   final String type;
   final String manufacturer;
   final String model;
-  final int orgUnitId;
-  final String orgUnit;
+  int orgUnitId;
+  String orgUnit;
   final int maintenanceInterval;
 
   HospitalDevice({this.id, this.type, this.manufacturer, this.model, this.orgUnitId, this.orgUnit, this.maintenanceInterval});

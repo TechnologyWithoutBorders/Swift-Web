@@ -1,3 +1,5 @@
+import 'package:teog_swift/utilities/organizationalRelation.dart';
+
 class OrganizationalUnit {
   final int id;
   final String name;
@@ -15,4 +17,11 @@ class OrganizationalUnit {
     'id': id,
     'name': name,
   };
+}
+
+class OrganizationalInfo {
+  final List<OrganizationalUnit> units;
+  final List<OrganizationalRelation> relations;
+
+  OrganizationalInfo({this.units, this.relations});
 }
