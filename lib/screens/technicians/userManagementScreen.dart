@@ -59,6 +59,9 @@ class _DetailScreenState extends State<UserManagementScreen> {
                       setState(() {
                         _users = users;
                       });
+                    }).onError<MessageException>((error, stackTrace) {
+                      final snackBar = SnackBar(content: Text(error.message));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     });
                   }
 
