@@ -477,6 +477,8 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                             )
                           )
                         ),
+                        SizedBox(height: 15),
+                        Text("Drag and drop the devices onto the departments in order to assign them.")
                       ]
                     )
                   ),
