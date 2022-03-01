@@ -187,7 +187,7 @@ Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, 
     uri,
     headers: _headers,
     body: jsonEncode(await _generateParameterMap(action: DataAction.searchDevices, authentication: true,
-        additional: <String, dynamic> {'type': type, 'manufacturer': manufacturer, 'orgUnits': jsonEncode(orgUnits)})
+        additional: <String, dynamic> {'type': type, 'manufacturer': manufacturer, 'orgUnits': orgUnits})
     ),
   );
 
