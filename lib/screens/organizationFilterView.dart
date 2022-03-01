@@ -50,6 +50,17 @@ class _OrganizationFilterViewState extends State<OrganizationFilterView> {
     });
   }
 
+  List<Node> _getAllSuccessingNodes(List<Node> nodes) {
+    List<Node> successors = [];
+
+    for(var succ in nodes) {
+      successors.addAll(_graph.successorsOf(succ));
+      successors.addAll(_getAllSuccessingNodes(_graph.successorsOf(succ)));
+    }
+
+    return successors;
+  }
+
   @override
   Widget build(BuildContext context) {
     BuchheimWalkerConfiguration builder = BuchheimWalkerConfiguration();
@@ -72,13 +83,17 @@ class _OrganizationFilterViewState extends State<OrganizationFilterView> {
                       child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: widget.orgUnit == null || widget.orgUnit.id != id ? Colors.black : Colors.white, fontWeight: FontWeight.bold)),
                       onPressed: () {
                         //return this unit and all child units
-                        List<int> successors = [];
+                        List<Node> successors = _getAllSuccessingNodes([node]);
 
-                        for(var node in _graph.successorsOf(node)) {
-                          successors.add(node.key.value);
+                        List<int> orgUnitIds = [];
+
+                        for(var node in successors) {
+                          orgUnitIds.add(node.key.value);
                         }
 
-                        Navigator.pop(context, DepartmentFilter(OrganizationalUnit(id: id, name: _nameMap[id]), successors));
+                        print(orgUnitIds.length);
+
+                        Navigator.pop(context, DepartmentFilter(OrganizationalUnit(id: id, name: _nameMap[id]), orgUnitIds));
                       }
                     ),
                   );
