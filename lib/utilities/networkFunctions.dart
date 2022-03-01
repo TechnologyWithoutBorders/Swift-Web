@@ -178,7 +178,7 @@ Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, 
 
   if(filter != null) {
     orgUnits = [filter.parent.id];
-  orgUnits.addAll(filter.successors);
+    orgUnits.addAll(filter.successors);
   } else {
     orgUnits = null;
   }
