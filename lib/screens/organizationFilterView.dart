@@ -91,8 +91,6 @@ class _OrganizationFilterViewState extends State<OrganizationFilterView> {
                           orgUnitIds.add(node.key.value);
                         }
 
-                        print(orgUnitIds.length);
-
                         Navigator.pop(context, DepartmentFilter(OrganizationalUnit(id: id, name: _nameMap[id]), orgUnitIds));
                       }
                     ),
