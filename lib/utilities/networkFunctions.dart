@@ -183,8 +183,6 @@ Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, 
     orgUnits = null;
   }
 
-  print(jsonEncode(orgUnits));
-
   final response = await http.post(
     uri,
     headers: _headers,
