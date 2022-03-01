@@ -252,7 +252,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
       _edited = false;
     });
 
-    List<PreviewDeviceInfo> devices = await Comm.searchDevices(null, null, 1);
+    List<PreviewDeviceInfo> devices = await Comm.searchDevices(null, null);
 
     Map<int, List<PreviewDeviceInfo>> deviceRelations = Map();
 

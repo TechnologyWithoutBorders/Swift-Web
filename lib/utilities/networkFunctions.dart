@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
+import 'package:teog_swift/screens/organizationFilterView.dart';
 import 'package:teog_swift/utilities/country.dart';
 import 'package:teog_swift/utilities/dataAction.dart';
 import 'package:teog_swift/utilities/deviceInfo.dart';
@@ -170,14 +171,25 @@ Future<DeviceInfo> editDevice(HospitalDevice device) async {
   }
 }
 
-Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, int orgUnitId) async {
+Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, {DepartmentFilter filter}) async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+
+  List<int> orgUnits;
+
+  if(filter != null) {
+    orgUnits = [filter.parent.id];
+  orgUnits.addAll(filter.successors);
+  } else {
+    orgUnits = null;
+  }
+
+  print(jsonEncode(orgUnits));
 
   final response = await http.post(
     uri,
     headers: _headers,
     body: jsonEncode(await _generateParameterMap(action: DataAction.searchDevices, authentication: true,
-        additional: <String, dynamic> {'type': type, 'manufacturer': manufacturer, 'orgUnitId': orgUnitId,})
+        additional: <String, dynamic> {'type': type, 'manufacturer': manufacturer, 'orgUnits': jsonEncode(orgUnits)})
     ),
   );
 

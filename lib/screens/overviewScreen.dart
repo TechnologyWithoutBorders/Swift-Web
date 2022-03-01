@@ -197,7 +197,7 @@ class _FilterFormState extends State<FilterForm> {
         _loading = true;
       });
 
-      Comm.searchDevices(_typeController.text, _manufacturerController.text, _departmentFilter != null ? _departmentFilter.parent.id : null).then((devices) {
+      Comm.searchDevices(_typeController.text, _manufacturerController.text, filter: _departmentFilter).then((devices) {
         setState(() {
           _filteredDevices = devices;
           _loading = false;
