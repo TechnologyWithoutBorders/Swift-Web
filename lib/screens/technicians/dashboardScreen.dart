@@ -247,11 +247,11 @@ class _DetailScreenState extends State<DashboardScreen> {
                             ),
                           ),
                         )),
-                        SizedBox(height: 15),
+                        /*SizedBox(height: 15),
                         ElevatedButton(
                           onPressed: () => _registerDevice(),
                           child: Text("Register new device")
-                        )
+                        )*/
                       ]
                     )
                   )
