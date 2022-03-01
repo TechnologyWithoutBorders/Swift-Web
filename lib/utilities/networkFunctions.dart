@@ -581,8 +581,14 @@ Future<bool> updateOrganizationalInfo(List<OrganizationalUnit> orgUnits, List<Or
     orgRelationList.add(orgRelation.toJson());
   }
 
+  List<Map<String, dynamic>> deviceRelationList = [];
+  for(var deviceRelation in deviceRelations) {
+    deviceRelationList.add(deviceRelation.toJson());
+  }
+
   orgInfo['orgUnits'] = orgUnitList;
   orgInfo['orgRelations'] = orgRelationList;
+  orgInfo['deviceRelations'] = deviceRelationList;
 
   final response = await http.post(
     uri,
