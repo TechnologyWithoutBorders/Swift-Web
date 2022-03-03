@@ -408,7 +408,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                   },
                                   onWillAccept: (item) {
                                     if(item is Node) {
-                                      return !(node.key.value == 1 || node.key.value == id);
+                                      return !(item.key.value == 1 || item.key.value == id);
                                     } else if(item is PreviewDeviceInfo) {
                                       return true;
                                     } else {
