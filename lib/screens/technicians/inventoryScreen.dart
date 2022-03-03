@@ -19,10 +19,9 @@ class InventoryScreen extends StatefulWidget {
 class _InventoryScreenState extends State<InventoryScreen> {
   final _scrollController = ScrollController();
   double _progress = 0;
-  Color _colorManual = Colors.blueGrey;
-  Color _colorAll = Color(Constants.teog_blue);
 
   List<ShortDeviceInfo> _devices = [];
+  List<ShortDeviceInfo> _assignedDevices = [];
   List<ShortDeviceInfo> _preFilteredDevices = [];
   List<ShortDeviceInfo> _displayedDevices = [];
 
@@ -40,37 +39,56 @@ class _InventoryScreenState extends State<InventoryScreen> {
   void initState() {
     super.initState();
 
-    _showAllDevices();
+    _initDevices();
+  }
+
+  Future<void> _initDevices() async {
+    List<ShortDeviceInfo> devices = await Comm.getDevices();//TODO: catch Exception
+    List<ShortDeviceInfo> assignedDevices = [];
+    assignedDevices.addAll(devices);
+    List<ShortDeviceInfo> prefilteredDevices = [];
+    prefilteredDevices.addAll(assignedDevices);
+    List<ShortDeviceInfo> displayedDevices = [];
+    displayedDevices.addAll(prefilteredDevices);
+    
+    setState(() {
+      _devices = devices;
+      _assignedDevices = assignedDevices;
+      _preFilteredDevices = prefilteredDevices;
+      _displayedDevices = displayedDevices;
+      _filterTextController.clear();
+      _filterType = filterNone;
+    });
   }
 
   Future<void> _showAllDevices() async {
-    List<ShortDeviceInfo> devices = await Comm.getDevices();//TODO: catch Exception
-    
+    List<ShortDeviceInfo> prefilteredDevices = [];
+    List<ShortDeviceInfo> displayedDevices = [];
+
+    prefilteredDevices.addAll(_assignedDevices);
+    displayedDevices.addAll(prefilteredDevices);
+
     setState(() {
       _filterTextController.clear();
       _filterType = filterNone;
-      _devices = devices;
-      _preFilteredDevices = List.from(_devices);
-      _displayedDevices = List.from(_devices);
-      _colorManual = Colors.blueGrey;
-      _colorAll = Color(Constants.teog_blue);
+      _preFilteredDevices = prefilteredDevices;
+      _displayedDevices = displayedDevices;
     });
   }
 
   void _checkManuals() async {
     setState(() {
       _manualButtonDisabled = true;
-      _filterTextController.clear();
-      _filterType = filterMissingManuals;
+
       _preFilteredDevices.clear();
       _displayedDevices.clear();
-      _colorManual = Color(Constants.teog_blue);
-      _colorAll = Colors.blueGrey;
+      _filterTextController.clear();
+      _filterType = filterMissingManuals;
     });
 
     int counter = 0;
 
-    for(ShortDeviceInfo deviceInfo in _devices) {
+    for(ShortDeviceInfo deviceInfo in _assignedDevices) {
       try {
         List<String> documents = await Comm.retrieveDocuments(deviceInfo.device.manufacturer, deviceInfo.device.model);
 
@@ -90,7 +108,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
       counter++;
 
       setState(() {
-        _progress = counter/_devices.length;
+        _progress = counter/_assignedDevices.length;
       });
     }
 
@@ -106,24 +124,33 @@ class _InventoryScreenState extends State<InventoryScreen> {
         return OrganizationFilterView(orgUnit: _departmentFilter != null ? _departmentFilter.parent : null);
       }
     ).then((departmentFilter) {
-      setState(() {
-        _departmentFilter = departmentFilter;
-        _filterTextController.clear();//TODO: this stuff here has to be in sync with the filter templates
-        _filterType = filterNone;
-        _preFilteredDevices.clear();
-        _displayedDevices.clear();
-        _colorManual = Colors.blueGrey;
-        _colorAll = Color(Constants.teog_blue);
-      });
+      List<ShortDeviceInfo> assignedDevices = [];
+      List<ShortDeviceInfo> preFilteredDevices = [];
+      List<ShortDeviceInfo> displayedDevices = [];
 
-      for(ShortDeviceInfo deviceInfo in _devices) {
-        if(_departmentFilter.parent.id == deviceInfo.device.orgUnitId || _departmentFilter.successors.contains(deviceInfo.device.orgUnitId)) {
-          _preFilteredDevices.add(deviceInfo);
-          setState(() {
-            _displayedDevices.add(deviceInfo);
-          });
+      if(departmentFilter == null) {
+        assignedDevices.addAll(_devices);
+        preFilteredDevices.addAll(assignedDevices);
+        displayedDevices.addAll(preFilteredDevices);
+      } else {
+        for(ShortDeviceInfo deviceInfo in _devices) {
+          if(departmentFilter.parent.id == deviceInfo.device.orgUnitId || departmentFilter.successors.contains(deviceInfo.device.orgUnitId)) {
+            assignedDevices.add(deviceInfo);
+            preFilteredDevices.add(deviceInfo);
+            displayedDevices.add(deviceInfo);
+          }
         }
       }
+
+      setState(() {
+        _departmentFilter = departmentFilter;
+
+        _assignedDevices = assignedDevices;
+        _preFilteredDevices = preFilteredDevices;
+        _displayedDevices = displayedDevices;
+        _filterTextController.clear();
+        _filterType = filterNone;
+      });
     });
   }
 
@@ -174,7 +201,24 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         iconSize: 25,
                         icon: Icon(Icons.cancel_outlined, color: Colors.red[700]),
                         tooltip: "clear selection",
-                        onPressed: () => setState(() => { _departmentFilter = null }), 
+                        onPressed: () {
+                          List<ShortDeviceInfo> assignedDevices = [];
+                          List<ShortDeviceInfo> preFilteredDevices = [];
+                          List<ShortDeviceInfo> displayedDevices = [];
+
+                          assignedDevices.addAll(_devices);
+                          preFilteredDevices.addAll(assignedDevices);
+                          displayedDevices.addAll(preFilteredDevices);
+                          
+                          setState(() {
+                            _departmentFilter = null;
+                            _assignedDevices = assignedDevices;
+                            _preFilteredDevices = preFilteredDevices;
+                            _displayedDevices = displayedDevices;
+                            _filterTextController.clear();
+                            _filterType = filterNone;
+                          });
+                        }, 
                       ): null,
                       OutlinedButton(onPressed: () => _filterDepartment(), child: Text("select department...")),
                     ]
@@ -186,12 +230,12 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       ElevatedButton(
                         child: Text("All"),
                         onPressed: _manualButtonDisabled ? null : () => _showAllDevices(),
-                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_colorAll) )
+                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterType == filterNone ? Color(Constants.teog_blue) : Colors.blueGrey))
                       ),
                       ElevatedButton(
                         child: Text("No manual attached"),
                         onPressed: _manualButtonDisabled ? null : () => _checkManuals(),
-                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_colorManual) ),
+                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterType == filterMissingManuals ? Color(Constants.teog_blue) : Colors.blueGrey))
                       ),
                     ],
                   ),
