@@ -435,7 +435,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                   Expanded(
                     child: Column(
                       children: [
-                        ElevatedButton(onPressed: () => _updateAssignedDevices(null), child: Text("Show unassigned devices")),
+                        _selectedDepartment != null ? ElevatedButton(onPressed: () => _updateAssignedDevices(null), child: Text("Show unassigned devices")) : SizedBox(height: 0),
                         SizedBox(height: 10),
                         Text(_selectedDepartment != null && _nameMap[_selectedDepartment] != null ? _nameMap[_selectedDepartment] : "Unassigned devices", style: TextStyle(fontSize: 25)),
                         Flexible(
