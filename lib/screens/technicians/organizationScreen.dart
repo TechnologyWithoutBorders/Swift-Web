@@ -370,7 +370,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                               ElevatedButton(child: Text("Reset"), onPressed: !_edited ? null : () => _reset())
                             ],
                           ),
-                          SizedBox(height: 15),
+                          SizedBox(height: 10),
                           GraphView(
                             graph: _graph,
                             algorithm: BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
