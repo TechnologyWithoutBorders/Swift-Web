@@ -279,7 +279,7 @@ class _FilterFormState extends State<FilterForm> {
           SizedBox(height: 10),
           _loading ? CircularProgressIndicator() : ElevatedButton(
             onPressed: () => _processInput(),
-            child: Text('Filter'),
+            child: Text('Search'),
           ),
           SizedBox(height: 10),
           Text(_filteredDevices.length.toString() + " device(s) match the filter:"),
