@@ -20,6 +20,8 @@ class _OrganizationFilterViewState extends State<OrganizationFilterView> {
   Graph _graph = Graph();
   Map<int, String> _nameMap = Map();
 
+  final _orgScrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -71,32 +73,45 @@ class _OrganizationFilterViewState extends State<OrganizationFilterView> {
           child: Padding(
             padding: EdgeInsets.all(25.0),
             child: _graph.nodeCount() > 0 ? Center(
-              child: GraphView(
-                graph: _graph,
-                algorithm: BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
-                builder: (Node node) {
-                  int id = node.key.value;
+              child: Scrollbar(
+                controller: _orgScrollController,
+                isAlwaysShown: true,
+                child: SingleChildScrollView(
+                  controller: _orgScrollController,
+                  scrollDirection: Axis.horizontal,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GraphView(
+                        graph: _graph,
+                        algorithm: BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
+                        builder: (Node node) {
+                          int id = node.key.value;
 
-                  return Card(
-                    color: widget.orgUnit == null || widget.orgUnit.id != id ? Colors.grey[100] : Color(Constants.teog_blue),
-                    child: TextButton(
-                      child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: widget.orgUnit == null || widget.orgUnit.id != id ? Colors.black : Colors.white, fontWeight: FontWeight.bold)),
-                      onPressed: () {
-                        //return this unit and all child units
-                        List<Node> successors = _getAllSuccessingNodes([node]);
+                          return Card(
+                            color: widget.orgUnit == null || widget.orgUnit.id != id ? Colors.grey[100] : Color(Constants.teog_blue),
+                            child: TextButton(
+                              child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: widget.orgUnit == null || widget.orgUnit.id != id ? Colors.black : Colors.white, fontWeight: FontWeight.bold)),
+                              onPressed: () {
+                                //return this unit and all child units
+                                List<Node> successors = _getAllSuccessingNodes([node]);
 
-                        List<int> orgUnitIds = [];
+                                List<int> orgUnitIds = [];
 
-                        for(var node in successors) {
-                          orgUnitIds.add(node.key.value);
+                                for(var node in successors) {
+                                  orgUnitIds.add(node.key.value);
+                                }
+
+                                Navigator.pop(context, DepartmentFilter(OrganizationalUnit(id: id, name: _nameMap[id]), orgUnitIds));
+                              }
+                            ),
+                          );
                         }
-
-                        Navigator.pop(context, DepartmentFilter(OrganizationalUnit(id: id, name: _nameMap[id]), orgUnitIds));
-                      }
-                    ),
-                  );
-                }
-              ),
+                      ),
+                    ]
+                  )
+                )
+              )
             ) : Center(child: Text("loading departments..."))
           )
         )
