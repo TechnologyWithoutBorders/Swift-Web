@@ -7,6 +7,7 @@ import 'package:teog_swift/screens/organizationFilterView.dart';
 import 'package:teog_swift/utilities/country.dart';
 import 'package:teog_swift/utilities/dataAction.dart';
 import 'package:teog_swift/utilities/deviceInfo.dart';
+import 'package:teog_swift/utilities/deviceState.dart';
 import 'package:teog_swift/utilities/deviceStats.dart';
 import 'package:teog_swift/utilities/organizationalRelation.dart';
 import 'package:teog_swift/utilities/organizationalUnit.dart';
@@ -470,8 +471,8 @@ Future<Report> queueRepair(int deviceId, String title, String problemDescription
   final response = await http.post(
     uri,
     headers: _headers,
-    body: jsonEncode(await _generateParameterMap(action: DataAction.queueRepair, authentication: true,
-        additional: <String, dynamic> {'device_id': deviceId, 'title': title, 'problem_description': problemDescription,}),
+    body: jsonEncode(await _generateParameterMap(action: DataAction.createReport, authentication: true,
+        additional: <String, dynamic> {'device_id': deviceId, 'title': title, 'description': problemDescription, 'current_state': DeviceState.broken}),
     ),
   );
 

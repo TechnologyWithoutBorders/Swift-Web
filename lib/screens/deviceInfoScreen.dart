@@ -224,7 +224,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
 
   Future<bool> _createReport() async {
     if(_formKey.currentState.validate()) {
-      await Comm.queueRepair(479, _reportTitleController.text, _problemTextController.text).then((newReport) {
+      await Comm.queueRepair(widget.deviceInfo.device.id, _reportTitleController.text, _problemTextController.text).then((newReport) {
         widget.updateDeviceInfo(ShortDeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData));
       }).onError((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.toString()));

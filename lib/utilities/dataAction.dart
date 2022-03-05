@@ -8,7 +8,6 @@ class DataAction {
   static const String getDevices = "get_devices";
   static const String getUsers = "get_users";
   static const String createUser = "create_user";
-  static const String queueRepair = "queue_repair";
   static const String getHospitals = "get_hospitals";
   static const String getHospitalInfo = "get_hospital_info";
   static const String getCountries = "get_countries";
