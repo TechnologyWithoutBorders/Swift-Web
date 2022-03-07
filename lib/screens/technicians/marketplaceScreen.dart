@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:teog_swift/utilities/marketplaceDeviceInfo.dart';
+import 'package:teog_swift/utilities/messageException.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/hospitalDevice.dart';
@@ -37,8 +38,8 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           _filteredDevices = devices;
           _loading = false;
         });
-      }).onError((error, stackTrace) {
-        final snackBar = SnackBar(content: Text(error.data));
+      }).onError<MessageException>((error, stackTrace) {
+        final snackBar = SnackBar(content: Text(error.message));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
         
         setState(() {
