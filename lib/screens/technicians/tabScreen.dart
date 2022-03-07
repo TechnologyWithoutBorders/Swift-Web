@@ -9,6 +9,7 @@ import 'package:teog_swift/screens/technicians/inventoryScreen.dart';
 import 'package:teog_swift/screens/technicians/organizationScreen.dart';
 import 'package:teog_swift/screens/technicians/userManagementScreen.dart';
 import 'package:teog_swift/screens/technicians/maintenanceScreen.dart';
+import 'package:teog_swift/screens/technicians/marketplaceScreen.dart';
 
 import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
@@ -128,6 +129,22 @@ class _TabScreenState extends State<TabScreen> {
                   tooltip: "show on map",
                   icon: Icon(Icons.map),
                   onPressed: () => _openMap()
+                ),
+                TextButton(
+                  style: ButtonStyle(
+                    foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
+                      return states.contains(MaterialState.disabled) ? null : Colors.white;
+                    }),
+                  ),
+                  child: Text("Marketplace"),
+                  onPressed: () => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MarketplaceScreen(),
+                      )
+                    )
+                  },
                 )
               ]
             ) : Text("TeoG Swift"),
