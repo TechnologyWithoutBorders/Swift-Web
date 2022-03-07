@@ -113,7 +113,7 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
                               leading: deviceInfo.imageData.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData)) : Text("no image"),
                               title: Text(device.type),
                               subtitle: Text(device.manufacturer + " " + device.model),
-                              trailing: Text(deviceInfo.distance.toString() + " km")
+                              trailing: Text(deviceInfo.location + "\n" + deviceInfo.distance.toString() + " km")
                             );
                           },
                           separatorBuilder: (BuildContext context, int index) => const Divider(),

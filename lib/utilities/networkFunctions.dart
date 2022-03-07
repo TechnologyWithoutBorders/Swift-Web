@@ -236,6 +236,7 @@ Future<List<MarketplaceDeviceInfo>> searchMarketplaceDevices(String type, String
         devices.add(MarketplaceDeviceInfo(
           device: HospitalDevice.fromJson(jsonDevice["device"]),
           imageData: jsonDevice["image"],
+          location: jsonDevice["location"],
           distance: jsonDevice["distance"]
         ));
       }
