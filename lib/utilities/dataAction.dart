@@ -3,6 +3,7 @@ class DataAction {
   static const String fetchDeviceInfo = "fetch_device_info";//TODO: rename
   static const String getDeviceInfo = "get_device_info";
   static const String searchDevices = "search_devices";
+  static const String searchMarketplaceDevices = "get_marketplace_devices";
   static const String getTodoDevices = "get_todo_devices";
   static const String getDeviceStats = "get_device_stats";
   static const String getDevices = "get_devices";

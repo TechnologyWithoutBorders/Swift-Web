@@ -214,6 +214,48 @@ Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, 
   }
 }
 
+Future<List<PreviewDeviceInfo>> searchMarketplaceDevices(String type, String manufacturer, {DepartmentFilter filter}) async {
+  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+
+  List<int> orgUnits;
+
+  if(filter != null) {
+    orgUnits = [filter.parent.id];
+    orgUnits.addAll(filter.successors);
+  } else {
+    orgUnits = null;
+  }
+
+  final response = await http.post(
+    uri,
+    headers: _headers,
+    body: jsonEncode(await _generateParameterMap(action: DataAction.searchMarketplaceDevices, authentication: true,
+        additional: <String, dynamic> {'type': type, 'manufacturer': manufacturer})
+    ),
+  );
+
+  if(response.statusCode == 200) {
+    SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
+    
+    if(swiftResponse.responseCode == 0) {
+      List<PreviewDeviceInfo> devices = [];
+
+      for(var jsonDevice in swiftResponse.data) {
+        devices.add(PreviewDeviceInfo(
+          device: HospitalDevice.fromJson(jsonDevice["device"]),
+          imageData: jsonDevice["image"],
+        ));
+      }
+
+      return devices;
+    } else {
+      throw MessageException(swiftResponse.data);
+    }
+  } else {
+    throw MessageException(Constants.generic_error_message);
+  }
+}
+
 Future<List<ShortDeviceInfo>> getDevices() async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
