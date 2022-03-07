@@ -80,11 +80,12 @@ class _TabScreenState extends State<TabScreen> {
     if(_user == null) {
       return FractionallySizedBox(
         widthFactor: 0.3,
-        heightFactor: 0.7,
+        heightFactor: 0.9,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
+            Image(image: AssetImage('graphics/dog2.png')),
             Text("Please choose your user:",
                   style: Theme.of(context)
                     .textTheme
