@@ -12,6 +12,7 @@ import 'package:teog_swift/utilities/deviceStats.dart';
 import 'package:teog_swift/utilities/organizationalRelation.dart';
 import 'package:teog_swift/utilities/organizationalUnit.dart';
 import 'package:teog_swift/utilities/previewDeviceInfo.dart';
+import 'package:teog_swift/utilities/marketplaceDeviceInfo.dart';
 
 import 'package:teog_swift/utilities/swiftResponse.dart';
 
@@ -214,23 +215,14 @@ Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, 
   }
 }
 
-Future<List<PreviewDeviceInfo>> searchMarketplaceDevices(String type, String manufacturer, {DepartmentFilter filter}) async {
+Future<List<MarketplaceDeviceInfo>> searchMarketplaceDevices(String type, String manufacturer, int maxDistance) async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
-
-  List<int> orgUnits;
-
-  if(filter != null) {
-    orgUnits = [filter.parent.id];
-    orgUnits.addAll(filter.successors);
-  } else {
-    orgUnits = null;
-  }
 
   final response = await http.post(
     uri,
     headers: _headers,
     body: jsonEncode(await _generateParameterMap(action: DataAction.searchMarketplaceDevices, authentication: true,
-        additional: <String, dynamic> {'type': type, 'manufacturer': manufacturer})
+        additional: <String, dynamic> {'type': type, 'manufacturer': manufacturer, 'maxDistance': maxDistance})
     ),
   );
 
@@ -238,12 +230,13 @@ Future<List<PreviewDeviceInfo>> searchMarketplaceDevices(String type, String man
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
     
     if(swiftResponse.responseCode == 0) {
-      List<PreviewDeviceInfo> devices = [];
+      List<MarketplaceDeviceInfo> devices = [];
 
       for(var jsonDevice in swiftResponse.data) {
-        devices.add(PreviewDeviceInfo(
+        devices.add(MarketplaceDeviceInfo(
           device: HospitalDevice.fromJson(jsonDevice["device"]),
           imageData: jsonDevice["image"],
+          distance: jsonDevice["distance"]
         ));
       }
 
