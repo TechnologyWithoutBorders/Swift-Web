@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:teog_swift/utilities/hospitalDevice.dart';
 
 class MaintenanceScreen extends StatefulWidget {
   MaintenanceScreen({Key key}) : super(key: key);
@@ -10,8 +11,13 @@ class MaintenanceScreen extends StatefulWidget {
 
 class _MaintenanceScreenState extends State<MaintenanceScreen> {
 
+  DateTime _selectedDay;
+  Map<DateTime, List<HospitalDevice>> maintenanceEvents = Map();
+
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
+
     return Scaffold(
       backgroundColor: Colors.grey[200],
       body: 
@@ -19,9 +25,20 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
         child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
           child: Card(
             child: TableCalendar(
-              firstDay: DateTime.utc(2010, 10, 16),
-              lastDay: DateTime.utc(2030, 3, 14),
-              focusedDay: DateTime.now(),
+              firstDay: now.subtract(Duration(days: 30)),
+              lastDay: now.add(Duration(days: 365)),
+              focusedDay: now,
+              selectedDayPredicate: (day) {
+                return isSameDay(_selectedDay, day);
+              },
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                });
+              },
+              eventLoader: (day) {
+                return maintenanceEvents[day];
+              },
             )
           )
         )
