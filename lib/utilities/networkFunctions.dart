@@ -263,7 +263,7 @@ Future<List<MaintenanceEvent>> getMaintenanceEvents() async {
 
       for(var jsonEvent in swiftResponse.data) {
         events.add(MaintenanceEvent(
-          dateTime: DateTime.parse(jsonEvent["datetime"]),
+          dateTime: DateTime.parse(jsonEvent["datetime"] + 'Z'),
           device: HospitalDevice.fromJson(jsonEvent["device"])
         ));
       }
