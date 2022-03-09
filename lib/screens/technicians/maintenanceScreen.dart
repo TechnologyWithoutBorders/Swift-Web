@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
 
+import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+
 class MaintenanceScreen extends StatefulWidget {
   MaintenanceScreen({Key key}) : super(key: key);
 
@@ -13,6 +15,21 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
 
   DateTime _selectedDay;
   Map<DateTime, List<HospitalDevice>> maintenanceEvents = Map();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _initEvents();
+  }
+
+  Future<void> _initEvents() async {
+    
+    
+    setState(() {
+     
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
