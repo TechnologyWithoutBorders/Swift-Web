@@ -14,7 +14,7 @@ class MaintenanceScreen extends StatefulWidget {
 
 class _MaintenanceScreenState extends State<MaintenanceScreen> {
 
-  DateTime _selectedDay;
+  DateTime _focusedDay = DateTime.now(), _selectedDay;
   Map<String, List<HospitalDevice>> _maintenanceEvents = Map();
 
   @override
@@ -51,13 +51,14 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
             child: TableCalendar(
               firstDay: now.subtract(Duration(days: 30)),
               lastDay: now.add(Duration(days: 365)),
-              focusedDay: now,
+              focusedDay: _focusedDay,
               selectedDayPredicate: (day) {
                 return isSameDay(_selectedDay, day);
               },
               onDaySelected: (selectedDay, focusedDay) {
                 setState(() {
                   _selectedDay = selectedDay;
+                  _focusedDay = focusedDay;
                 });
               },
               eventLoader: (day) {
