@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
 import 'package:teog_swift/utilities/maintenanceEvent.dart';
+import 'package:teog_swift/utilities/constants.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 
@@ -53,7 +54,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
         child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
           child: Card(
             child: TableCalendar(
-              firstDay: now.subtract(Duration(days: 30)),
+              firstDay: now,
               lastDay: now.add(Duration(days: 365)),
               focusedDay: _focusedDay,
               selectedDayPredicate: (day) {
@@ -68,6 +69,15 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
               eventLoader: (day) {
                 return _maintenanceEvents[day.toString()];
               },
+              calendarBuilders: CalendarBuilders(
+                markerBuilder: (context, day, events) {
+                  if(events.length > 0) {
+                    return Container(color: Color(Constants.teog_blue_light), child: Padding(padding: EdgeInsets.all(3), child: Text(events.length.toString() + " devices")));
+                  } else {
+                    return null;
+                  }
+                },
+              )
             )
           )
         )
