@@ -56,37 +56,74 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
             child: Row(
               children: [
                 Expanded(
-                  child: TableCalendar(
-                    firstDay: now,
-                    lastDay: now.add(Duration(days: 365)),
-                    focusedDay: _focusedDay,
-                    selectedDayPredicate: (day) {
-                      return isSameDay(_selectedDay, day);
-                    },
-                    onDaySelected: (selectedDay, focusedDay) {
-                      setState(() {
-                        _selectedDay = selectedDay;
-                        _focusedDay = focusedDay;
-                      });
-                    },
-                    eventLoader: (day) {
-                      return _maintenanceEvents[day.toString()];
-                    },
-                    headerStyle: HeaderStyle(
-                      titleTextStyle: TextStyle(fontSize: 20.0),
+                  child: Card(
+                    margin: const EdgeInsets.all(8.0),
+                    elevation: 5.0,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                      side: BorderSide( color: Colors.black, width: 1.0),
                     ),
-                    calendarBuilders: CalendarBuilders(
-                      markerBuilder: (context, day, events) {
-                        if(events.length > 0) {
-                          return Container(color: Color(Constants.teog_blue_light), child: Padding(padding: EdgeInsets.all(1), child: Text(events.length.toString() + " devices", style: TextStyle(fontSize: 14.0))));
-                        } else {
-                          return null;
-                        }
+                    child: TableCalendar(
+                      startingDayOfWeek: StartingDayOfWeek.monday,
+                      weekendDays: const [DateTime.saturday, DateTime.sunday],//TODO: define per locale
+                      daysOfWeekHeight: 40.0,
+                      firstDay: now,
+                      lastDay: now.add(Duration(days: 365)),
+                      focusedDay: _focusedDay,
+                      selectedDayPredicate: (day) {
+                        return isSameDay(_selectedDay, day);
                       },
+                      onDaySelected: (selectedDay, focusedDay) {
+                        setState(() {
+                          _selectedDay = selectedDay;
+                          _focusedDay = focusedDay;
+                        });
+                      },
+                      eventLoader: (day) {
+                        return _maintenanceEvents[day.toString()];
+                      },
+                      headerStyle: HeaderStyle(
+                        formatButtonVisible: false,
+                        titleTextStyle: TextStyle(color: Colors.white, fontSize: 20.0),
+                        decoration: BoxDecoration(
+                          color: Color(Constants.teog_blue),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10)
+                          )
+                        ),
+                        leftChevronIcon: Icon(
+                          Icons.chevron_left,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                        rightChevronIcon: Icon(
+                          Icons.chevron_right,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                      ),
+                      daysOfWeekStyle: const DaysOfWeekStyle(
+                        weekendStyle: TextStyle(color: Colors.redAccent),
+                      ),
+                      calendarStyle: CalendarStyle(
+                        weekendTextStyle: TextStyle(color: Colors.redAccent),
+                      ),
+                      calendarBuilders: CalendarBuilders(
+                        markerBuilder: (context, day, events) {
+                          if(events.length > 0) {
+                            return Container(color: Color(Constants.teog_blue_light), child: Padding(padding: EdgeInsets.all(1), child: Text(events.length.toString() + " devices", style: TextStyle(fontSize: 14.0))));
+                          } else {
+                            return null;
+                          }
+                        },
+                      )
                     )
                   )
                 ),
-                Expanded(child: SizedBox.shrink())
+                Expanded(child: Center(child: Text("The devices will be shown here in the future if you click on a date.")))
               ]
             )
           )
