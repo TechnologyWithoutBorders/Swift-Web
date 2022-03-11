@@ -30,7 +30,11 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
     Map<String, List<HospitalDevice>> maintenanceEvents = Map();
 
     for(var event in events) {
-      maintenanceEvents[event.dateTime.toString()] = [event.device];
+      if(maintenanceEvents.containsKey(event.dateTime.toString())) {
+        maintenanceEvents[event.dateTime.toString()].add(event.device);
+      } else {
+        maintenanceEvents[event.dateTime.toString()] = [event.device];
+      }
     }
     
     setState(() {
