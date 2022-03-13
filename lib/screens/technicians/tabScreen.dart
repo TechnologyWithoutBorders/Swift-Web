@@ -85,8 +85,7 @@ class _TabScreenState extends State<TabScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image(image: AssetImage('graphics/dog2.png')),
-            Text("Please choose your user:",
+            Text("Please select your user:",
                   style: Theme.of(context)
                     .textTheme
                     .headline3),
