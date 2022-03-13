@@ -30,7 +30,7 @@ class _TabScreenState extends State<TabScreen> {
   String _countryName;
   Hospital _hospital;
 
-  List<User> _users = [];
+  List<User> _users;
   User _user;
 
   void _logout(BuildContext context) async {
@@ -78,40 +78,44 @@ class _TabScreenState extends State<TabScreen> {
   @override
   Widget build(BuildContext context) {
     if(_user == null) {
-      return FractionallySizedBox(
-        widthFactor: 0.3,
-        heightFactor: 0.9,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text("Please select your user:",
-                  style: Theme.of(context)
-                    .textTheme
-                    .headline3),
-            SizedBox(height: 15),
-            Flexible(
-              child: Card(
-                child: Scrollbar(isAlwaysShown: true,
-                  controller: _scrollController,
-                  child: ListView.separated(
-                    controller: _scrollController,
-                    itemCount: _users.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      User user = _users[index];
+      return Scaffold(
+        backgroundColor: Colors.grey[200],
+        body: Container(
+          alignment: Alignment.center,
+          child: FractionallySizedBox(
+            widthFactor: 0.3,
+            heightFactor: 0.8,
+            child: Card(
+              child: Column(
+                children: [
+                  Text("Please select your user:",
+                        style: Theme.of(context)
+                          .textTheme
+                          .headline4),
+                  SizedBox(height: 15),
+                  Flexible(
+                    child: _users != null ? Scrollbar(isAlwaysShown: true,
+                      controller: _scrollController,
+                      child: ListView.separated(
+                        controller: _scrollController,
+                        itemCount: _users.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          User user = _users[index];
 
-                      return ListTile(
-                        title: Text(user.name),
-                        subtitle: Text(user.position),
-                        onTap: () => _saveUser(user),
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) => const Divider(),
-                  ),
-                )
+                          return ListTile(
+                            title: Text(user.name),
+                            subtitle: Text(user.position),
+                            onTap: () => _saveUser(user),
+                          );
+                        },
+                        separatorBuilder: (BuildContext context, int index) => const Divider(),
+                      ),
+                    ) : Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator()))
+                  )
+                ]
               )
             )
-          ]
+          )
         )
       );
     } else {
