@@ -9,6 +9,7 @@ import 'package:teog_swift/utilities/dataAction.dart';
 import 'package:teog_swift/utilities/deviceInfo.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
 import 'package:teog_swift/utilities/deviceStats.dart';
+import 'package:teog_swift/utilities/maintenanceEvent.dart';
 import 'package:teog_swift/utilities/organizationalRelation.dart';
 import 'package:teog_swift/utilities/organizationalUnit.dart';
 import 'package:teog_swift/utilities/previewDeviceInfo.dart';
@@ -237,6 +238,37 @@ Future<List<ShortDeviceInfo>> getDevices() async {
       }
 
       return devices;
+    } else {
+      throw MessageException(swiftResponse.data);
+    }
+  } else {
+    throw MessageException(Constants.generic_error_message);
+  }
+}
+
+Future<List<MaintenanceEvent>> getMaintenanceEvents() async {
+  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+
+  final response = await http.post(
+    uri,
+    headers: _headers,
+    body: jsonEncode(await _generateParameterMap(action: DataAction.getMaintenanceEvents, authentication: true)),
+  );
+
+  if(response.statusCode == 200) {
+    SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
+    
+    if(swiftResponse.responseCode == 0) {
+      List<MaintenanceEvent> events = [];
+
+      for(var jsonEvent in swiftResponse.data) {
+        events.add(MaintenanceEvent(
+          dateTime: DateTime.parse(jsonEvent["datetime"] + 'Z'),
+          device: HospitalDevice.fromJson(jsonEvent["device"])
+        ));
+      }
+
+      return events;
     } else {
       throw MessageException(swiftResponse.data);
     }
