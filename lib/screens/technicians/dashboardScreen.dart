@@ -184,6 +184,8 @@ class _DetailScreenState extends State<DashboardScreen> {
       )];
     }
 
+    DateTime now = DateTime.now();
+
     return Scaffold(
       backgroundColor: Colors.grey[200],
       body: Container(alignment: Alignment.center,
@@ -223,14 +225,20 @@ class _DetailScreenState extends State<DashboardScreen> {
                                 HospitalDevice device = deviceInfo.device;
                                 Report report = deviceInfo.report;
 
+                                int days = now.difference(report.created).inDays;
+
                                 return ListTile(
-                                  leading: Container(width: 30, height: 30, color: DeviceState.getColor(report.currentState),
-                                    child: Padding(padding: EdgeInsets.all(3.0),
-                                      child: Row(children: [
-                                          Icon(DeviceState.getIconData(report.currentState))
-                                        ]
-                                      )
-                                    )
+                                  leading: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(width: 30, height: 30, color: DeviceState.getColor(report.currentState),
+                                        child: Padding(padding: EdgeInsets.all(3.0),
+                                          child: Icon(DeviceState.getIconData(report.currentState))
+                                        )
+                                      ),
+                                      SizedBox(height: 3),
+                                      Text(days.toString() + " d", style: TextStyle(fontSize: 12, color: Color(Constants.info_green)))
+                                    ]
                                   ),
                                   title: Text(device.type),
                                   subtitle: Text(device.manufacturer + " " + device.model),
