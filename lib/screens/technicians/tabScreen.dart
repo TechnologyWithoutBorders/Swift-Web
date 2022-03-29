@@ -62,6 +62,8 @@ class _TabScreenState extends State<TabScreen> {
 
     Comm.getUsers().then((users) => {
       setState(() {
+        users.sort((a, b) => a.name.compareTo(b.name));
+
         _users = users;
       })
     });
