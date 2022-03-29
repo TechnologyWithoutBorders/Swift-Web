@@ -388,7 +388,7 @@ Future<List<User>> getUsers() async {
   }
 }
 
-Future<List<Report>> getRecentActivity() async {
+Future<List<DetailedReport>> getRecentActivity() async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
   final response = await http.post(
@@ -401,10 +401,10 @@ Future<List<Report>> getRecentActivity() async {
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
     
     if(swiftResponse.responseCode == 0) {
-      List<Report> reports = [];
+      List<DetailedReport> reports = [];
 
       for(var jsonReport in swiftResponse.data) {
-        reports.add(Report.fromJson(jsonReport));
+        reports.add(DetailedReport.fromJson(jsonReport));
       }
 
       return reports;
