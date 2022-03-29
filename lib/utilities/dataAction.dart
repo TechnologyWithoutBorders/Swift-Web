@@ -17,4 +17,5 @@ class DataAction {
   static const String updateOrganizationalUnits = "update_organizational_units";
   static const String createReport = "create_report";
   static const String getMaintenanceEvents = "get_maintenance_events";
+  static const String getRecentActivity = "get_recent_activity";
 }

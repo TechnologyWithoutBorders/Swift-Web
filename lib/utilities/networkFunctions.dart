@@ -388,6 +388,34 @@ Future<List<User>> getUsers() async {
   }
 }
 
+Future<List<Report>> getRecentActivity() async {
+  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+
+  final response = await http.post(
+    uri,
+    headers: _headers,
+    body: jsonEncode(await _generateParameterMap(action: DataAction.getRecentActivity, authentication: true)),
+  );
+
+  if(response.statusCode == 200) {
+    SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
+    
+    if(swiftResponse.responseCode == 0) {
+      List<Report> reports = [];
+
+      for(var jsonReport in swiftResponse.data) {
+        reports.add(Report.fromJson(jsonReport));
+      }
+
+      return reports;
+    } else {
+      throw MessageException(swiftResponse.data);
+    }
+  } else {
+    throw MessageException(Constants.generic_error_message);
+  }
+}
+
 Future<List<Hospital>> getHospitals(String country) async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
