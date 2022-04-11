@@ -4,6 +4,8 @@ import 'package:teog_swift/utilities/hospitalDevice.dart';
 import 'package:teog_swift/utilities/maintenanceEvent.dart';
 import 'package:teog_swift/utilities/constants.dart';
 
+import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
+
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 
 class MaintenanceScreen extends StatefulWidget {
@@ -14,6 +16,9 @@ class MaintenanceScreen extends StatefulWidget {
 }
 
 class _MaintenanceScreenState extends State<MaintenanceScreen> {
+  final _scrollController = ScrollController();
+
+  List<HospitalDevice> _selectedDevices = [];
 
   DateTime _focusedDay = DateTime.now(), _selectedDay;
   Map<String, List<HospitalDevice>> _maintenanceEvents = Map();
@@ -31,10 +36,12 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
     Map<String, List<HospitalDevice>> maintenanceEvents = Map();
 
     for(var event in events) {
-      if(maintenanceEvents.containsKey(event.dateTime.toString())) {
-        maintenanceEvents[event.dateTime.toString()].add(event.device);
+      String key = event.dateTime.toString().substring(0, 10);
+
+      if(maintenanceEvents.containsKey(key)) {
+        maintenanceEvents[key].add(event.device);
       } else {
-        maintenanceEvents[event.dateTime.toString()] = [event.device];
+        maintenanceEvents[key] = [event.device];
       }
     }
     
@@ -76,13 +83,20 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                         return isSameDay(_selectedDay, day);
                       },
                       onDaySelected: (selectedDay, focusedDay) {
+                        List<HospitalDevice> selectedDevices = [];
+
+                        if(_maintenanceEvents.containsKey(selectedDay.toString().substring(0, 10))) {
+                          selectedDevices.addAll(_maintenanceEvents[selectedDay.toString().substring(0, 10)]);
+                        }
+
                         setState(() {
                           _selectedDay = selectedDay;
                           _focusedDay = focusedDay;
+                          _selectedDevices = selectedDevices;
                         });
                       },
                       eventLoader: (day) {
-                        return _maintenanceEvents[day.toString()];
+                        return _maintenanceEvents[day.toString().substring(0, 10)];
                       },
                       headerStyle: HeaderStyle(
                         formatButtonVisible: false,
@@ -123,7 +137,40 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                     )
                   )
                 ),
-                Expanded(child: Center(child: Text("The devices will be shown here in the future if you click on a date.")))
+                Expanded(
+                  child: _selectedDevices.length > 0 ? Padding(
+                    padding: EdgeInsets.all(5.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _selectedDay != null ? Text(_selectedDay.toString().substring(0, 10), style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)) : Text(""),
+                        Flexible(child: Padding(padding: EdgeInsets.all(10.0),
+                          child: Scrollbar(isAlwaysShown: true,
+                            controller: _scrollController,
+                            child: ListView.separated(
+                              controller: _scrollController,
+                              padding: const EdgeInsets.all(3),
+                              itemCount: _selectedDevices.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                HospitalDevice device = _selectedDevices[index];
+
+                                return ListTile(
+                                  title: Text(device.type),
+                                  subtitle: Text(device.manufacturer + " " + device.model),
+                                  trailing: device.orgUnit != null ? Text(device.orgUnit) : null,
+                                  onTap: () => {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: device.id)))
+                                  }
+                                );
+                              },
+                              separatorBuilder: (BuildContext context, int index) => const Divider(),
+                            ),
+                          ),
+                        )),
+                      ]
+                    )
+                  ) : Center(child: Text("Click on a date in the calendar to show the devices that need maintenance."))
+                )
               ]
             )
           )
