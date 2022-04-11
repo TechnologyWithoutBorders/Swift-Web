@@ -167,7 +167,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
       bool skip = false;
 
       for(String filterText in filterTexts) {
-        if(device.type.toLowerCase().contains(filterText) || device.manufacturer.toLowerCase().contains(filterText) || device.model.toLowerCase().contains(filterText)) {
+        if(device.type.toLowerCase().contains(filterText) || device.manufacturer.toLowerCase().contains(filterText) || device.model.toLowerCase().contains(filterText) || device.serialNumber.toLowerCase().contains(filterText)) {
           continue;
         } else {
           skip = true;
