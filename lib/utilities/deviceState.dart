@@ -8,7 +8,7 @@ class DeviceState {
   static const int salvage = 4;
   static const int limitations = 5;
 
-  static const _names = ["working", "maintenance", "broken", "work in progress", "salvage", "working with limitations"];
+  static const _names = ["working", "maintenance", "broken", "work in progress", "beyond repair", "working with limitations"];
   static const _colors = [Colors.green, Colors.blue, Colors.orange, Colors.lightGreen, Colors.red, Colors.redAccent];
   static const _icons = [Icons.check, Icons.access_alarm, Icons.build, Icons.hourglass_empty, Icons.block, Icons.warning];
 
