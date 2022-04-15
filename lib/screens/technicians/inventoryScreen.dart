@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:teog_swift/screens/organizationFilterView.dart';
 import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
@@ -8,6 +9,7 @@ import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/shortDeviceInfo.dart';
 import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
+import 'package:teog_swift/utilities/deviceStats.dart';
 
 class InventoryScreen extends StatefulWidget {
   InventoryScreen({Key key}) : super(key: key);
@@ -44,6 +46,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   Future<void> _initDevices() async {
     List<ShortDeviceInfo> devices = await Comm.getDevices();//TODO: catch Exception
+    DeviceStats deviceStats = await Comm.getDeviceStats(); //TODO catch Exception
     List<ShortDeviceInfo> assignedDevices = [];
     assignedDevices.addAll(devices);
     List<ShortDeviceInfo> prefilteredDevices = [];
@@ -117,6 +120,20 @@ class _InventoryScreenState extends State<InventoryScreen> {
     });
   }
 
+  void _filterStatus(int status) {
+    List<ShortDeviceInfo> assignedDevices = [];
+    List<ShortDeviceInfo> preFilteredDevices = [];
+    List<ShortDeviceInfo> displayedDevices = [];
+    
+    for(ShortDeviceInfo deviceInfo in _devices) {
+      if(status == deviceInfo.report.currentState){
+        print("in if");
+        assignedDevices.add(deviceInfo);
+        preFilteredDevices.add(deviceInfo);
+        displayedDevices.add(deviceInfo);
+      }
+    }
+  }
   void _filterDepartment() {
     showDialog<DepartmentFilter>(
       context: context,
@@ -226,7 +243,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   ButtonBar(
                     alignment: MainAxisAlignment.center,
                     children: [
-                      Text("Select devices by template: ", style: TextStyle(fontSize: 20)),
+                      Text("Select by template: ", style: TextStyle(fontSize: 20)),
                       ElevatedButton(
                         child: Text("All"),
                         onPressed: _manualButtonDisabled ? null : () => _showAllDevices(),
@@ -236,6 +253,65 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         child: Text("No manual attached"),
                         onPressed: _manualButtonDisabled ? null : () => _checkManuals(),
                         style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterType == filterMissingManuals ? Color(Constants.teog_blue) : Colors.blueGrey))
+                      ),
+                    ],
+                  ),
+                  ButtonBar(
+                    alignment: MainAxisAlignment.center,
+                    children: [
+                      Column(
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(DeviceState.getIconData(0), color: DeviceState.getColor(0), size: 40),
+                            onPressed: () => _filterStatus(0),
+                          ),
+                          Text("200"),
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(DeviceState.getIconData(1), color: DeviceState.getColor(1), size: 40),
+                            onPressed: () => {},
+                          ),
+                          Text("40"),
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(DeviceState.getIconData(2), color: DeviceState.getColor(2), size: 40),
+                            onPressed: () => {},
+                          ),
+                          Text("2"),
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(DeviceState.getIconData(3), color: DeviceState.getColor(3), size: 40),
+                            onPressed: () => {},
+                          ),
+                          Text("200"),
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(DeviceState.getIconData(4), color: DeviceState.getColor(4), size: 40),
+                            onPressed: () => {},
+                          ),
+                          Text("200"),
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(DeviceState.getIconData(5), color: DeviceState.getColor(5), size: 40),
+                            onPressed: () => {},
+                          ),
+                          Text("200"),
+                        ],
                       ),
                     ],
                   ),
