@@ -278,6 +278,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                     child: Column(
                       children: [
                         Text("Recent Activity", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                        SizedBox(height: 10),
                         Flexible(
                           child: Container(
                             color: Colors.grey[200],
