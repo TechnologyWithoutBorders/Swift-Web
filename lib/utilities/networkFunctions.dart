@@ -403,7 +403,7 @@ Future<List<DetailedReport>> getRecentActivity() async {
     if(swiftResponse.responseCode == 0) {
       List<DetailedReport> reports = [];
 
-      for(var jsonReport in swiftResponse.data) {
+      for(var jsonReport in swiftResponse.data["reports"]) {
         reports.add(DetailedReport.fromJson(jsonReport));
       }
 
