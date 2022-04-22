@@ -10,6 +10,7 @@ import 'package:teog_swift/utilities/shortDeviceInfo.dart';
 import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
 import 'package:teog_swift/utilities/report.dart';
+import 'package:teog_swift/utilities/detailedReport.dart';
 
 class DashboardScreen extends StatefulWidget {
   DashboardScreen({Key key}) : super(key: key);
@@ -20,10 +21,11 @@ class DashboardScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DashboardScreen> {
   final _scrollController = ScrollController();
+  final _activityScrollController = ScrollController();
 
   DeviceStats _deviceStats;
-
   List<ShortDeviceInfo> _todoDevices = [];
+  List<DetailedReport> _recentReports = [];
 
   @override
   void initState() {
@@ -44,6 +46,12 @@ class _DetailScreenState extends State<DashboardScreen> {
     Comm.getDeviceStats().then((deviceStats) {//TODO: catch Exception
       setState(() {
         _deviceStats = deviceStats;
+      });
+    });
+
+    Comm.getRecentActivity().then((reports) {
+      setState(() {
+        _recentReports = reports;
       });
     });
   }
@@ -196,7 +204,7 @@ class _DetailScreenState extends State<DashboardScreen> {
             child: Padding(padding: EdgeInsets.all(25.0),
               child: Row(mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Flexible(
+                  Expanded(
                     child: _deviceStats != null ? Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -210,7 +218,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                       ]
                     ) : Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator())),
                   ),
-                  Flexible(
+                  Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -262,6 +270,64 @@ class _DetailScreenState extends State<DashboardScreen> {
                           onPressed: () => _registerDevice(),
                           child: Text("Register new device")
                         )*/
+                      ]
+                    )
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Text("Recent Activity", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                        SizedBox(height: 10),
+                        Flexible(
+                          child: Container(
+                            color: Colors.grey[200],
+                            child: Scrollbar(isAlwaysShown: true,
+                              controller: _activityScrollController,
+                              child: ListView.separated(
+                                controller: _activityScrollController,
+                                itemCount: _recentReports.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  DetailedReport report = _recentReports[index];
+                                  // Flutter does not support date formatting without libraries
+                                  String dateStamp = report.created.toString().substring(0, report.created.toString().length-7);
+
+                                  return Padding(
+                                    padding: EdgeInsets.all(15.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      children: [
+                                        Text(dateStamp),
+                                        Card(
+                                          color: Colors.white,
+                                          child: Padding(
+                                            padding: EdgeInsets.all(5.0),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Expanded(child: Text(report.author + ":")),
+                                                    Icon(DeviceState.getIconData(report.currentState),
+                                                      color: DeviceState.getColor(report.currentState)
+                                                    )
+                                                  ]
+                                                ),
+                                                Text(report.title, style: TextStyle(fontWeight: FontWeight.bold)),
+                                                Text(report.description)
+                                              ]
+                                            )
+                                          )
+                                        )
+                                      ]
+                                    )
+                                  );
+                                },
+                                separatorBuilder: (BuildContext context, int index) => Container(),
+                              ),
+                            ),
+                          )
+                        ),
                       ]
                     )
                   )
