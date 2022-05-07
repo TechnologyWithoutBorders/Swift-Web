@@ -13,7 +13,7 @@ class DetailScreen extends StatefulWidget {
   //this one is never modified
   final ShortDeviceInfo deviceInfo;
 
-  DetailScreen({Key key, @required this.deviceInfo}) : super(key: key);
+  DetailScreen({Key? key, required this.deviceInfo}) : super(key: key);
 
   @override
   _DetailScreenState createState() => _DetailScreenState(deviceInfo: deviceInfo);
@@ -22,7 +22,7 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   ShortDeviceInfo deviceInfo;
 
-  _DetailScreenState({this.deviceInfo});
+  _DetailScreenState({required this.deviceInfo});
 
   _updateDeviceInfo(ShortDeviceInfo modifiedDeviceInfo) {
     setState(() {
@@ -34,7 +34,7 @@ class _DetailScreenState extends State<DetailScreen> {
   Widget build(BuildContext context) {
     Widget reportWidget;
 
-    String reasonText;
+    String? reasonText;
 
     switch(deviceInfo.report.currentState) {
       case DeviceState.broken:
@@ -112,7 +112,7 @@ class _DetailScreenState extends State<DetailScreen> {
 class DocumentScreen extends StatefulWidget {
   final ShortDeviceInfo deviceInfo;
 
-  DocumentScreen({Key key, @required this.deviceInfo}) : super(key: key);
+  DocumentScreen({Key? key, required this.deviceInfo}) : super(key: key);
 
   @override
   _DocumentScreenState createState() => _DocumentScreenState();
@@ -171,7 +171,7 @@ class StateScreen extends StatefulWidget {
 
   final ValueChanged<ShortDeviceInfo> updateDeviceInfo;
 
-  StateScreen({Key key, @required this.deviceInfo, this.updateDeviceInfo}) : super(key: key);
+  StateScreen({Key? key, required this.deviceInfo, this.updateDeviceInfo}) : super(key: key);
 
   @override
   _StateScreenState createState() => _StateScreenState();
@@ -210,7 +210,7 @@ class ReportProblemForm extends StatefulWidget {
 
   final ValueChanged<ShortDeviceInfo> updateDeviceInfo;
 
-  ReportProblemForm({Key key, @required this.deviceInfo, this.updateDeviceInfo}) : super(key: key);
+  ReportProblemForm({Key? key, required this.deviceInfo, this.updateDeviceInfo}) : super(key: key);
 
   @override
   _ReportProblemFormState createState() => _ReportProblemFormState();
