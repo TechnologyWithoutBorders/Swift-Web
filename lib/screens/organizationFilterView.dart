@@ -86,12 +86,12 @@ class _OrganizationFilterViewState extends State<OrganizationFilterView> {
                         graph: _graph,
                         algorithm: BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
                         builder: (Node node) {
-                          int id = node.key.value;
+                          int id = node.key!.value;
 
                           return Card(
-                            color: widget.orgUnit == null || widget.orgUnit.id != id ? Colors.grey[100] : Color(Constants.teog_blue),
+                            color: widget.orgUnit == null || widget.orgUnit!.id != id ? Colors.grey[100] : Color(Constants.teog_blue),
                             child: TextButton(
-                              child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: widget.orgUnit == null || widget.orgUnit.id != id ? Colors.black : Colors.white, fontWeight: FontWeight.bold)),
+                              child: Text(_nameMap[id]!, style: TextStyle(fontSize: 15, color: widget.orgUnit == null || widget.orgUnit!.id != id ? Colors.black : Colors.white, fontWeight: FontWeight.bold)),
                               onPressed: () {
                                 //return this unit and all child units
                                 List<Node> successors = _getAllSuccessingNodes([node]);
@@ -99,10 +99,10 @@ class _OrganizationFilterViewState extends State<OrganizationFilterView> {
                                 List<int> orgUnitIds = [];
 
                                 for(var node in successors) {
-                                  orgUnitIds.add(node.key.value);
+                                  orgUnitIds.add(node.key!.value);
                                 }
 
-                                Navigator.pop(context, DepartmentFilter(OrganizationalUnit(id: id, name: _nameMap[id]), orgUnitIds));
+                                Navigator.pop(context, DepartmentFilter(OrganizationalUnit(id: id, name: _nameMap[id]!), orgUnitIds));
                               }
                             ),
                           );

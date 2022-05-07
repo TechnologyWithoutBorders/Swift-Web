@@ -81,7 +81,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
         context: context,
         builder: (BuildContext context) {
           return new AlertDialog(
-          title: Text("Add child department to \"" + (_nameMap.containsKey(parent) ? _nameMap[parent]! : "invalid") + "\""),
+          title: Text("Add child department to \"" + _nameMap[parent].toString() + "\""),
           contentPadding: const EdgeInsets.all(16.0),
           content: new Column(
             mainAxisSize: MainAxisSize.min,
@@ -139,7 +139,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
         context: context,
         builder: (BuildContext context) {
           return new AlertDialog(
-            title: Text("Change name of \"" + (_nameMap.containsKey(id) ? _nameMap[id]! : "invalid") + "\""),
+            title: Text("Change name of \"" + _nameMap[id].toString() + "\""),
             contentPadding: const EdgeInsets.all(16.0),
             content: new Column(
               mainAxisSize: MainAxisSize.min,
@@ -182,7 +182,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
 
       if(_deviceRelations.containsKey(removedUnitId)) {
         //put removed devices to unassigned devices
-        _deviceRelations[null].addAll(_deviceRelations.remove(removedUnitId));
+        _deviceRelations[null]!.addAll(_deviceRelations.remove(removedUnitId)!);
       }
 
       _recursiveDeleteSuccessors(_graph.successorsOf(succ));
@@ -196,7 +196,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
       context: context,
       builder: (BuildContext context) {
         return new AlertDialog(
-          title: Text("Delete department \"" + _nameMap[id] + "\"?"),
+          title: Text("Delete department \"" + _nameMap[id].toString() + "\"?"),
           content: Text("This will also delete all child departments.", style: TextStyle(color: Colors.red)),
           actions: <Widget>[
             ElevatedButton(
@@ -218,7 +218,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
 
                     if(_deviceRelations.containsKey(id)) {
                       //put removed devices to unassigned devices
-                      _deviceRelations[null].addAll(_deviceRelations.remove(id));
+                      _deviceRelations[null]!.addAll(_deviceRelations.remove(id)!);
                     }
                     
                     _edited = true;
@@ -265,7 +265,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
       HospitalDevice device = deviceInfo.device;
 
       if(deviceRelations.containsKey(device.orgUnitId)) {
-        deviceRelations[device.orgUnitId].add(deviceInfo);
+        deviceRelations[device.orgUnitId]!.add(deviceInfo);
       } else {
         deviceRelations[device.orgUnitId] = [deviceInfo];
       }
@@ -283,14 +283,14 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     List<OrganizationalRelation> orgRelations = [];
 
     for(var node in _graph.nodes) {
-      int id = node.key.value;
+      int id = node.key!.value;
 
-      orgUnits.add(OrganizationalUnit(id: id, name: _nameMap[id]));
+      orgUnits.add(OrganizationalUnit(id: id, name: _nameMap[id]!));
     }
 
     for(var edge in _graph.edges) {
-      int parent = edge.source.key.value;
-      int id = edge.destination.key.value;
+      int parent = edge.source.key!.value;
+      int id = edge.destination.key!.value;
 
       orgRelations.add(OrganizationalRelation(id: id, parent: parent));
     }
@@ -299,7 +299,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
 
     for(var entry in _deviceRelations.entries) {
       for(var deviceInfo in entry.value) {
-        deviceRelations.add(DeviceRelation(deviceId: deviceInfo.device.id, orgUnitId: entry.key));
+        deviceRelations.add(DeviceRelation(deviceId: deviceInfo.device.id, orgUnitId: entry.key!));
       }
     }
 
@@ -319,8 +319,8 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     List<PreviewDeviceInfo> devices = [];
 
     for(var succ in successors) {
-        if(_deviceRelations.containsKey(succ.key.value)) {
-          devices.addAll(_deviceRelations[succ.key.value]);
+        if(_deviceRelations.containsKey(succ.key!.value)) {
+          devices.addAll(_deviceRelations[succ.key!.value]!);
         }
 
         devices.addAll(_getAllSuccessingDevices(_graph.successorsOf(succ)));
@@ -337,7 +337,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     List<PreviewDeviceInfo> displayedDevices = [];
 
     if(_deviceRelations.containsKey(orgUnitId)) {
-      displayedDevices.addAll(_deviceRelations[orgUnitId]);
+      displayedDevices.addAll(_deviceRelations[orgUnitId]!);
     }
 
     if(orgUnitId != null) {
@@ -384,11 +384,11 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                               graph: _graph,
                               algorithm: BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
                               builder: (Node node) {
-                                int id = node.key.value;
+                                int id = node.key!.value;
 
                                 return Draggable<Node>(
                                   data: node,
-                                  feedback: Card(color: Colors.grey[100], child: Padding(padding: EdgeInsets.all(15), child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)))),
+                                  feedback: Card(color: Colors.grey[100], child: Padding(padding: EdgeInsets.all(15), child: Text(_nameMap[id]!, style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)))),
                                   child: DragTarget<Object>(
                                     builder: (context, candidateItems, rejectedItems) {
                                       return Card(
@@ -402,14 +402,14 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            TextButton(child: Text(_nameMap[id], style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)), onPressed: () => _updateAssignedDevices(id)),
+                                            TextButton(child: Text(_nameMap[id]!, style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)), onPressed: () => _updateAssignedDevices(id)),
                                             ButtonBar(
                                               mainAxisSize: MainAxisSize.min,
                                               buttonPadding: EdgeInsets.zero,
                                               children: [
-                                                id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key.value)) : null,
-                                                id != 1 ? TextButton(child: Icon(Icons.edit), onPressed: ()=> _renameUnit(node.key.value)) : null,
-                                                TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key.value))
+                                                id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key!.value)) : Container(),
+                                                id != 1 ? TextButton(child: Icon(Icons.edit), onPressed: ()=> _renameUnit(node.key!.value)) : Container(),
+                                                TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key!.value))
                                             ],)
                                           ]
                                         )
@@ -417,7 +417,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                     },
                                     onWillAccept: (item) {
                                       if(item is Node) {
-                                        return !(item.key.value == 1 || item.key.value == id);
+                                        return !(item.key!.value == 1 || item.key!.value == id);
                                       } else if(item is PreviewDeviceInfo) {
                                         return true;
                                       } else {
@@ -426,7 +426,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                     },
                                     onAccept: (item) {
                                       if(item is Node) {
-                                        _reOrganizeUnit(item.key.value, id);
+                                        _reOrganizeUnit(item.key!.value, id);
                                       } else if(item is PreviewDeviceInfo) {
                                         _assignDevice(item, id);
                                       }
@@ -447,7 +447,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                       children: [
                         _selectedDepartment != null ? ElevatedButton(onPressed: () => _updateAssignedDevices(null), child: Text("Show unassigned devices")) : SizedBox(height: 0),
                         SizedBox(height: 10),
-                        Text(_selectedDepartment != null && _nameMap[_selectedDepartment] != null ? _nameMap[_selectedDepartment] : "Unassigned devices", style: TextStyle(fontSize: 25)),
+                        Text(_selectedDepartment != null && _nameMap[_selectedDepartment] != null ? _nameMap[_selectedDepartment]! : "Unassigned devices", style: TextStyle(fontSize: 25)),
                         Flexible(
                           child: Scrollbar(
                             controller: _scrollController,
@@ -479,7 +479,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                     leading: deviceInfo.imageData.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData)) : Text("no image"),
                                     title: Text(device.type),
                                     subtitle: Text(device.manufacturer + " " + device.model),
-                                    trailing: device.orgUnit != null ? Text(device.orgUnit) : Text(""),
+                                    trailing: device.orgUnit != null ? Text(device.orgUnit!) : Text(""),
                                   )
                                 );
                               },
