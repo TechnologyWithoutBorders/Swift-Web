@@ -25,8 +25,8 @@ class OverviewScreen extends StatefulWidget {
 }
 
 class _OverviewScreenState extends State<OverviewScreen> {
-  String _countryName;
-  Hospital _hospital;
+  String? _countryName;
+  Hospital? _hospital;
 
   void _logout(BuildContext context) async {
     await Prefs.logout();
@@ -34,7 +34,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
   }
 
   void _setHospitalInfo() async {
-    String countryName = await Prefs.getCountry();
+    String? countryName = await Prefs.getCountry();
     Hospital hospital = await Comm.getHospitalInfo();
 
     setState(() {
@@ -55,13 +55,13 @@ class _OverviewScreenState extends State<OverviewScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: _hospital != null ? Text("TeoG Swift - "+ _hospital.name +  ", " + _countryName) : Text("TeoG Swift"),
+        title: _hospital != null && _countryName != null ? Text("TeoG Swift - "+ _hospital!.name +  ", " + _countryName!) : Text("TeoG Swift"),
         actions: [
           Padding(padding: EdgeInsets.only(right: 20.0),
             child: TextButton(
               style: ButtonStyle(
                 foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                  return states.contains(MaterialState.disabled) ? null : Colors.white;
+                  return states.contains(MaterialState.disabled) ? Colors.grey : Colors.white;
                 }),
               ),
               child: Text("Logout"),

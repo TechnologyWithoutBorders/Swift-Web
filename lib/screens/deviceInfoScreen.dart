@@ -255,7 +255,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
                       controller: _reportTitleController,
                       decoration: new InputDecoration(labelText: 'Title'),
                       validator: (value) {
-                        if (value.isEmpty) {
+                        if (value == null || value.isEmpty) {
                           return "Please give your report a title.";
                         }
                         return null;
@@ -269,7 +269,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
                         decoration: new InputDecoration(labelText: 'Problem description'),
                         maxLines: 4,
                         validator: (value) {
-                          if (value.isEmpty) {
+                          if (value == null || value.isEmpty) {
                             return "Please describe the problem in a few sentences.";
                           }
                           return null;
