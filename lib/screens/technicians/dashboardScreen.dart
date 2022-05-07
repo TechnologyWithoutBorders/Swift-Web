@@ -342,13 +342,13 @@ class _DetailScreenState extends State<DashboardScreen> {
 }
 
 class DatumLegendWithMeasures extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, String>> seriesList;
 
   DatumLegendWithMeasures(this.seriesList);
 
   @override
   Widget build(BuildContext context) {
-    return new charts.PieChart(
+    return new charts.PieChart<String>(
       seriesList,
       defaultRenderer: new charts.ArcRendererConfig(arcRendererDecorators: [
           new charts.ArcLabelDecorator(
