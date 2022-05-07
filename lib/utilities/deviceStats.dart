@@ -8,7 +8,7 @@ class DeviceStats {
 
   final int maintenanceOverdue;
 
-  DeviceStats({this.working, this.maintenance, this.broken, this.progress, this.salvage, this.limitations, this.maintenanceOverdue});
+  DeviceStats({required this.working, required this.maintenance, required this.broken, required this.progress, required this.salvage, required this.limitations, required this.maintenanceOverdue});
 
   factory DeviceStats.fromJson(Map<String, dynamic> json) {
     return DeviceStats(

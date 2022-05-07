@@ -2,7 +2,7 @@ class Report {
   final int currentState;
   final DateTime created;
 
-  Report({this.currentState, this.created});
+  Report({required this.currentState, required this.created});
 
   factory Report.fromJson(Map<String, dynamic> json) {
     return Report(

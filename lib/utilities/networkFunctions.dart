@@ -173,10 +173,10 @@ Future<DeviceInfo> editDevice(HospitalDevice device) async {
   }
 }
 
-Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, {DepartmentFilter filter}) async {
+Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, {DepartmentFilter? filter}) async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
-  List<int> orgUnits;
+  List<int>? orgUnits;
 
   if(filter != null) {
     orgUnits = [filter.parent.id];
@@ -690,11 +690,11 @@ Future<Map<String, dynamic>> _generateParameterMap({final String action = "", fi
   }
 
   if(authentication) {
-    String country = await Prefs.getCountry();
-    int hospital = await Prefs.getHospital();
-    String role = await Prefs.getRole();
-    int user = await Prefs.getUser();
-    String password = await Prefs.getPassword();
+    String? country = await Prefs.getCountry();
+    int? hospital = await Prefs.getHospital();
+    String? role = await Prefs.getRole();
+    int? user = await Prefs.getUser();
+    String? password = await Prefs.getPassword();
 
     parameterMap[_countryIdentifier] = country;
     parameterMap[_hospitalIdentifier] = hospital;

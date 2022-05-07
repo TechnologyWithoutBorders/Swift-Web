@@ -4,5 +4,5 @@ class MaintenanceEvent {
   final DateTime dateTime;
   final HospitalDevice device;
 
-  MaintenanceEvent({this.dateTime, this.device});
+  MaintenanceEvent({required this.dateTime, required this.device});
 }
