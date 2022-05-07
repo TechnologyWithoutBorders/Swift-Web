@@ -173,7 +173,7 @@ Future<DeviceInfo> editDevice(HospitalDevice device) async {
   }
 }
 
-Future<List<PreviewDeviceInfo>> searchDevices(String type, String manufacturer, {DepartmentFilter? filter}) async {
+Future<List<PreviewDeviceInfo>> searchDevices(String? type, String? manufacturer, {DepartmentFilter? filter}) async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
   List<int>? orgUnits;

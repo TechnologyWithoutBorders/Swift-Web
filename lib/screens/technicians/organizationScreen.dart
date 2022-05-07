@@ -23,7 +23,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   bool _edited = false;
 
   int? _selectedDepartment;
-  Map<int, List<PreviewDeviceInfo>> _deviceRelations = Map();
+  Map<int?, List<PreviewDeviceInfo>> _deviceRelations = Map();
   List<PreviewDeviceInfo> _displayedDevices = [];
   final _scrollController = ScrollController();
   final _orgScrollController = ScrollController();
@@ -55,10 +55,12 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
 
   void _assignDevice(PreviewDeviceInfo deviceInfo, int orgUnitId) {
     setState(() {
-      _deviceRelations[deviceInfo.device.orgUnitId].remove(deviceInfo);
+      if(_deviceRelations.containsKey(deviceInfo.device.orgUnitId)) {
+        _deviceRelations[deviceInfo.device.orgUnitId]!.remove(deviceInfo);
+      }
 
       if(_deviceRelations.containsKey(orgUnitId)) {
-        _deviceRelations[orgUnitId].add(deviceInfo);
+        _deviceRelations[orgUnitId]!.add(deviceInfo);
       } else {
         _deviceRelations[orgUnitId] = [deviceInfo];
       }
@@ -79,7 +81,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
         context: context,
         builder: (BuildContext context) {
           return new AlertDialog(
-          title: Text("Add child department to \"" + _nameMap[parent] + "\""),
+          title: Text("Add child department to \"" + (_nameMap.containsKey(parent) ? _nameMap[parent]! : "invalid") + "\""),
           contentPadding: const EdgeInsets.all(16.0),
           content: new Column(
             mainAxisSize: MainAxisSize.min,
@@ -105,8 +107,8 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                     int maxId = 1;
 
                     for(Node node in _graph.nodes) {
-                      if(node.key.value > maxId) {
-                        maxId = node.key.value;
+                      if(node.key!.value > maxId) {
+                        maxId = node.key!.value;
                       }
                     }
 
@@ -137,7 +139,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
         context: context,
         builder: (BuildContext context) {
           return new AlertDialog(
-            title: Text("Change name of \"" + _nameMap[id] + "\""),
+            title: Text("Change name of \"" + (_nameMap.containsKey(id) ? _nameMap[id]! : "invalid") + "\""),
             contentPadding: const EdgeInsets.all(16.0),
             content: new Column(
               mainAxisSize: MainAxisSize.min,
@@ -176,7 +178,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
 
   void _recursiveDeleteSuccessors(List<Node> successors) {
     for(var succ in successors) {
-      int removedUnitId = succ.key.value;
+      int removedUnitId = succ.key!.value;
 
       if(_deviceRelations.containsKey(removedUnitId)) {
         //put removed devices to unassigned devices
@@ -255,7 +257,9 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
 
     List<PreviewDeviceInfo> devices = await Comm.searchDevices(null, null);
 
-    Map<int, List<PreviewDeviceInfo>> deviceRelations = Map();
+    Map<int?, List<PreviewDeviceInfo>> deviceRelations = Map();
+    //always add a list for unassigned devices
+    deviceRelations[null] = [];
 
     for(PreviewDeviceInfo deviceInfo in devices) {
       HospitalDevice device = deviceInfo.device;
