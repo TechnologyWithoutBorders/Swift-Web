@@ -74,7 +74,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   children: [
                     Expanded(
                       flex: 3,
-                      child: Image.memory(base64Decode(deviceInfo.imageData))
+                      child: deviceInfo.imageData != null && deviceInfo.imageData!.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData!)) : Text("no image available"),
                     ),
                     SizedBox(width: 30),
                     Expanded(
@@ -169,9 +169,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
 class StateScreen extends StatefulWidget {
   final ShortDeviceInfo deviceInfo;
 
-  final ValueChanged<ShortDeviceInfo> updateDeviceInfo;
-
-  StateScreen({Key? key, required this.deviceInfo, this.updateDeviceInfo}) : super(key: key);
+  StateScreen({Key? key, required this.deviceInfo}) : super(key: key);
 
   @override
   _StateScreenState createState() => _StateScreenState();
@@ -210,7 +208,7 @@ class ReportProblemForm extends StatefulWidget {
 
   final ValueChanged<ShortDeviceInfo> updateDeviceInfo;
 
-  ReportProblemForm({Key? key, required this.deviceInfo, this.updateDeviceInfo}) : super(key: key);
+  ReportProblemForm({Key? key, required this.deviceInfo, required this.updateDeviceInfo}) : super(key: key);
 
   @override
   _ReportProblemFormState createState() => _ReportProblemFormState();
@@ -223,7 +221,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
   final _problemTextController = TextEditingController();
 
   Future<bool> _createReport() async {
-    if(_formKey.currentState.validate()) {
+    if(_formKey.currentState!.validate()) {
       await Comm.queueRepair(widget.deviceInfo.device.id, _reportTitleController.text, _problemTextController.text).then((newReport) {
         widget.updateDeviceInfo(ShortDeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData));
       }).onError((error, stackTrace) {

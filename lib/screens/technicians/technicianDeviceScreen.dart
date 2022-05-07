@@ -247,7 +247,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
       body: Center(child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
         child: Card(
           child: Padding(padding: EdgeInsets.all(10.0),
-            child: (device != null && reports != null && _userId != null) ? Column(
+            child: (_deviceInfo != null && device != null && reports != null && _userId != null) ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Row(
@@ -289,7 +289,10 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                 Flexible(child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(flex: 3, child: Image.memory(base64Decode(_deviceInfo.imageData))),
+                    Expanded(
+                      flex: 3,
+                      child: _deviceInfo!.imageData != null && _deviceInfo!.imageData!.isNotEmpty ? Image.memory(base64Decode(_deviceInfo!.imageData!)) : Text("no image available")
+                    ),
                     SizedBox(width: 30),
                     Expanded(
                       flex: 2,

@@ -86,8 +86,10 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                       onDaySelected: (selectedDay, focusedDay) {
                         List<HospitalDevice> selectedDevices = [];
 
-                        if(_maintenanceEvents.containsKey(selectedDay.toString().substring(0, 10))) {
-                          selectedDevices.addAll(_maintenanceEvents[selectedDay.toString().substring(0, 10)]);
+                        String key = selectedDay.toString().substring(0, 10);
+
+                        if(_maintenanceEvents.containsKey(key)) {
+                          selectedDevices.addAll(_maintenanceEvents[key]!);
                         }
 
                         setState(() {
@@ -97,7 +99,13 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                         });
                       },
                       eventLoader: (day) {
-                        return _maintenanceEvents[day.toString().substring(0, 10)];
+                        String key = day.toString().substring(0, 10);
+
+                        if(_maintenanceEvents.containsKey(key)) {
+                          return _maintenanceEvents[key]!;
+                        } else {
+                          return [];
+                        }
                       },
                       headerStyle: HeaderStyle(
                         formatButtonVisible: false,
@@ -158,7 +166,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                 return ListTile(
                                   title: Text(device.type),
                                   subtitle: Text(device.manufacturer + " " + device.model),
-                                  trailing: device.orgUnit != null ? Text(device.orgUnit) : null,
+                                  trailing: device.orgUnit != null ? Text(device.orgUnit!) : null,
                                   onTap: () => {
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: device.id)))
                                   }

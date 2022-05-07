@@ -124,7 +124,7 @@ class _SearchFormState extends State with SessionMixin {
   }
 
   void _processDeviceId() {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       Comm.fetchDevice(int.parse(_deviceIDController.text)).then((deviceInfo) {
         Navigator.push(
           context,
@@ -191,7 +191,7 @@ class _FilterFormState extends State<FilterForm> {
   bool _loading = false;
 
   void _processInput() {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       setState(() {
         _filteredDevices = [];
         _loading = true;

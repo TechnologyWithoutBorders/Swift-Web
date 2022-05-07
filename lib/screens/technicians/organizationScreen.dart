@@ -459,6 +459,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                               itemBuilder: (BuildContext context, int index) {
                                 PreviewDeviceInfo deviceInfo = _displayedDevices[index];
                                 HospitalDevice device = deviceInfo.device;
+                                String? imageData = deviceInfo.imageData;
 
                                 return Draggable<PreviewDeviceInfo>(
                                   data: deviceInfo,
@@ -468,7 +469,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                       padding: EdgeInsets.all(10),
                                       child: Row(
                                         children: [
-                                          deviceInfo.imageData.isNotEmpty ? SizedBox(width: 50, child: Image.memory(base64Decode(deviceInfo.imageData))) : Text(""),
+                                          imageData != null && imageData.isNotEmpty ? SizedBox(width: 50, child: Image.memory(base64Decode(imageData))) : Text(""),
                                           SizedBox(width: 5,),
                                           Text(device.type,style: TextStyle(fontSize: 15))
                                         ]
@@ -476,7 +477,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                     )
                                   ),
                                   child: ListTile(
-                                    leading: deviceInfo.imageData.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData)) : Text("no image"),
+                                    leading: imageData != null && imageData.isNotEmpty ? Image.memory(base64Decode(imageData)) : Text("no image"),
                                     title: Text(device.type),
                                     subtitle: Text(device.manufacturer + " " + device.model),
                                     trailing: device.orgUnit != null ? Text(device.orgUnit!) : Text(""),

@@ -158,13 +158,17 @@ class _TabScreenState extends State<TabScreen> {
                     );
                   }
                 ).toList(),
-                onChanged: (user) => _saveUser(user),
+                onChanged: (user) => {
+                  if(user != null) {
+                    _saveUser(user)
+                  }
+                },
               ),
               Padding(padding: EdgeInsets.only(right: 20.0),
                 child: TextButton(
                   style: ButtonStyle(
                     foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                      return states.contains(MaterialState.disabled) ? null : Colors.white;
+                      return states.contains(MaterialState.disabled) ? Colors.grey : Colors.white;
                     }),
                   ),
                   child: Text("Logout"),
