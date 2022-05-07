@@ -2,7 +2,7 @@ class Country {
   final String name;
   final String code;
 
-  Country({this.name, this.code});
+  Country({required this.name, required this.code});
 
   factory Country.fromString(String countryInfo) {
     List<String> parts = countryInfo.split(":");

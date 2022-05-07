@@ -88,20 +88,23 @@ class _LoginFormState extends State<LoginForm> {
 
   final _countryScrollController = ScrollController();
   List<Country> _countries = [];
-  Country _selectedCountry;
+  Country? _selectedCountry;
 
   final _hospitalScrollController = ScrollController();
   List<Hospital> _hospitals = [];
-  Hospital _selectedHospital;
+  Hospital? _selectedHospital;
 
   final _passwordTextController = TextEditingController();
 
   void _login() {
-    if (_formKey.currentState.validate()) {
+    String? countryName = _selectedCountry?.name;
+    int? hospitalId = _selectedHospital?.id;
+
+    if(countryName != null && hospitalId != null && _formKey.currentState!.validate()) {
       String password = _passwordTextController.text;
 
-      Comm.checkCredentials(_selectedCountry.name, _selectedHospital.id, password).then((role) {
-        String route;
+      Comm.checkCredentials(countryName, hospitalId, password).then((role) {
+        String? route;
 
         if(role == Constants.role_technical) {
           route = TabScreen.route;
@@ -109,9 +112,14 @@ class _LoginFormState extends State<LoginForm> {
           route = OverviewScreen.route;
         }
 
-        List<int> bytes = utf8.encode(password);
-        String hash = sha256.convert(bytes).toString();
-        Prefs.save(_selectedCountry.name, _selectedHospital.id, role, hash).then((success) => Navigator.pushNamedAndRemoveUntil(context, route, (r) => false));
+        if(route != null) {
+          List<int> bytes = utf8.encode(password);
+          String hash = sha256.convert(bytes).toString();
+          Prefs.save(countryName, hospitalId, role, hash).then((success) => Navigator.pushNamedAndRemoveUntil(context, route!, (r) => false));
+        } else {
+          final snackBar = SnackBar(content: Text("could not determine role of user"));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
       }).onError<MessageException>((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.message));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -163,7 +171,7 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     Widget input;
 
-    if(_selectedHospital == null) {
+    if(_selectedCountry == null || _selectedHospital == null) {
       input = Row(
         children: [
           Flexible(
@@ -247,8 +255,8 @@ class _LoginFormState extends State<LoginForm> {
             ButtonBar(
               alignment: MainAxisAlignment.center,
               children:[
-                Flag.fromString(_selectedCountry.code, height: 35, width: 35),
-                Text(_selectedCountry.name + ' - ' + _selectedHospital.name, style: TextStyle(fontSize: 20)),
+                Flag.fromString(_selectedCountry!.code, height: 35, width: 35),
+                Text(_selectedCountry!.name + ' - ' + _selectedHospital!.name, style: TextStyle(fontSize: 20)),
                 IconButton(
                   iconSize: 20,
                   icon: Icon(Icons.cancel_outlined, color: Colors.red[700]),
@@ -265,7 +273,7 @@ class _LoginFormState extends State<LoginForm> {
                 obscureText: true,
                 autofocus: true,
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value == null || value.isEmpty) {
                     return 'Please enter some text';
                   }
                   return null;

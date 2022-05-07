@@ -7,7 +7,7 @@ class DetailedReport {
   final int currentState;
   final DateTime created;
 
-  DetailedReport({this.id, this.title, this.description, this.authorId, this.author, this.currentState, this.created});
+  DetailedReport({required this.id, required this.title, required this.description, required this.authorId, required this.author, required this.currentState, required this.created});
 
   factory DetailedReport.fromJson(Map<String, dynamic> json) {
     return DetailedReport(

@@ -10,7 +10,7 @@ import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
 
 class InventoryScreen extends StatefulWidget {
-  InventoryScreen({Key key}) : super(key: key);
+  InventoryScreen({Key? key}) : super(key: key);
 
   @override
   _InventoryScreenState createState() => _InventoryScreenState();
@@ -32,7 +32,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
   static const int filterNone = 0;
   static const int filterMissingManuals = 1;
 
-  DepartmentFilter _departmentFilter;
+  DepartmentFilter? _departmentFilter;
   int _filterType = filterNone;
 
   @override
@@ -121,7 +121,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
     showDialog<DepartmentFilter>(
       context: context,
       builder: (BuildContext context) {
-        return OrganizationFilterView(orgUnit: _departmentFilter != null ? _departmentFilter.parent : null);
+        return OrganizationFilterView(orgUnit: _departmentFilter?.parent);
       }
     ).then((departmentFilter) {
       List<ShortDeviceInfo> assignedDevices = [];
@@ -196,7 +196,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   ButtonBar(
                     alignment: MainAxisAlignment.center,
                     children: [
-                      _departmentFilter != null ? Text("Department: " + _departmentFilter.parent.name, style: TextStyle(fontSize: 25)) : null,
+                      _departmentFilter != null ? Text("Department: " + _departmentFilter!.parent.name, style: TextStyle(fontSize: 25)) : Container(),
                       _departmentFilter != null ? IconButton(
                         iconSize: 25,
                         icon: Icon(Icons.cancel_outlined, color: Colors.red[700]),
@@ -219,7 +219,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                             _filterType = filterNone;
                           });
                         }, 
-                      ): null,
+                      ): Container(),
                       OutlinedButton(onPressed: () => _filterDepartment(), child: Text("select department...")),
                     ]
                   ),
@@ -278,7 +278,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                             ),
                             title: Text(device.type),
                             subtitle: Text(device.manufacturer + " " + device.model),
-                            trailing: device.orgUnit != null ? Text(device.orgUnit) : null,
+                            trailing: device.orgUnit != null ? Text(device.orgUnit!) : null,
                             onTap: () => {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: device.id))).then((value) => {
                                 if(_filterType == filterMissingManuals) {

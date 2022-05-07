@@ -2,7 +2,7 @@ class OrganizationalRelation {
   final int id;
   final int parent;
 
-  OrganizationalRelation({this.id, this.parent});
+  OrganizationalRelation({required this.id, required this.parent});
 
   factory OrganizationalRelation.fromJson(Map<String, dynamic> json) {
     return OrganizationalRelation(
@@ -21,7 +21,7 @@ class DeviceRelation {
   final int deviceId;
   final int orgUnitId;
 
-  DeviceRelation({this.deviceId, this.orgUnitId});
+  DeviceRelation({required this.deviceId, required this.orgUnitId});
 
   Map<String, dynamic> toJson() => {
     'deviceId': deviceId,

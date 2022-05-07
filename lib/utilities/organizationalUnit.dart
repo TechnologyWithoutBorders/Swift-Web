@@ -4,7 +4,7 @@ class OrganizationalUnit {
   final int id;
   final String name;
 
-  OrganizationalUnit({this.id, this.name});
+  OrganizationalUnit({required this.id, required this.name});
 
   factory OrganizationalUnit.fromJson(Map<String, dynamic> json) {
     return OrganizationalUnit(
@@ -23,5 +23,5 @@ class OrganizationalInfo {
   final List<OrganizationalUnit> units;
   final List<OrganizationalRelation> relations;
 
-  OrganizationalInfo({this.units, this.relations});
+  OrganizationalInfo({required this.units, required this.relations});
 }

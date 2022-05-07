@@ -9,12 +9,12 @@ import 'package:teog_swift/utilities/constants.dart';
 Future<String> checkLogin({bool syncWithServer: false}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  String password = prefs.getString(Constants.key_pw);
-  String country = prefs.getString(Constants.key_country);
-  String role = prefs.getString(Constants.key_role);
-  int hospital = prefs.getInt(Constants.key_hospital);
+  String? password = prefs.getString(Constants.key_pw);
+  String? country = prefs.getString(Constants.key_country);
+  String? role = prefs.getString(Constants.key_role);
+  int? hospital = prefs.getInt(Constants.key_hospital);
 
-  if(password != null && country != null && hospital != null && role != null) {
+  if(password != null && country != null && role != null && hospital != null) {
     if(syncWithServer) {
       return await Comm.checkCredentials(country, hospital, password, hashPassword: false);
     } else {
@@ -58,31 +58,31 @@ Future<void> logout() async{
   prefs.remove(Constants.key_pw);
 }
 
-Future<String> getPassword() async {
+Future<String?> getPassword() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   return prefs.getString(Constants.key_pw);
 }
 
-Future<String> getCountry() async {
+Future<String?> getCountry() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   return prefs.getString(Constants.key_country);
 }
 
-Future<int> getHospital() async {
+Future<int?> getHospital() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   return prefs.getInt(Constants.key_hospital);
 }
 
-Future<String> getRole() async {
+Future<String?> getRole() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   return prefs.getString(Constants.key_role);
 }
 
-Future<int> getUser() async {
+Future<int?> getUser() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   return prefs.getInt(Constants.key_user);

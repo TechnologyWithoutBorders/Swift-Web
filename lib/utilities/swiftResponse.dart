@@ -2,7 +2,7 @@ class SwiftResponse {
   final int responseCode;
   final dynamic data;
 
-  SwiftResponse({this.responseCode, this.data});
+  SwiftResponse({required this.responseCode, this.data});
 
   factory SwiftResponse.fromJson(Map<String, dynamic> json) {
     return SwiftResponse(

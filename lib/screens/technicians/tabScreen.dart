@@ -18,7 +18,7 @@ import 'package:teog_swift/utilities/hospital.dart';
 class TabScreen extends StatefulWidget {
   static const String route = '/tabs';
 
-  TabScreen({Key key}) : super(key: key);
+  TabScreen({Key? key}) : super(key: key);
 
   @override
   _TabScreenState createState() => _TabScreenState();
@@ -27,11 +27,11 @@ class TabScreen extends StatefulWidget {
 class _TabScreenState extends State<TabScreen> {
   final _scrollController = ScrollController();
   
-  String _countryName;
-  Hospital _hospital;
+  String? _countryName;
+  Hospital? _hospital;
 
-  List<User> _users;
-  User _user;
+  List<User>? _users;
+  User? _user;
 
   void _logout(BuildContext context) async {
     await Prefs.logout();
@@ -39,8 +39,8 @@ class _TabScreenState extends State<TabScreen> {
   }
 
   void _setHospitalInfo() async {
-    String countryName = await Prefs.getCountry();
-    Hospital hospital = await Comm.getHospitalInfo();
+    String? countryName = await Prefs.getCountry();
+    Hospital? hospital = await Comm.getHospitalInfo();
 
     setState(() {
       _countryName = countryName;
@@ -50,7 +50,7 @@ class _TabScreenState extends State<TabScreen> {
 
   void _openMap() {
     if(_hospital != null) {
-      html.window.open('https://www.openstreetmap.org/?mlat=' + _hospital.latitude.toString() + '&mlon=' + _hospital.longitude.toString() + '#map=17/' + _hospital.latitude.toString() + '/' + _hospital.longitude.toString(), 'map');
+      html.window.open('https://www.openstreetmap.org/?mlat=' + _hospital!.latitude.toString() + '&mlon=' + _hospital!.longitude.toString() + '#map=17/' + _hospital!.latitude.toString() + '/' + _hospital!.longitude.toString(), 'map');
     }
   }
 
@@ -100,9 +100,9 @@ class _TabScreenState extends State<TabScreen> {
                       controller: _scrollController,
                       child: ListView.separated(
                         controller: _scrollController,
-                        itemCount: _users.length,
+                        itemCount: _users!.length,
                         itemBuilder: (BuildContext context, int index) {
-                          User user = _users[index];
+                          User user = _users![index];
 
                           return ListTile(
                             title: Text(user.name),
@@ -126,9 +126,9 @@ class _TabScreenState extends State<TabScreen> {
         child: Scaffold(
           backgroundColor: Colors.grey[200],
           appBar: AppBar(
-            title: _hospital != null ? Row(
+            title: _hospital != null && _countryName != null ? Row(
               children: [
-                Text("TeoG Swift - "+ _hospital.name +  ", " + _countryName),
+                Text("TeoG Swift - "+ _hospital!.name +  ", " + _countryName!),
                 IconButton(
                   tooltip: "show on map",
                   icon: Icon(Icons.map),
@@ -140,7 +140,7 @@ class _TabScreenState extends State<TabScreen> {
               DropdownButton<User>(
                 value: _user,
                 selectedItemBuilder: (_) {
-                  return _users.map((user) => Container(
+                  return _users!.map((user) => Container(
                     alignment: Alignment.center,
                     child: Text(
                       user.name,
@@ -148,7 +148,7 @@ class _TabScreenState extends State<TabScreen> {
                     ),
                   )).toList();
                 },
-                items: _users.map<DropdownMenuItem<User>>((User user) {
+                items: _users!.map<DropdownMenuItem<User>>((User user) {
                     return DropdownMenuItem<User>(
                       value: user,
                       child: Text(
@@ -158,13 +158,17 @@ class _TabScreenState extends State<TabScreen> {
                     );
                   }
                 ).toList(),
-                onChanged: (user) => _saveUser(user),
+                onChanged: (user) => {
+                  if(user != null) {
+                    _saveUser(user)
+                  }
+                },
               ),
               Padding(padding: EdgeInsets.only(right: 20.0),
                 child: TextButton(
                   style: ButtonStyle(
                     foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                      return states.contains(MaterialState.disabled) ? null : Colors.white;
+                      return states.contains(MaterialState.disabled) ? Colors.grey : Colors.white;
                     }),
                   ),
                   child: Text("Logout"),

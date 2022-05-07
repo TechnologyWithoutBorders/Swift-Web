@@ -13,7 +13,7 @@ class DetailScreen extends StatefulWidget {
   //this one is never modified
   final ShortDeviceInfo deviceInfo;
 
-  DetailScreen({Key key, @required this.deviceInfo}) : super(key: key);
+  DetailScreen({Key? key, required this.deviceInfo}) : super(key: key);
 
   @override
   _DetailScreenState createState() => _DetailScreenState(deviceInfo: deviceInfo);
@@ -22,7 +22,7 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   ShortDeviceInfo deviceInfo;
 
-  _DetailScreenState({this.deviceInfo});
+  _DetailScreenState({required this.deviceInfo});
 
   _updateDeviceInfo(ShortDeviceInfo modifiedDeviceInfo) {
     setState(() {
@@ -34,7 +34,7 @@ class _DetailScreenState extends State<DetailScreen> {
   Widget build(BuildContext context) {
     Widget reportWidget;
 
-    String reasonText;
+    String? reasonText;
 
     switch(deviceInfo.report.currentState) {
       case DeviceState.broken:
@@ -66,7 +66,7 @@ class _DetailScreenState extends State<DetailScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(deviceInfo.device.manufacturer + " " + deviceInfo.device.model, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                deviceInfo.device.orgUnit != null ? Text(deviceInfo.device.orgUnit, style: TextStyle(fontSize: 25)) : Text(""),
+                deviceInfo.device.orgUnit != null ? Text(deviceInfo.device.orgUnit!, style: TextStyle(fontSize: 25)) : Text(""),
                 Divider(),
                 SizedBox(height: 20),
                 Flexible(child: Row(
@@ -74,7 +74,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   children: [
                     Expanded(
                       flex: 3,
-                      child: Image.memory(base64Decode(deviceInfo.imageData))
+                      child: deviceInfo.imageData != null && deviceInfo.imageData!.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData!)) : Text("no image available"),
                     ),
                     SizedBox(width: 30),
                     Expanded(
@@ -112,7 +112,7 @@ class _DetailScreenState extends State<DetailScreen> {
 class DocumentScreen extends StatefulWidget {
   final ShortDeviceInfo deviceInfo;
 
-  DocumentScreen({Key key, @required this.deviceInfo}) : super(key: key);
+  DocumentScreen({Key? key, required this.deviceInfo}) : super(key: key);
 
   @override
   _DocumentScreenState createState() => _DocumentScreenState();
@@ -169,9 +169,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
 class StateScreen extends StatefulWidget {
   final ShortDeviceInfo deviceInfo;
 
-  final ValueChanged<ShortDeviceInfo> updateDeviceInfo;
-
-  StateScreen({Key key, @required this.deviceInfo, this.updateDeviceInfo}) : super(key: key);
+  StateScreen({Key? key, required this.deviceInfo}) : super(key: key);
 
   @override
   _StateScreenState createState() => _StateScreenState();
@@ -210,7 +208,7 @@ class ReportProblemForm extends StatefulWidget {
 
   final ValueChanged<ShortDeviceInfo> updateDeviceInfo;
 
-  ReportProblemForm({Key key, @required this.deviceInfo, this.updateDeviceInfo}) : super(key: key);
+  ReportProblemForm({Key? key, required this.deviceInfo, required this.updateDeviceInfo}) : super(key: key);
 
   @override
   _ReportProblemFormState createState() => _ReportProblemFormState();
@@ -223,7 +221,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
   final _problemTextController = TextEditingController();
 
   Future<bool> _createReport() async {
-    if(_formKey.currentState.validate()) {
+    if(_formKey.currentState!.validate()) {
       await Comm.queueRepair(widget.deviceInfo.device.id, _reportTitleController.text, _problemTextController.text).then((newReport) {
         widget.updateDeviceInfo(ShortDeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData));
       }).onError((error, stackTrace) {
@@ -255,7 +253,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
                       controller: _reportTitleController,
                       decoration: new InputDecoration(labelText: 'Title'),
                       validator: (value) {
-                        if (value.isEmpty) {
+                        if (value == null || value.isEmpty) {
                           return "Please give your report a title.";
                         }
                         return null;
@@ -269,7 +267,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
                         decoration: new InputDecoration(labelText: 'Problem description'),
                         maxLines: 4,
                         validator: (value) {
-                          if (value.isEmpty) {
+                          if (value == null || value.isEmpty) {
                             return "Please describe the problem in a few sentences.";
                           }
                           return null;

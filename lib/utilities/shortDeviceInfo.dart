@@ -4,7 +4,7 @@ import 'report.dart';
 class ShortDeviceInfo {
   final HospitalDevice device;
   final Report report;
-  final String imageData;
+  final String? imageData;
 
-  ShortDeviceInfo({this.device, this.report, this.imageData});
+  ShortDeviceInfo({required this.device, required this.report, this.imageData});
 }

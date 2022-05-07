@@ -5,7 +5,7 @@ class Hospital {
   final double latitude;
   final double longitude;
 
-  Hospital({this.id, this.name, this.location, this.latitude, this.longitude});
+  Hospital({required this.id, required this.name, required this.location, required this.latitude, required this.longitude});
 
   factory Hospital.fromJson(Map<String, dynamic> json) {
     return Hospital(

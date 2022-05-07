@@ -5,7 +5,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 class AboutScreen extends StatefulWidget {
   static const String route = '/about';
 
-  AboutScreen({Key key}) : super(key: key);
+  AboutScreen({Key? key}) : super(key: key);
 
   @override
   _AboutScreenState createState() => _AboutScreenState();
