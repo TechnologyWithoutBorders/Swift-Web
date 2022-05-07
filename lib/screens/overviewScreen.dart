@@ -109,8 +109,8 @@ class _SearchFormState extends State with SessionMixin {
   ///Validates whether a given [value] is a valid device ID.
   ///
   ///Returns null if value is valid, otherwise text message.
-  String validateDeviceID(String value) {
-    if(value.isNotEmpty) {
+  String? validateDeviceID(String? value) {
+    if(value != null && value.isNotEmpty) {
       var numeric = int.tryParse(value);
 
       if(numeric != null && numeric > 0) {
@@ -186,7 +186,7 @@ class _FilterFormState extends State<FilterForm> {
 
   final _scrollController = ScrollController();
 
-  DepartmentFilter _departmentFilter;
+  DepartmentFilter? _departmentFilter;
   List<PreviewDeviceInfo> _filteredDevices = [];
   bool _loading = false;
 
@@ -202,10 +202,10 @@ class _FilterFormState extends State<FilterForm> {
           _filteredDevices = devices;
           _loading = false;
         });
-      }).onError((error, stackTrace) {
-        final snackBar = SnackBar(content: Text(error.data));
+      }).onError<MessageException>((error, stackTrace) {
+        final snackBar = SnackBar(content: Text(error.message));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        
+
         setState(() {
           _loading = false;
         });
@@ -221,8 +221,8 @@ class _FilterFormState extends State<FilterForm> {
           builder: (context) => DetailScreen(deviceInfo: deviceInfo),
         )
       );
-    }).onError((error, stackTrace) {
-      final snackBar = SnackBar(content: Text(error.data));
+    }).onError<MessageException>((error, stackTrace) {
+      final snackBar = SnackBar(content: Text(error.message));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
   }
@@ -231,7 +231,7 @@ class _FilterFormState extends State<FilterForm> {
     showDialog<DepartmentFilter>(
       context: context,
       builder: (BuildContext context) {
-        return OrganizationFilterView(orgUnit: _departmentFilter != null ? _departmentFilter.parent : null);
+        return OrganizationFilterView(orgUnit: _departmentFilter != null ? _departmentFilter!.parent : null);
       }
     ).then((departmentFilter) {
       setState(() {
@@ -255,13 +255,13 @@ class _FilterFormState extends State<FilterForm> {
           ButtonBar(
             alignment: MainAxisAlignment.center,
             children: [
-              _departmentFilter != null ? Text("Department: " + _departmentFilter.parent.name, style: TextStyle(fontSize: 25)) : null,
+              _departmentFilter != null ? Text("Department: " + _departmentFilter!.parent.name, style: TextStyle(fontSize: 25)) : Container(),
               _departmentFilter != null ? IconButton(
                 iconSize: 25,
                 icon: Icon(Icons.cancel_outlined, color: Colors.red[700]),
                 tooltip: "clear selection",
                 onPressed: () => setState(() => { _departmentFilter = null }), 
-              ): null,
+              ): Container(),
               OutlinedButton(onPressed: () => _filterDepartment(), child: Text("select department...")),
             ]
           ),
@@ -294,10 +294,10 @@ class _FilterFormState extends State<FilterForm> {
                 HospitalDevice device = deviceInfo.device;
 
                 return ListTile(
-                  leading: deviceInfo.imageData.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData)) : Text("no image"),
+                  leading: deviceInfo.imageData != null ? Image.memory(base64Decode(deviceInfo.imageData!)) : Text("no image"),
                   title: Text(device.type),
                   subtitle: Text(device.manufacturer + " " + device.model),
-                  trailing: device.orgUnit != null ? Text(device.orgUnit) : null,
+                  trailing: device.orgUnit != null ? Text(device.orgUnit!) : null,
                   onTap: () => _openDeviceById(device.id)
                 );
               },
