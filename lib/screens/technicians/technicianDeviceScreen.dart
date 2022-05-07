@@ -20,7 +20,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 class TechnicianDeviceScreen extends StatefulWidget {
   final int id;
 
-  TechnicianDeviceScreen({Key key, @required this.id}) : super(key: key);
+  TechnicianDeviceScreen({Key? key, required this.id}) : super(key: key);
 
   @override
   _TechnicianDeviceScreenState createState() => _TechnicianDeviceScreenState();

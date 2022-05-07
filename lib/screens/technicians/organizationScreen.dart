@@ -11,7 +11,7 @@ import 'package:teog_swift/utilities/previewDeviceInfo.dart';
 import 'package:teog_swift/utilities/constants.dart';
 
 class OrganizationScreen extends StatefulWidget {
-  OrganizationScreen({Key key}) : super(key: key);
+  OrganizationScreen({Key? key}) : super(key: key);
 
   @override
   _OrganizationScreenState createState() => _OrganizationScreenState();

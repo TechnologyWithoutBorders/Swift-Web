@@ -18,7 +18,7 @@ import 'package:teog_swift/screens/organizationFilterView.dart';
 class OverviewScreen extends StatefulWidget {
   static const String route = '/welcome';
 
-  OverviewScreen({Key key}) : super(key: key);
+  OverviewScreen({Key? key}) : super(key: key);
 
   @override
   _OverviewScreenState createState() => _OverviewScreenState();

@@ -8,9 +8,9 @@ import 'package:teog_swift/utilities/organizationalUnit.dart';
 import 'package:teog_swift/utilities/messageException.dart';
 
 class OrganizationFilterView extends StatefulWidget {
-  final OrganizationalUnit orgUnit;
+  final OrganizationalUnit? orgUnit;
 
-  OrganizationFilterView({Key key, this.orgUnit}) : super(key: key);
+  OrganizationFilterView({Key? key, this.orgUnit}) : super(key: key);
 
   @override
   _OrganizationFilterViewState createState() => _OrganizationFilterViewState();

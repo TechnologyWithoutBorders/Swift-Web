@@ -18,7 +18,7 @@ import 'package:teog_swift/utilities/hospital.dart';
 class TabScreen extends StatefulWidget {
   static const String route = '/tabs';
 
-  TabScreen({Key key}) : super(key: key);
+  TabScreen({Key? key}) : super(key: key);
 
   @override
   _TabScreenState createState() => _TabScreenState();

@@ -5,7 +5,7 @@ import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/messageException.dart';
 
 class UserManagementScreen extends StatefulWidget {
-  UserManagementScreen({Key key}) : super(key: key);
+  UserManagementScreen({Key? key}) : super(key: key);
 
   @override
   _DetailScreenState createState() => _DetailScreenState();

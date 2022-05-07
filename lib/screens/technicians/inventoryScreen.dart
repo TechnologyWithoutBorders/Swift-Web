@@ -10,7 +10,7 @@ import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
 
 class InventoryScreen extends StatefulWidget {
-  InventoryScreen({Key key}) : super(key: key);
+  InventoryScreen({Key? key}) : super(key: key);
 
   @override
   _InventoryScreenState createState() => _InventoryScreenState();

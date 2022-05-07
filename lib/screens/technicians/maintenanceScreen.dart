@@ -9,7 +9,7 @@ import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 
 class MaintenanceScreen extends StatefulWidget {
-  MaintenanceScreen({Key key}) : super(key: key);
+  MaintenanceScreen({Key? key}) : super(key: key);
 
   @override
   _MaintenanceScreenState createState() => _MaintenanceScreenState();

@@ -13,7 +13,7 @@ import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/detailedReport.dart';
 
 class DashboardScreen extends StatefulWidget {
-  DashboardScreen({Key key}) : super(key: key);
+  DashboardScreen({Key? key}) : super(key: key);
 
   @override
   _DetailScreenState createState() => _DetailScreenState();
