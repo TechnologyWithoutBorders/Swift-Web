@@ -40,7 +40,7 @@ class _TabScreenState extends State<TabScreen> {
 
   void _setHospitalInfo() async {
     String? countryName = await Prefs.getCountry();
-    Hospital hospital = await Comm.getHospitalInfo();
+    Hospital? hospital = await Comm.getHospitalInfo();
 
     setState(() {
       _countryName = countryName;
@@ -126,7 +126,7 @@ class _TabScreenState extends State<TabScreen> {
         child: Scaffold(
           backgroundColor: Colors.grey[200],
           appBar: AppBar(
-            title: _hospital != null ? Row(
+            title: _hospital != null && _countryName != null ? Row(
               children: [
                 Text("TeoG Swift - "+ _hospital!.name +  ", " + _countryName!),
                 IconButton(
@@ -140,7 +140,7 @@ class _TabScreenState extends State<TabScreen> {
               DropdownButton<User>(
                 value: _user,
                 selectedItemBuilder: (_) {
-                  return _users.map((user) => Container(
+                  return _users!.map((user) => Container(
                     alignment: Alignment.center,
                     child: Text(
                       user.name,
@@ -148,7 +148,7 @@ class _TabScreenState extends State<TabScreen> {
                     ),
                   )).toList();
                 },
-                items: _users.map<DropdownMenuItem<User>>((User user) {
+                items: _users!.map<DropdownMenuItem<User>>((User user) {
                     return DropdownMenuItem<User>(
                       value: user,
                       child: Text(

@@ -100,7 +100,7 @@ class _LoginFormState extends State<LoginForm> {
     String? countryName = _selectedCountry?.name;
     int? hospitalId = _selectedHospital?.id;
 
-    if(countryName != null && hospitalId != null && _formKey.currentState.validate()) {
+    if(countryName != null && hospitalId != null && _formKey.currentState!.validate()) {
       String password = _passwordTextController.text;
 
       Comm.checkCredentials(countryName, hospitalId, password).then((role) {
