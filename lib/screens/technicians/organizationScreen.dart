@@ -22,7 +22,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   Map<int, String> _nameMap = Map();
   bool _edited = false;
 
-  int _selectedDepartment;
+  int? _selectedDepartment;
   Map<int, List<PreviewDeviceInfo>> _deviceRelations = Map();
   List<PreviewDeviceInfo> _displayedDevices = [];
   final _scrollController = ScrollController();
@@ -325,7 +325,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     return devices;
   }
 
-  void _updateAssignedDevices(int orgUnitId) {
+  void _updateAssignedDevices(int? orgUnitId) {
     setState(() {
       _displayedDevices.clear();
     });

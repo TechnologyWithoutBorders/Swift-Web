@@ -27,11 +27,11 @@ class TabScreen extends StatefulWidget {
 class _TabScreenState extends State<TabScreen> {
   final _scrollController = ScrollController();
   
-  String _countryName;
-  Hospital _hospital;
+  String? _countryName;
+  Hospital? _hospital;
 
-  List<User> _users;
-  User _user;
+  List<User>? _users;
+  User? _user;
 
   void _logout(BuildContext context) async {
     await Prefs.logout();
@@ -39,7 +39,7 @@ class _TabScreenState extends State<TabScreen> {
   }
 
   void _setHospitalInfo() async {
-    String countryName = await Prefs.getCountry();
+    String? countryName = await Prefs.getCountry();
     Hospital hospital = await Comm.getHospitalInfo();
 
     setState(() {
@@ -50,7 +50,7 @@ class _TabScreenState extends State<TabScreen> {
 
   void _openMap() {
     if(_hospital != null) {
-      html.window.open('https://www.openstreetmap.org/?mlat=' + _hospital.latitude.toString() + '&mlon=' + _hospital.longitude.toString() + '#map=17/' + _hospital.latitude.toString() + '/' + _hospital.longitude.toString(), 'map');
+      html.window.open('https://www.openstreetmap.org/?mlat=' + _hospital!.latitude.toString() + '&mlon=' + _hospital!.longitude.toString() + '#map=17/' + _hospital!.latitude.toString() + '/' + _hospital!.longitude.toString(), 'map');
     }
   }
 
@@ -100,9 +100,9 @@ class _TabScreenState extends State<TabScreen> {
                       controller: _scrollController,
                       child: ListView.separated(
                         controller: _scrollController,
-                        itemCount: _users.length,
+                        itemCount: _users!.length,
                         itemBuilder: (BuildContext context, int index) {
-                          User user = _users[index];
+                          User user = _users![index];
 
                           return ListTile(
                             title: Text(user.name),
@@ -128,7 +128,7 @@ class _TabScreenState extends State<TabScreen> {
           appBar: AppBar(
             title: _hospital != null ? Row(
               children: [
-                Text("TeoG Swift - "+ _hospital.name +  ", " + _countryName),
+                Text("TeoG Swift - "+ _hospital!.name +  ", " + _countryName!),
                 IconButton(
                   tooltip: "show on map",
                   icon: Icon(Icons.map),

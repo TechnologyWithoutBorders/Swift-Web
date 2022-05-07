@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
@@ -27,8 +28,8 @@ class TechnicianDeviceScreen extends StatefulWidget {
 }
 
 class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
-  int _userId = -1;
-  DeviceInfo _deviceInfo;
+  int? _userId;
+  DeviceInfo? _deviceInfo;
 
   final _scrollController = ScrollController();
 
@@ -43,7 +44,11 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
 
-    Prefs.getUser().then((userId) => _userId = userId);
+    Prefs.getUser().then((userId) => {
+      setState(() {
+        _userId = userId;
+      })
+    });
   }
 
   void _updateDeviceInfo(DeviceInfo modifiedDeviceInfo) {
@@ -53,185 +58,196 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
   }
 
   void _editDevice() {
-    //TODO: should those be disposed?
-    TextEditingController typeController = TextEditingController(text: this._deviceInfo.device.type);
-    TextEditingController manufacturerController = TextEditingController(text: this._deviceInfo.device.manufacturer);
-    TextEditingController modelController = TextEditingController(text: this._deviceInfo.device.model);
-    int maintenanceInterval = (this._deviceInfo.device.maintenanceInterval/4).ceil();
+    HospitalDevice? device = _deviceInfo?.device;
 
-    showDialog<String>(
-      context: context,
-      builder: (BuildContext context) {
-        return new AlertDialog(
-          contentPadding: const EdgeInsets.all(16.0),
-          content: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return new Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  TextField(
-                    controller: typeController,
-                    decoration: new InputDecoration(
-                      labelText: 'Type'),
-                  ),
-                  TextField(
-                    controller: manufacturerController,
-                    decoration: new InputDecoration(
-                      labelText: 'Manufacturer'),
-                  ),
-                  TextField(
-                    controller: modelController,
-                    decoration: new InputDecoration(
-                      labelText: 'Model'),
-                  ),
-                  SizedBox(height: 10),
-                  Text("Maintenance interval (months):"),
-                  NumberPicker(
-                    minValue: 1,
-                    maxValue: 24,
-                    value: maintenanceInterval,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.black26),
+    if(device != null) {
+      //TODO: should those be disposed?
+      TextEditingController typeController = TextEditingController(text: device.type);
+      TextEditingController manufacturerController = TextEditingController(text: device.manufacturer);
+      TextEditingController modelController = TextEditingController(text: device.model);
+      int maintenanceInterval = (device.maintenanceInterval/4).ceil();
+
+      showDialog<String>(
+        context: context,
+        builder: (BuildContext context) {
+          return new AlertDialog(
+            contentPadding: const EdgeInsets.all(16.0),
+            content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return new Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextField(
+                      controller: typeController,
+                      decoration: new InputDecoration(
+                        labelText: 'Type'),
                     ),
-                    onChanged: (value) => {
-                      setState(() {
-                        maintenanceInterval = value;
-                      })
-                    }
-                  )
-                ],
-              );
-            }
-          ),
-          actions: <Widget>[
-            ElevatedButton(
-                child: const Text('Cancel'),
-                onPressed: () {
-                  Navigator.pop(context);
-                }),
-            ElevatedButton(
-                child: const Text('Save'),
-                onPressed: () {
-                  String type = typeController.text;
-                  String manufacturer = manufacturerController.text;
-                  String model = modelController.text;
+                    TextField(
+                      controller: manufacturerController,
+                      decoration: new InputDecoration(
+                        labelText: 'Manufacturer'),
+                    ),
+                    TextField(
+                      controller: modelController,
+                      decoration: new InputDecoration(
+                        labelText: 'Model'),
+                    ),
+                    SizedBox(height: 10),
+                    Text("Maintenance interval (months):"),
+                    NumberPicker(
+                      minValue: 1,
+                      maxValue: 24,
+                      value: maintenanceInterval,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.black26),
+                      ),
+                      onChanged: (value) => {
+                        setState(() {
+                          maintenanceInterval = value;
+                        })
+                      }
+                    )
+                  ],
+                );
+              }
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                  child: const Text('Cancel'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+              ElevatedButton(
+                  child: const Text('Save'),
+                  onPressed: () {
+                    String type = typeController.text;
+                    String manufacturer = manufacturerController.text;
+                    String model = modelController.text;
 
-                  Comm.editDevice(
-                    HospitalDevice(id: this._deviceInfo.device.id, type: type, manufacturer: manufacturer, model: model, orgUnitId: this._deviceInfo.device.orgUnitId, orgUnit: this._deviceInfo.device.orgUnit, maintenanceInterval: maintenanceInterval*4)).then((modifiedDeviceInfo) {
-                    
-                    _updateDeviceInfo(modifiedDeviceInfo);
-                  });
+                    Comm.editDevice(
+                      HospitalDevice(id: device.id, type: type, manufacturer: manufacturer, model: model, serialNumber: "", orgUnitId: device.orgUnitId, orgUnit: device.orgUnit, maintenanceInterval: maintenanceInterval*4)).then((modifiedDeviceInfo) {
+                      
+                      _updateDeviceInfo(modifiedDeviceInfo);
+                    });
 
-                  Navigator.pop(context);
-                })
-          ],
-        );
-      }
-    );
+                    Navigator.pop(context);
+                  })
+            ],
+          );
+        }
+      );
+    }
   }
 
   void _createReport() async {
-    final titleTextController = TextEditingController();
-    final descriptionTextController = TextEditingController();
-    int selectedState = _deviceInfo.reports[0].currentState;
+    HospitalDevice? device = _deviceInfo?.device;
+    List<DetailedReport>? reports = _deviceInfo?.reports;
 
-    await showDialog<String>(
-      context: context,
-      builder: (BuildContext context) {
-        return new AlertDialog(
-          title: Text("Create a report"),
-          contentPadding: const EdgeInsets.all(16.0),
-          content: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  TextField(
-                    controller: titleTextController,
-                    decoration: new InputDecoration(
-                      labelText: 'Title'),
-                  ),
-                  TextField(
-                    controller: descriptionTextController,
-                    decoration: new InputDecoration(
-                      labelText: 'Description'),
-                  ),
-                  DropdownButton<int>(
-                    hint: Text("Current state"),
-                    value: selectedState,
-                    items: <int>[0, 1, 2, 3, 4, 5]//TODO: das sollte aus DeviceStates kommen
-                      .map<DropdownMenuItem<int>>((int state) {
-                        return DropdownMenuItem<int>(
-                          value: state,
-                          child: Container(
-                            color: DeviceState.getColor(state),
-                            child: Row(
-                              children: [
-                                Icon(DeviceState.getIconData(state)),
-                                SizedBox(width: 5),
-                                Text(DeviceState.getStateString(state)),
-                              ]
-                            )
-                          ),
-                        );
-                      }
-                    ).toList(),
-                    onChanged: (newValue) => {
+    if(device != null && reports != null) {
+      final titleTextController = TextEditingController();
+      final descriptionTextController = TextEditingController();
+      int selectedState = reports[0].currentState;
+
+      await showDialog<String>(
+        context: context,
+        builder: (BuildContext context) {
+          return new AlertDialog(
+            title: Text("Create a report"),
+            contentPadding: const EdgeInsets.all(16.0),
+            content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextField(
+                      controller: titleTextController,
+                      decoration: new InputDecoration(
+                        labelText: 'Title'),
+                    ),
+                    TextField(
+                      controller: descriptionTextController,
+                      decoration: new InputDecoration(
+                        labelText: 'Description'),
+                    ),
+                    DropdownButton<int>(
+                      hint: Text("Current state"),
+                      value: selectedState,
+                      items: <int>[0, 1, 2, 3, 4, 5]//TODO: das sollte aus DeviceStates kommen
+                        .map<DropdownMenuItem<int>>((int state) {
+                          return DropdownMenuItem<int>(
+                            value: state,
+                            child: Container(
+                              color: DeviceState.getColor(state),
+                              child: Row(
+                                children: [
+                                  Icon(DeviceState.getIconData(state)),
+                                  SizedBox(width: 5),
+                                  Text(DeviceState.getStateString(state)),
+                                ]
+                              )
+                            ),
+                          );
+                        }
+                      ).toList(),
+                      onChanged: (newValue) => {
+                        if(newValue != null) {
+                          setState(() {
+                            selectedState = newValue;
+                          })
+                        }
+                      },
+                    ),
+                  ],
+                );
+              }
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                  child: const Text('Cancel'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+              ElevatedButton(
+                  child: const Text('Save'),
+                  onPressed: () {
+                    String title = titleTextController.text;
+                    String description = descriptionTextController.text;
+
+                    Comm.createReport(device.id, title, description, selectedState).then((report) => {
                       setState(() {
-                        selectedState = newValue;
+                        reports.insert(0, report);//TODO: get reports from server
                       })
-                    },
-                  ),
-                ],
-              );
-            }
-          ),
-          actions: <Widget>[
-            ElevatedButton(
-                child: const Text('Cancel'),
-                onPressed: () {
-                  Navigator.pop(context);
-                }),
-            ElevatedButton(
-                child: const Text('Save'),
-                onPressed: () {
-                  String title = titleTextController.text;
-                  String description = descriptionTextController.text;
+                    });
 
-                  Comm.createReport(_deviceInfo.device.id, title, description, selectedState).then((report) => {
-                    setState(() {
-                      _deviceInfo.reports.insert(0, report);//TODO: get reports from server
-                    })
-                  });
-
-                  Navigator.pop(context);
-                })
-          ],
-        );
-      }
-    );
+                    Navigator.pop(context);
+                  })
+            ],
+          );
+        }
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    HospitalDevice device;
-    List<DetailedReport> reports;
+    HospitalDevice? device;
+    List<DetailedReport>? reports;
 
     if(_deviceInfo != null) {
-      device = _deviceInfo.device;
-      reports = _deviceInfo.reports;
+      device = _deviceInfo!.device;
+      reports = _deviceInfo!.reports;
     }
 
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: Text(_deviceInfo != null ? device.type : "loading..."),
+        title: Text(device != null ? device.type : "loading..."),
       ),
       body: Center(child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
         child: Card(
           child: Padding(padding: EdgeInsets.all(10.0),
-            child: (_deviceInfo != null && _userId >= 0) ? Column(
+            child: (device != null && reports != null && _userId != null) ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Row(
@@ -244,7 +260,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SelectableText(device.manufacturer + " " + device.model, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                            device.orgUnit != null ? Text(device.orgUnit, style: TextStyle(fontSize: 25)) : Text(""),
+                            device.orgUnit != null ? Text(device.orgUnit!, style: TextStyle(fontSize: 25)) : Text(""),
                             SelectableText("Serial number: " + device.serialNumber),
                             Text("Maintenance interval: " + (device.maintenanceInterval/4).toString() + " months"),
                             TextButton(
@@ -260,7 +276,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                       children: [
                         Text("You can scan this code using the mobile app."),
                         QrImage(
-                          data: _deviceInfo.device.id.toString(),
+                          data: device.id.toString(),
                           version: QrVersions.auto,
                           size: 100.0,
                         ),
@@ -279,7 +295,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                       flex: 2,
                       child: Column(mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          StateScreen(deviceInfo: _deviceInfo),
+                          StateScreen(deviceInfo: _deviceInfo!),
                           Flexible(
                             child: Container(
                               color: Colors.grey[200],
@@ -289,7 +305,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                                   controller: _scrollController,
                                   itemCount: reports.length,
                                   itemBuilder: (BuildContext context, int index) {
-                                    DetailedReport report = reports[index];
+                                    DetailedReport report = reports![index];
                                     // Flutter does not support date formatting without libraries
                                     String dateStamp = report.created.toString().substring(0, report.created.toString().length-7);
 
@@ -343,7 +359,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                         children: [
                           Text("Available Documents:", style: TextStyle(fontSize: 25)),
                           SizedBox(height: 10),
-                          Flexible(child: DocumentScreen(deviceInfo: _deviceInfo)),
+                          Flexible(child: DocumentScreen(deviceInfo: _deviceInfo!)),
                         ],
                       )
                     )
@@ -361,7 +377,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
 class DocumentScreen extends StatefulWidget {
   final DeviceInfo deviceInfo;
 
-  DocumentScreen({Key key, @required this.deviceInfo}) : super(key: key);
+  DocumentScreen({Key? key, required this.deviceInfo}) : super(key: key);
 
   @override
   _DocumentScreenState createState() => _DocumentScreenState();
@@ -373,7 +389,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
   bool _uploading = false;
 
   void _uploadDocuments() async {
-    FilePickerResult result = await FilePicker.platform.pickFiles(
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
       allowMultiple: true,
@@ -387,8 +403,10 @@ class _DocumentScreenState extends State<DocumentScreen> {
       List<PlatformFile> files = result.files;
 
       for(PlatformFile file in files) {
-        if(file.extension == 'pdf') {
-          List<String> documents = await Comm.uploadDocument(widget.deviceInfo.device.manufacturer, widget.deviceInfo.device.model, file.name, file.bytes);
+        Uint8List? content = file.bytes;
+
+        if(file.extension == 'pdf' && content != null) {
+          List<String> documents = await Comm.uploadDocument(widget.deviceInfo.device.manufacturer, widget.deviceInfo.device.model, file.name, content);
 
           setState(() {
             _documents = documents;
@@ -464,7 +482,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
 class StateScreen extends StatefulWidget {
   final DeviceInfo deviceInfo;
 
-  StateScreen({Key key, @required this.deviceInfo}) : super(key: key);
+  StateScreen({Key? key, required this.deviceInfo}) : super(key: key);
 
   @override
   _StateScreenState createState() => _StateScreenState();

@@ -20,7 +20,8 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
 
   List<HospitalDevice> _selectedDevices = [];
 
-  DateTime _focusedDay = DateTime.now(), _selectedDay;
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
   Map<String, List<HospitalDevice>> _maintenanceEvents = Map();
 
   @override
@@ -39,7 +40,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
       String key = event.dateTime.toString().substring(0, 10);
 
       if(maintenanceEvents.containsKey(key)) {
-        maintenanceEvents[key].add(event.device);
+        maintenanceEvents[key]!.add(event.device);
       } else {
         maintenanceEvents[key] = [event.device];
       }
