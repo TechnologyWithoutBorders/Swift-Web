@@ -23,7 +23,7 @@ class _DetailScreenState extends State<DashboardScreen> {
   final _scrollController = ScrollController();
   final _activityScrollController = ScrollController();
 
-  DeviceStats _deviceStats;
+  DeviceStats? _deviceStats;
   List<ShortDeviceInfo> _todoDevices = [];
   List<DetailedReport> _recentReports = [];
 
@@ -57,7 +57,7 @@ class _DetailScreenState extends State<DashboardScreen> {
   }
 
   void _registerDevice() {
-    int selectedState = DeviceState.working;
+    int? selectedState = DeviceState.working;
 
     //TODO: should those be disposed?
     TextEditingController idController = TextEditingController();
@@ -173,7 +173,7 @@ class _DetailScreenState extends State<DashboardScreen> {
     List<charts.Series<CategoryData, String>> seriesList = [];
 
     if(_deviceStats != null) {
-      var stateList = [_deviceStats.working, _deviceStats.maintenance, _deviceStats.broken, _deviceStats.progress, _deviceStats.salvage, _deviceStats.limitations];
+      var stateList = [_deviceStats!.working, _deviceStats!.maintenance, _deviceStats!.broken, _deviceStats!.progress, _deviceStats!.salvage, _deviceStats!.limitations];
 
       final List<CategoryData> data = [];
 
@@ -210,10 +210,10 @@ class _DetailScreenState extends State<DashboardScreen> {
                       children: [
                         Text("Overview", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                         Flexible(child: Padding(padding: EdgeInsets.all(30.0), child: DatumLegendWithMeasures(seriesList))),
-                        _deviceStats.maintenanceOverdue > 0 ? Container(
+                        _deviceStats!.maintenanceOverdue > 0 ? Container(
                           padding: EdgeInsets.all(3.0),
                           color: Color(Constants.light_red),
-                          child: Text(_deviceStats.maintenanceOverdue.toString() + " devices are overdue for maintenance", style: TextStyle(fontSize: 20))
+                          child: Text(_deviceStats!.maintenanceOverdue.toString() + " devices are overdue for maintenance", style: TextStyle(fontSize: 20))
                         ) : Container(),
                       ]
                     ) : Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator())),
@@ -252,7 +252,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                                   ),
                                   title: Text(device.type),
                                   subtitle: Text(device.manufacturer + " " + device.model),
-                                  trailing: device.orgUnit != null ? Text(device.orgUnit) : null,
+                                  trailing: device.orgUnit != null ? Text(device.orgUnit!) : null,
                                   onTap: () => {
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: device.id))).then((value) => {
                                       //this is called when the newly created route returns
