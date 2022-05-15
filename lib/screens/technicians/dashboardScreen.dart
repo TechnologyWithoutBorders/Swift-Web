@@ -280,7 +280,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                         Text("Recent Activity", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                         SizedBox(height: 10),
                         Flexible(
-                          child: Container(
+                          child: _recentReports.isNotEmpty ? Container(
                             color: Colors.grey[200],
                             child: Scrollbar(isAlwaysShown: true,
                               controller: _activityScrollController,
@@ -326,7 +326,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                                 separatorBuilder: (BuildContext context, int index) => Container(),
                               ),
                             ),
-                          )
+                          ) : Center(child: Text("no activity in the last 7 days"))
                         ),
                       ]
                     )
