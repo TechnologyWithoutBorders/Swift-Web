@@ -24,8 +24,8 @@ class _DetailScreenState extends State<DashboardScreen> {
   final _activityScrollController = ScrollController();
 
   DeviceStats? _deviceStats;
-  List<ShortDeviceInfo> _todoDevices = [];
-  List<DetailedReport> _recentReports = [];
+  List<ShortDeviceInfo>? _todoDevices;
+  List<DetailedReport>? _recentReports;
 
   @override
   void initState() {
@@ -202,10 +202,10 @@ class _DetailScreenState extends State<DashboardScreen> {
         child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
           child: Card(
             child: Padding(padding: EdgeInsets.all(25.0),
-              child: Row(mainAxisAlignment: MainAxisAlignment.center,
+              child: _deviceStats != null && _todoDevices != null && _recentReports != null ? Row(mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
-                    child: _deviceStats != null ? Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text("Overview", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
@@ -216,7 +216,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                           child: Text(_deviceStats!.maintenanceOverdue.toString() + " devices are overdue for maintenance", style: TextStyle(fontSize: 20))
                         ) : Container(),
                       ]
-                    ) : Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator())),
+                    ),
                   ),
                   Expanded(
                     child: Column(
@@ -229,9 +229,9 @@ class _DetailScreenState extends State<DashboardScreen> {
                             child: ListView.separated(
                               controller: _scrollController,
                               padding: const EdgeInsets.all(3),
-                              itemCount: _todoDevices.length,
+                              itemCount: _todoDevices!.length,
                               itemBuilder: (BuildContext context, int index) {
-                                ShortDeviceInfo deviceInfo = _todoDevices[index];
+                                ShortDeviceInfo deviceInfo = _todoDevices![index];
                                 HospitalDevice device = deviceInfo.device;
                                 Report report = deviceInfo.report;
 
@@ -280,15 +280,15 @@ class _DetailScreenState extends State<DashboardScreen> {
                         Text("Recent Activity", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                         SizedBox(height: 10),
                         Flexible(
-                          child: _recentReports.isNotEmpty ? Container(
+                          child: _recentReports!.isNotEmpty ? Container(
                             color: Colors.grey[200],
                             child: Scrollbar(isAlwaysShown: true,
                               controller: _activityScrollController,
                               child: ListView.separated(
                                 controller: _activityScrollController,
-                                itemCount: _recentReports.length,
+                                itemCount: _recentReports!.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  DetailedReport report = _recentReports[index];
+                                  DetailedReport report = _recentReports![index];
                                   // Flutter does not support date formatting without libraries
                                   String dateStamp = report.created.toString().substring(0, report.created.toString().length-7);
 
@@ -340,7 +340,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                     )
                   )
                 ]
-              )
+              ) : Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator()))
             ),
           )
         )
