@@ -273,7 +273,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                       ]
                     )
                   ),
-                  SizedBox(width: 10),
+                  SizedBox(width: 20),
                   Expanded(
                     child: Column(
                       children: [
