@@ -298,26 +298,34 @@ class _DetailScreenState extends State<DashboardScreen> {
                                       crossAxisAlignment: CrossAxisAlignment.stretch,
                                       children: [
                                         Text(dateStamp),
-                                        Card(
-                                          color: Colors.white,
-                                          child: Padding(
-                                            padding: EdgeInsets.all(5.0),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Expanded(child: Text(report.author + ":")),
-                                                    Icon(DeviceState.getIconData(report.currentState),
-                                                      color: DeviceState.getColor(report.currentState)
-                                                    )
-                                                  ]
-                                                ),
-                                                Text(report.title, style: TextStyle(fontWeight: FontWeight.bold)),
-                                                Text(report.description)
-                                              ]
+                                        InkWell(
+                                          child: Card(
+                                            color: Colors.white,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(5.0),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Expanded(child: Text(report.author + ":")),
+                                                      Icon(DeviceState.getIconData(report.currentState),
+                                                        color: DeviceState.getColor(report.currentState)
+                                                      )
+                                                    ]
+                                                  ),
+                                                  Text(report.title, style: TextStyle(fontWeight: FontWeight.bold)),
+                                                  Text(report.description)
+                                                ]
+                                              )
                                             )
-                                          )
+                                          ),
+                                          onTap: () => {
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: report.deviceId))).then((value) => {
+                                              //this is called when the newly created route returns
+                                              _updateDevices()
+                                            })
+                                          }
                                         )
                                       ]
                                     )
