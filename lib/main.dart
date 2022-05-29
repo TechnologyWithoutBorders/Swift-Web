@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teog_swift/screens/overviewScreen.dart';
 import 'package:teog_swift/screens/technicians/tabScreen.dart';
-import 'package:teog_swift/screens/aboutScreen.dart';
 import 'package:teog_swift/utilities/constants.dart';
 
 import 'dart:convert';
@@ -16,6 +15,8 @@ import 'package:teog_swift/utilities/messageException.dart';
 
 import 'package:flag/flag.dart';
 
+import 'package:package_info_plus/package_info_plus.dart';
+
 void main() => runApp(SwiftApp());
 
 class SwiftApp extends StatelessWidget {
@@ -29,7 +30,6 @@ class SwiftApp extends StatelessWidget {
       routes: {
         SwiftApp.route: (context) => LoginScreen(),
         OverviewScreen.route: (context) => OverviewScreen(),
-        AboutScreen.route: (context) => AboutScreen(),
         TabScreen.route: (context) => TabScreen(),
       },
       theme: ThemeData(
@@ -66,7 +66,7 @@ class LoginScreen extends StatelessWidget {
               Spacer(),
               Flexible(flex: 20, child: Card(child: Padding(padding: EdgeInsets.all(10.0), child: LoginForm()))),
               Spacer(),
-              TextButton(onPressed: () => Navigator.of(context).pushNamed(AboutScreen.route),
+              TextButton(onPressed: () => showAboutDialog(context: context),
                 child: Text('About'),
               ),
               Spacer(flex: 2),
@@ -153,9 +153,26 @@ class _LoginFormState extends State<LoginForm> {
     });
   }
 
+  PackageInfo _packageInfo = PackageInfo(
+    appName: 'Unknown',
+    packageName: 'Unknown',
+    version: 'Unknown',
+    buildNumber: 'Unknown',
+    buildSignature: 'Unknown',
+  );
+
+  Future<void> _initPackageInfo() async {
+    final info = await PackageInfo.fromPlatform();
+
+    setState(() {
+        _packageInfo = info;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+
     Prefs.checkLogin(syncWithServer: true).then((role) { 
       if(role == Constants.role_medical) {
         Navigator.pushNamedAndRemoveUntil(context, OverviewScreen.route, (r) => false);
@@ -165,6 +182,8 @@ class _LoginFormState extends State<LoginForm> {
         _checkForPreferences();
       }
     });
+
+    _initPackageInfo();
   }
 
   @override
