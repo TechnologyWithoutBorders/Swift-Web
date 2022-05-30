@@ -46,7 +46,36 @@ class SwiftApp extends StatelessWidget {
   }
 }
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+
+  PackageInfo _packageInfo = PackageInfo(
+    appName: 'Unknown',
+    packageName: 'Unknown',
+    version: 'Unknown',
+    buildNumber: 'Unknown',
+    buildSignature: 'Unknown',
+  );
+
+  Future<void> _initPackageInfo() async {
+    final info = await PackageInfo.fromPlatform();
+
+    setState(() {
+        _packageInfo = info;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _initPackageInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +95,13 @@ class LoginScreen extends StatelessWidget {
               Spacer(),
               Flexible(flex: 20, child: Card(child: Padding(padding: EdgeInsets.all(10.0), child: LoginForm()))),
               Spacer(),
-              TextButton(onPressed: () => showAboutDialog(context: context),
+              TextButton(
+                onPressed: () => showAboutDialog(
+                  context: context,
+                  applicationName: _packageInfo.appName,
+                  applicationVersion: " v" + _packageInfo.version + "-" + _packageInfo.buildNumber,
+                  applicationIcon: Image(image: AssetImage(Constants.logo_path))
+                ),
                 child: Text('About'),
               ),
               Spacer(flex: 2),
@@ -153,22 +188,6 @@ class _LoginFormState extends State<LoginForm> {
     });
   }
 
-  PackageInfo _packageInfo = PackageInfo(
-    appName: 'Unknown',
-    packageName: 'Unknown',
-    version: 'Unknown',
-    buildNumber: 'Unknown',
-    buildSignature: 'Unknown',
-  );
-
-  Future<void> _initPackageInfo() async {
-    final info = await PackageInfo.fromPlatform();
-
-    setState(() {
-        _packageInfo = info;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -182,8 +201,6 @@ class _LoginFormState extends State<LoginForm> {
         _checkForPreferences();
       }
     });
-
-    _initPackageInfo();
   }
 
   @override
