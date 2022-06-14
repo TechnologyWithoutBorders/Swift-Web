@@ -16,6 +16,8 @@ class _DetailScreenState extends State<UserManagementScreen> {
 
   List<User> _users = [];
 
+  bool _autoMaintenance = false;
+
   void _createUser() {
     //TODO: should those be disposed?
     TextEditingController nameController = TextEditingController();
@@ -127,7 +129,13 @@ class _DetailScreenState extends State<UserManagementScreen> {
               child: Row(mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
-                    child: Center(),
+                    child: Column(
+                      children: [
+                        Text("Settings", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                        Row(children: [Spacer(), Text("Automatic maintenance"), Switch(value: _autoMaintenance, onChanged: (newValue) => {setState(() { _autoMaintenance = newValue; })}), Spacer()]),
+                        Text("change password")
+                      ]
+                    ),
                   ),
                   Expanded(
                     child: Column(
