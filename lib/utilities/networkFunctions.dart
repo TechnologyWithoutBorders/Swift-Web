@@ -13,6 +13,7 @@ import 'package:teog_swift/utilities/maintenanceEvent.dart';
 import 'package:teog_swift/utilities/organizationalRelation.dart';
 import 'package:teog_swift/utilities/organizationalUnit.dart';
 import 'package:teog_swift/utilities/previewDeviceInfo.dart';
+import 'package:teog_swift/utilities/settings.dart';
 
 import 'package:teog_swift/utilities/swiftResponse.dart';
 
@@ -674,6 +675,29 @@ Future<bool> updateOrganizationalInfo(List<OrganizationalUnit> orgUnits, List<Or
 
     if(swiftResponse.responseCode == 0) {
       return true;
+    } else {
+      throw MessageException(swiftResponse.data);
+    }
+  } else {
+    throw MessageException(Constants.generic_error_message);
+  }
+}
+
+Future<Settings> getSettings() async {
+  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+
+  final response = await http.post(
+    uri,
+    headers: _headers,
+    body: jsonEncode(await _generateParameterMap(action: DataAction.getSettings, authentication: true),
+    ),
+  );
+
+  if(response.statusCode == 200) {
+    SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
+
+    if(swiftResponse.responseCode == 0) {
+      return Settings.fromJson(swiftResponse.data);
     } else {
       throw MessageException(swiftResponse.data);
     }
