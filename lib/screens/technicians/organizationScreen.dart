@@ -249,12 +249,6 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
         graph.addEdge(graph.getNodeUsingId(orgRelation.parent), graph.getNodeUsingId(orgRelation.id));
     }
 
-    setState(() {
-      _graph = graph;
-      _nameMap = nameMap;
-      _edited = false;
-    });
-
     List<PreviewDeviceInfo> devices = await Comm.searchDevices(null, null);
 
     Map<int?, List<PreviewDeviceInfo>> deviceRelations = Map();
@@ -272,6 +266,9 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     }
 
     setState(() {
+      _graph = graph;
+      _nameMap = nameMap;
+      _edited = false;
       _deviceRelations = deviceRelations;
     });
 
@@ -439,7 +436,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                           ]
                         )
                       )
-                    ) : Center(child: Text("loading departments...")),
+                    ) : Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator())),
                   ),
                   VerticalDivider(),
                   Expanded(
