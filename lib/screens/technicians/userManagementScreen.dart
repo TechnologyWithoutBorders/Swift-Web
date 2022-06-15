@@ -132,7 +132,14 @@ class _DetailScreenState extends State<UserManagementScreen> {
                     child: Column(
                       children: [
                         Text("Settings", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                        Row(children: [Spacer(), Text("Automatic maintenance"), Switch(value: _autoMaintenance, onChanged: (newValue) => {setState(() { _autoMaintenance = newValue; })}), Spacer()]),
+                        Row(
+                          children: [
+                            Spacer(),
+                            Tooltip(message: "Sets devices to \"maintenance due\" automatically.", child: Text("Automatic maintenance")),
+                            Switch(value: _autoMaintenance, onChanged: (newValue) => {setState(() { _autoMaintenance = newValue; })}),
+                            Spacer()
+                          ]
+                        ),
                         Text("change password")
                       ]
                     ),
