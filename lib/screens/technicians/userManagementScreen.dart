@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/settings.dart';
 import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/messageException.dart';
 
@@ -16,7 +17,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
 
   List<User> _users = [];
 
-  bool _autoMaintenance = false;
+  Settings? _settings;
 
   void _createUser() {
     //TODO: should those be disposed?
@@ -81,6 +82,15 @@ class _DetailScreenState extends State<UserManagementScreen> {
   void initState() {
     super.initState();
 
+    Comm.getSettings().then((settings) {
+      setState(() {
+        _settings = settings;
+      });
+    }).onError<MessageException>((error, stackTrace) {
+      final snackBar = SnackBar(content: Text(error.message));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    });
+
     Comm.getUsers().then((users) {
       setState(() {
         users.sort((a, b) => a.name.compareTo(b.name));
@@ -88,8 +98,8 @@ class _DetailScreenState extends State<UserManagementScreen> {
         _users = users;
       });
     }).onError<MessageException>((error, stackTrace) {
-        final snackBar = SnackBar(content: Text(error.message));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      final snackBar = SnackBar(content: Text(error.message));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
   }
 
@@ -132,15 +142,14 @@ class _DetailScreenState extends State<UserManagementScreen> {
                     child: Column(
                       children: [
                         Text("Settings", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                        Row(
+                        _settings != null ? Row(
                           children: [
                             Spacer(),
                             Tooltip(message: "Sets devices to \"maintenance due\" automatically.", child: Text("Automatic maintenance")),
-                            Switch(value: _autoMaintenance, onChanged: (newValue) => {setState(() { _autoMaintenance = newValue; })}),
+                            Switch(value: _settings!.autoMaintenance, onChanged: (newValue) => {setState(() {  })}),
                             Spacer()
                           ]
-                        ),
-                        Text("change password")
+                        ) : Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator())),
                       ]
                     ),
                   ),
