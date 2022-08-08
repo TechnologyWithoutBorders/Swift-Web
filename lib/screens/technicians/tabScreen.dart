@@ -96,7 +96,7 @@ class _TabScreenState extends State<TabScreen> {
                           .headline4),
                   SizedBox(height: 15),
                   Flexible(
-                    child: _users != null ? Scrollbar(isAlwaysShown: true,
+                    child: _users != null ? Scrollbar(
                       controller: _scrollController,
                       child: ListView.separated(
                         controller: _scrollController,

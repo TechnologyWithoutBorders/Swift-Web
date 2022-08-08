@@ -256,7 +256,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   SizedBox(height: 10),
                   Text("Number of devices matching filter: " + _displayedDevices.length.toString(), style: TextStyle(fontSize: 20)),
                   Flexible(child: Padding(padding: EdgeInsets.all(10.0),
-                    child: Scrollbar(isAlwaysShown: true,
+                    child: Scrollbar(
                       controller: _scrollController,
                       child: ListView.separated(
                         controller: _scrollController,

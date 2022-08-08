@@ -147,7 +147,6 @@ class _DocumentScreenState extends State<DocumentScreen> {
       children: [
         _documents.length > 0 ? Flexible(
           child: Scrollbar(
-            isAlwaysShown: true,
             child: ListView.separated(
               padding: const EdgeInsets.all(8),
               itemCount: _documents.length,

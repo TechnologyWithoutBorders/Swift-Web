@@ -154,7 +154,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                       children: [
                         _selectedDay != null ? Text(_selectedDay.toString().substring(0, 10), style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)) : Text(""),
                         Flexible(child: Padding(padding: EdgeInsets.all(10.0),
-                          child: Scrollbar(isAlwaysShown: true,
+                          child: Scrollbar(
                             controller: _scrollController,
                             child: ListView.separated(
                               controller: _scrollController,
