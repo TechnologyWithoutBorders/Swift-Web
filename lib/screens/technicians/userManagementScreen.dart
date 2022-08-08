@@ -135,7 +135,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
                       children: [
                         Text("Manage Staff", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                         Flexible(
-                          child: Scrollbar(isAlwaysShown: true,
+                          child: Scrollbar(
                             controller: _scrollController,
                             child: ListView.separated(
                               controller: _scrollController,

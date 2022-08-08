@@ -75,7 +75,6 @@ class _OrganizationFilterViewState extends State<OrganizationFilterView> {
             child: _graph.nodeCount() > 0 ? Center(
               child: Scrollbar(
                 controller: _orgScrollController,
-                isAlwaysShown: true,
                 child: SingleChildScrollView(
                   controller: _orgScrollController,
                   scrollDirection: Axis.horizontal,

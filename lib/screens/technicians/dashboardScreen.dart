@@ -224,7 +224,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                       children: [
                         Text("ToDo", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                         Flexible(child: Padding(padding: EdgeInsets.all(10.0),
-                          child: Scrollbar(isAlwaysShown: true,
+                          child: Scrollbar(
                             controller: _scrollController,
                             child: ListView.separated(
                               controller: _scrollController,
@@ -282,7 +282,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                         Flexible(
                           child: _recentReports!.isNotEmpty ? Container(
                             color: Colors.grey[200],
-                            child: Scrollbar(isAlwaysShown: true,
+                            child: Scrollbar(
                               controller: _activityScrollController,
                               child: ListView.separated(
                                 controller: _activityScrollController,

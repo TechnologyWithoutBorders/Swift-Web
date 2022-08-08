@@ -374,7 +374,6 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                         Expanded(
                           child: Scrollbar(
                             controller: _orgScrollController,
-                            isAlwaysShown: true,
                             child: SingleChildScrollView(
                               controller: _orgScrollController,
                               scrollDirection: Axis.horizontal,
@@ -454,7 +453,6 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                         Flexible(
                           child: Scrollbar(
                             controller: _scrollController,
-                            isAlwaysShown: true,
                             child: ListView.separated(
                               controller: _scrollController,
                               padding: const EdgeInsets.all(3),
