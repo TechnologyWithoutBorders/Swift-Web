@@ -40,6 +40,9 @@ class SwiftApp extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             primary: Color(Constants.teog_blue_light)
           )
+        ),
+        scrollbarTheme: ScrollbarThemeData(
+          thumbVisibility: MaterialStateProperty.all<bool>(true),
         )
       ),
     );
@@ -220,7 +223,6 @@ class _LoginFormState extends State<LoginForm> {
                     .headline5),
                 Flexible(
                   child: Scrollbar(
-                    isAlwaysShown: true,
                     controller: _countryScrollController,
                     child: ListView.separated(
                       controller: _countryScrollController,
@@ -257,7 +259,6 @@ class _LoginFormState extends State<LoginForm> {
                     .headline5),
                 Flexible(
                   child: Scrollbar(
-                    isAlwaysShown: true,
                     controller: _hospitalScrollController,
                     child: ListView.separated(
                       controller: _hospitalScrollController,

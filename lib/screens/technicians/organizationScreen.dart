@@ -362,80 +362,85 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                 children: [
                   Expanded(
                     flex: 4,
-                    child: _graph.nodeCount() > 0 ? Scrollbar(
-                      controller: _orgScrollController,
-                      isAlwaysShown: true,
-                      child: SingleChildScrollView(
-                        controller: _orgScrollController,
-                        scrollDirection: Axis.horizontal,
-                        child: Column(
+                    child: _graph.nodeCount() > 0 ? Column(
+                      children: [
+                        ButtonBar(
+                          alignment: MainAxisAlignment.center,
                           children: [
-                            ButtonBar(
-                              alignment: MainAxisAlignment.center,
-                              children: [
-                                ElevatedButton(child: Text("Save"), onPressed: !_edited ? null : () => _save()),
-                                ElevatedButton(child: Text("Reset"), onPressed: !_edited ? null : () => _reset())
-                              ],
-                            ),
-                            GraphView(
-                              graph: _graph,
-                              algorithm: BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
-                              builder: (Node node) {
-                                int id = node.key!.value;
+                            ElevatedButton(child: Text("Save"), onPressed: !_edited ? null : () => _save()),
+                            ElevatedButton(child: Text("Reset"), onPressed: !_edited ? null : () => _reset())
+                          ],
+                        ),
+                        Expanded(
+                          child: Scrollbar(
+                            controller: _orgScrollController,
+                            child: SingleChildScrollView(
+                              controller: _orgScrollController,
+                              scrollDirection: Axis.horizontal,
+                              child: Column(
+                                children: [
+                                  GraphView(
+                                    graph: _graph,
+                                    algorithm: BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
+                                    builder: (Node node) {
+                                      int id = node.key!.value;
 
-                                return Draggable<Node>(
-                                  data: node,
-                                  feedback: Card(color: Colors.grey[100], child: Padding(padding: EdgeInsets.all(15), child: Text(_nameMap[id]!, style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)))),
-                                  child: DragTarget<Object>(
-                                    builder: (context, candidateItems, rejectedItems) {
-                                      return Card(
-                                        shape: id != _selectedDepartment ? RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(4.0),
-                                        ) : RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(4.0),
-                                          side: new BorderSide(color: Color(Constants.teog_blue))
-                                        ),
-                                        color: candidateItems.isNotEmpty ? Colors.grey[300] : Colors.grey[100],
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            TextButton(child: Text(_nameMap[id]!, style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)), onPressed: () => _updateAssignedDevices(id)),
-                                            ButtonBar(
-                                              mainAxisSize: MainAxisSize.min,
-                                              buttonPadding: EdgeInsets.zero,
-                                              children: [
-                                                id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key!.value)) : Container(),
-                                                id != 1 ? TextButton(child: Icon(Icons.edit), onPressed: ()=> _renameUnit(node.key!.value)) : Container(),
-                                                TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key!.value))
-                                            ],)
-                                          ]
+                                      return Draggable<Node>(
+                                        data: node,
+                                        feedback: Card(color: Colors.grey[100], child: Padding(padding: EdgeInsets.all(15), child: Text(_nameMap[id]!, style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)))),
+                                        child: DragTarget<Object>(
+                                          builder: (context, candidateItems, rejectedItems) {
+                                            return Card(
+                                              shape: id != _selectedDepartment ? RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(4.0),
+                                              ) : RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(4.0),
+                                                side: new BorderSide(color: Color(Constants.teog_blue))
+                                              ),
+                                              color: candidateItems.isNotEmpty ? Colors.grey[300] : Colors.grey[100],
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  TextButton(child: Text(_nameMap[id]!, style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)), onPressed: () => _updateAssignedDevices(id)),
+                                                  ButtonBar(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    buttonPadding: EdgeInsets.zero,
+                                                    children: [
+                                                      id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key!.value)) : Container(),
+                                                      id != 1 ? TextButton(child: Icon(Icons.edit), onPressed: ()=> _renameUnit(node.key!.value)) : Container(),
+                                                      TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key!.value))
+                                                  ],)
+                                                ]
+                                              )
+                                            );
+                                          },
+                                          onWillAccept: (item) {
+                                            if(item is Node) {
+                                              return !(item.key!.value == 1 || item.key!.value == id);
+                                            } else if(item is PreviewDeviceInfo) {
+                                              return true;
+                                            } else {
+                                              return false;
+                                            }
+                                          },
+                                          onAccept: (item) {
+                                            if(item is Node) {
+                                              _reOrganizeUnit(item.key!.value, id);
+                                            } else if(item is PreviewDeviceInfo) {
+                                              _assignDevice(item, id);
+                                            }
+                                          },
                                         )
                                       );
-                                    },
-                                    onWillAccept: (item) {
-                                      if(item is Node) {
-                                        return !(item.key!.value == 1 || item.key!.value == id);
-                                      } else if(item is PreviewDeviceInfo) {
-                                        return true;
-                                      } else {
-                                        return false;
-                                      }
-                                    },
-                                    onAccept: (item) {
-                                      if(item is Node) {
-                                        _reOrganizeUnit(item.key!.value, id);
-                                      } else if(item is PreviewDeviceInfo) {
-                                        _assignDevice(item, id);
-                                      }
-                                    },
-                                  )
-                                );
-                              }
-                            ),
-                            SizedBox(height: 10)
-                          ]
+                                    }
+                                  ),
+                                  SizedBox(height: 10)
+                                ]
+                              )
+                            )
+                          )
                         )
-                      )
+                      ]
                     ) : Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator())),
                   ),
                   VerticalDivider(),
@@ -448,7 +453,6 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                         Flexible(
                           child: Scrollbar(
                             controller: _scrollController,
-                            isAlwaysShown: true,
                             child: ListView.separated(
                               controller: _scrollController,
                               padding: const EdgeInsets.all(3),
