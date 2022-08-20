@@ -5,14 +5,14 @@ import 'package:teog_swift/utilities/settings.dart';
 import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/messageException.dart';
 
-class UserManagementScreen extends StatefulWidget {
-  UserManagementScreen({Key? key}) : super(key: key);
+class AdministrationScreen extends StatefulWidget {
+  AdministrationScreen({Key? key}) : super(key: key);
 
   @override
   _DetailScreenState createState() => _DetailScreenState();
 }
 
-class _DetailScreenState extends State<UserManagementScreen> {
+class _DetailScreenState extends State<AdministrationScreen> {
   final _scrollController = ScrollController();
 
   List<User> _users = [];

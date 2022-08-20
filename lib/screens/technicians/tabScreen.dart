@@ -7,7 +7,7 @@ import 'package:teog_swift/main.dart';
 import 'package:teog_swift/screens/technicians/dashBoardScreen.dart';
 import 'package:teog_swift/screens/technicians/inventoryScreen.dart';
 import 'package:teog_swift/screens/technicians/organizationScreen.dart';
-import 'package:teog_swift/screens/technicians/userManagementScreen.dart';
+import 'package:teog_swift/screens/technicians/administrationScreen.dart';
 import 'package:teog_swift/screens/technicians/maintenanceScreen.dart';
 
 import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
@@ -193,7 +193,7 @@ class _TabScreenState extends State<TabScreen> {
               MaintenanceScreen(),
               InventoryScreen(),
               OrganizationScreen(),
-              UserManagementScreen(),
+              AdministrationScreen(),
             ],
           ),
         ),
