@@ -145,7 +145,7 @@ class _DetailScreenState extends State<AdministrationScreen> {
                         _settings != null ? Row(
                           children: [
                             Spacer(),
-                            Tooltip(message: "Sets devices to \"maintenance due\" automatically.", child: Text("Automatic maintenance")),
+                            Tooltip(message: "Automatically creates reports with state \"maintenance due\" when maintenances for devices are due.", child: Text("Schedule maintenances for devices automatically when due")),
                             Switch(value: _settings!.autoMaintenance, onChanged: (newValue) => {setState(() {  })}),
                             Spacer()
                           ]
