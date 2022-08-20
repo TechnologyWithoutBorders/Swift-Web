@@ -149,7 +149,7 @@ class _DetailScreenState extends State<AdministrationScreen> {
                             Switch(value: _settings!.autoMaintenance, onChanged: (newValue) => {setState(() {  })}),
                             Spacer()
                           ]
-                        ) : Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator())),
+                        ) : Flexible(child: Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator()))),
                       ]
                     ),
                   ),
