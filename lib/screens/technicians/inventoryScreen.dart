@@ -183,7 +183,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
     }
   }
 
-  void _csvExportInventory() {
+  void _csvExportInventory() async {
     List<List<dynamic>> exportList = [["Type", "Manufacturer", "Model"]];
 
     for(ShortDeviceInfo deviceInfo in _displayedDevices) {
