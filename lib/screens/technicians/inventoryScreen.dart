@@ -1,3 +1,4 @@
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:teog_swift/screens/organizationFilterView.dart';
 import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
@@ -182,6 +183,21 @@ class _InventoryScreenState extends State<InventoryScreen> {
     }
   }
 
+  void _csvExportInventory() {
+    List<List<dynamic>> exportList = [["Type", "Manufacturer", "Model"]];
+
+    for(ShortDeviceInfo deviceInfo in _displayedDevices) {
+      HospitalDevice device = deviceInfo.device;
+
+      exportList.add([device.type, device.manufacturer, device.model]);
+    }
+
+    String csv = const ListToCsvConverter().convert(exportList);
+
+    print("CSV:");
+    print(csv);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -294,6 +310,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       ),
                     ),
                   )),
+                  ElevatedButton(
+                    child: Text("Export list"),
+                    onPressed: () => _csvExportInventory()
+                  ),
                 ]
               ),
             ),
