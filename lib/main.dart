@@ -38,7 +38,7 @@ class SwiftApp extends StatelessWidget {
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            primary: Color(Constants.teog_blue_light)
+            backgroundColor: Color(Constants.teog_blue_light)
           )
         ),
         scrollbarTheme: ScrollbarThemeData(
