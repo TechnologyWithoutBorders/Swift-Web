@@ -1,5 +1,7 @@
 import 'package:csv/csv.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
+import 'dart:typed_data';
 import 'package:teog_swift/screens/organizationFilterView.dart';
 import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
@@ -193,9 +195,15 @@ class _InventoryScreenState extends State<InventoryScreen> {
     }
 
     String csv = const ListToCsvConverter().convert(exportList);
+    final Uint8List data = Uint8List.fromList(csv.codeUnits);
 
-    print("CSV:");
-    print(csv);
+    MimeType type = MimeType.CSV;
+
+    await FileSaver.instance.saveFile(
+      "inventory.csv",
+      data,
+      "csv",
+      mimeType: type);
   }
 
   @override

@@ -26,6 +26,7 @@ dependencies:
 
   crypto: ^3.0.2
   csv: ^5.0.1
+  file_saver: ^0.1.1
   http: ^0.13.4
   shared_preferences: ^2.0.13
   #pdf: ^3.6.0
