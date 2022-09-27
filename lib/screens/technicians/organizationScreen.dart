@@ -296,7 +296,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
 
     for(var entry in _deviceRelations.entries) {
       for(var deviceInfo in entry.value) {
-        deviceRelations.add(DeviceRelation(deviceId: deviceInfo.device.id, orgUnitId: entry.key!));
+        deviceRelations.add(DeviceRelation(deviceId: deviceInfo.device.id, orgUnitId: entry.key));
       }
     }
 

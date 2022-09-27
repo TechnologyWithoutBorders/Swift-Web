@@ -19,7 +19,7 @@ class OrganizationalRelation {
 
 class DeviceRelation {
   final int deviceId;
-  final int orgUnitId;
+  final int? orgUnitId;
 
   DeviceRelation({required this.deviceId, required this.orgUnitId});
 
