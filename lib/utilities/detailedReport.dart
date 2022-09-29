@@ -19,7 +19,7 @@ class DetailedReport {
       authorId: json['authorId'],
       author: json['author'],
       currentState: json['currentState'],
-      created: DateTime.parse(json['created']),//TODO: UTC->local
+      created: DateTime.parse(json['created']).toLocal(),
     );
   }
 }

@@ -11,6 +11,7 @@ import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
 import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/detailedReport.dart';
+import 'package:teog_swift/utilities/messageException.dart';
 
 class DashboardScreen extends StatefulWidget {
   DashboardScreen({Key? key}) : super(key: key);
@@ -41,18 +42,27 @@ class _DetailScreenState extends State<DashboardScreen> {
       setState(() {
         _todoDevices = todoDevices;
       });
+    }).onError<MessageException>((error, stackTrace) {
+      final snackBar = SnackBar(content: Text(error.message));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
 
-    Comm.getDeviceStats().then((deviceStats) {//TODO: catch Exception
+    Comm.getDeviceStats().then((deviceStats) {
       setState(() {
         _deviceStats = deviceStats;
       });
+    }).onError<MessageException>((error, stackTrace) {
+      final snackBar = SnackBar(content: Text(error.message));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
 
     Comm.getRecentActivity().then((reports) {
       setState(() {
         _recentReports = reports;
       });
+    }).onError<MessageException>((error, stackTrace) {
+      final snackBar = SnackBar(content: Text(error.message));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
   }
 
