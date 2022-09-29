@@ -253,7 +253,9 @@ class _DetailScreenState extends State<DashboardScreen> {
                                     children: [
                                       Container(width: 30, height: 30, color: DeviceState.getColor(report.currentState),
                                         child: Padding(padding: EdgeInsets.all(3.0),
-                                          child: Icon(DeviceState.getIconData(report.currentState))
+                                          child: Icon(DeviceState.getIconData(report.currentState),
+                                              color: Colors.grey[900]
+                                            )
                                         )
                                       ),
                                       SizedBox(height: 3),

@@ -295,7 +295,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
                             leading: Container(width: 30, height: 30, color: DeviceState.getColor(report.currentState),
                               child: Padding(padding: EdgeInsets.all(3.0),
                                 child: Row(children: [
-                                    Icon(DeviceState.getIconData(report.currentState))
+                                    Icon(DeviceState.getIconData(report.currentState),
+                                      color: Colors.grey[900]
+                                    )
                                   ]
                                 )
                               )
