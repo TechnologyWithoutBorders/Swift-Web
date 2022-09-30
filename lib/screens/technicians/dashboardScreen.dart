@@ -183,13 +183,14 @@ class _DetailScreenState extends State<DashboardScreen> {
     List<charts.Series<CategoryData, String>> seriesList = [];
 
     if(_deviceStats != null) {
-      var stateList = [_deviceStats!.working, _deviceStats!.maintenance, _deviceStats!.broken, _deviceStats!.progress, _deviceStats!.salvage, _deviceStats!.limitations];
+      var stateOrder = [DeviceState.working, DeviceState.inProgress, DeviceState.maintenance, DeviceState.broken, DeviceState.limitations, DeviceState.salvage];
+      var stateList = [_deviceStats!.working, _deviceStats!.progress, _deviceStats!.maintenance, _deviceStats!.broken, _deviceStats!.limitations, _deviceStats!.salvage];
 
       final List<CategoryData> data = [];
 
       for(int state = 0; state < stateList.length; state++) {
         if(stateList[state] > 0) {
-          data.add(new CategoryData(DeviceState.getStateString(state), stateList[state], charts.ColorUtil.fromDartColor(DeviceState.getColor(state))));
+          data.add(new CategoryData(DeviceState.getStateString(stateOrder[state]), stateList[state], charts.ColorUtil.fromDartColor(DeviceState.getColor(stateOrder[state]))));
         }
       }
 
@@ -371,11 +372,19 @@ class DatumLegendWithMeasures extends StatelessWidget {
   Widget build(BuildContext context) {
     return new charts.PieChart<String>(
       seriesList,
-      defaultRenderer: new charts.ArcRendererConfig<String>(
-        arcRendererDecorators: [
-          new charts.ArcLabelDecorator<String>(
-              labelPosition: charts.ArcLabelPosition.outside)
-        ])
+      behaviors: [
+        new charts.DatumLegend(
+          position: charts.BehaviorPosition.bottom,
+          horizontalFirst: false,
+          cellPadding: new EdgeInsets.only(right: 10.0, top: 4.0),
+          showMeasures: true,
+          desiredMaxRows: 3,
+          legendDefaultMeasure: charts.LegendDefaultMeasure.firstValue,
+          measureFormatter: (num? value) {
+            return value == null ? '-' : value.toString();
+          }
+        )
+      ]
     );
   }
 }
