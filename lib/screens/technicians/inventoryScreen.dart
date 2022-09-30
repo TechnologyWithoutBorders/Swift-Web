@@ -292,13 +292,14 @@ class _InventoryScreenState extends State<InventoryScreen> {
                           Report report = deviceInfo.report;
 
                           return ListTile(
-                            leading: Container(width: 30, height: 30, color: DeviceState.getColor(report.currentState),
-                              child: Padding(padding: EdgeInsets.all(3.0),
-                                child: Row(children: [
+                            leading: Container(width: 40, height: 40, color: DeviceState.getColor(report.currentState),
+                              child: Padding(padding: EdgeInsets.all(6.0),
+                                child: Center(child: (
                                     Icon(DeviceState.getIconData(report.currentState),
-                                      color: Colors.grey[900]
+                                      size: 28,
+                                      color: Colors.grey[900],
                                     )
-                                  ]
+                                  )
                                 )
                               )
                             ),
