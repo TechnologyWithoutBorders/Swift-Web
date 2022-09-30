@@ -251,12 +251,15 @@ class _DetailScreenState extends State<DashboardScreen> {
                                   leading: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Container(width: 30, height: 30, color: DeviceState.getColor(report.currentState),
-                                        child: Padding(padding: EdgeInsets.all(3.0),
-                                          child: Icon(DeviceState.getIconData(report.currentState))
+                                      Container(width: 33, height: 33, color: DeviceState.getColor(report.currentState),
+                                        child: Padding(padding: EdgeInsets.all(4.0),
+                                          child: Icon(DeviceState.getIconData(report.currentState),
+                                              size: 25,
+                                              color: Colors.grey[900]
+                                            )
                                         )
                                       ),
-                                      SizedBox(height: 3),
+                                      SizedBox(height: 1),
                                       Text(days.toString() + " d", style: TextStyle(fontSize: 12, color: Color(Constants.info_green)))
                                     ]
                                   ),
