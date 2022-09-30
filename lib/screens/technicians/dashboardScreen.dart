@@ -371,8 +371,9 @@ class DatumLegendWithMeasures extends StatelessWidget {
   Widget build(BuildContext context) {
     return new charts.PieChart<String>(
       seriesList,
-      defaultRenderer: new charts.ArcRendererConfig(arcRendererDecorators: [
-          new charts.ArcLabelDecorator(
+      defaultRenderer: new charts.ArcRendererConfig<String>(
+        arcRendererDecorators: [
+          new charts.ArcLabelDecorator<String>(
               labelPosition: charts.ArcLabelPosition.outside)
         ])
     );
