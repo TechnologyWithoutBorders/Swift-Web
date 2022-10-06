@@ -77,7 +77,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
               Text('Welcome', style: Theme
                 .of(context)
                 .textTheme
-                .headline3),
+                .headline4),
               Text('Please tell us which device you are looking for', style: Theme
                 .of(context)
                 .textTheme
