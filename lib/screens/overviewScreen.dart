@@ -6,7 +6,6 @@ import 'package:teog_swift/utilities/previewDeviceInfo.dart';
 import 'package:teog_swift/screens/deviceInfoScreen.dart';
 
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
-import 'package:teog_swift/utilities/doubleCardLayout.dart';
 
 import 'package:teog_swift/utilities/sessionMixin.dart';
 import 'package:teog_swift/utilities/messageException.dart';
@@ -70,21 +69,25 @@ class _OverviewScreenState extends State<OverviewScreen> {
           )
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Welcome', style: Theme
-              .of(context)
-              .textTheme
-              .headline3),
-            Text('Please tell us which device you are looking for', style: Theme
-              .of(context)
-              .textTheme
-              .headline5),
-            SizedBox(height: 25),
-            Flexible(child: FractionallySizedBox(widthFactor: 0.8, heightFactor: 0.8, child: DoubleCardLayout(DoubleCardLayout.horizontal, SearchForm(), "OR", FilterForm()))),
-          ]
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Welcome', style: Theme
+                .of(context)
+                .textTheme
+                .headline3),
+              Text('Please tell us which device you are looking for', style: Theme
+                .of(context)
+                .textTheme
+                .headline5),
+              SizedBox(height: 25),
+              Card(child: Padding(padding: EdgeInsets.all(10.0), child: SearchForm())),
+              Text("OR", style: TextStyle(fontSize: 30)),
+              Card(child: Padding(padding: EdgeInsets.all(10.0), child: FilterForm())),
+            ]
+          )
         )
       ),
     );
@@ -286,6 +289,7 @@ class _FilterFormState extends State<FilterForm> {
           SizedBox(height: 10),
           Flexible(
             child: ListView.separated(
+              shrinkWrap: true,
               controller: _scrollController,
               padding: const EdgeInsets.all(5),
               itemCount: _filteredDevices.length,
