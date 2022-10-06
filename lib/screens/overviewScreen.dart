@@ -15,7 +15,7 @@ import 'package:teog_swift/utilities/hospital.dart';
 import 'package:teog_swift/screens/organizationFilterView.dart';
 
 class OverviewScreen extends StatefulWidget {
-  static const String route = '/welcome';
+  static const String route = '/reporting';
 
   OverviewScreen({Key? key}) : super(key: key);
 
