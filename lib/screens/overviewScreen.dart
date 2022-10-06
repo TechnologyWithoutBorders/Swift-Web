@@ -70,7 +70,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Center(
+        child: Padding(padding: EdgeInsets.all(20.0), child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -90,7 +90,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
           )
         )
       ),
-    );
+    ));
   }
 }
 
@@ -246,7 +246,7 @@ class _FilterFormState extends State<FilterForm> {
   @override
   Widget build(BuildContext context) {
     return Form(key: _formKey,
-      child: SizedBox(width: 450,
+      child: SizedBox(width: 450, height: 400,
         child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
