@@ -15,7 +15,7 @@ import 'package:teog_swift/utilities/hospital.dart';
 import 'package:teog_swift/screens/organizationFilterView.dart';
 
 class OverviewScreen extends StatefulWidget {
-  static const String route = '/welcome';
+  static const String route = '/reporting';
 
   OverviewScreen({Key? key}) : super(key: key);
 
@@ -70,14 +70,14 @@ class _OverviewScreenState extends State<OverviewScreen> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Center(
+        child: Padding(padding: EdgeInsets.all(20.0), child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text('Welcome', style: Theme
                 .of(context)
                 .textTheme
-                .headline3),
+                .headline4),
               Text('Please tell us which device you are looking for', style: Theme
                 .of(context)
                 .textTheme
@@ -90,7 +90,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
           )
         )
       ),
-    );
+    ));
   }
 }
 
@@ -246,7 +246,7 @@ class _FilterFormState extends State<FilterForm> {
   @override
   Widget build(BuildContext context) {
     return Form(key: _formKey,
-      child: SizedBox(width: 450,
+      child: SizedBox(width: 450, height: 400,
         child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

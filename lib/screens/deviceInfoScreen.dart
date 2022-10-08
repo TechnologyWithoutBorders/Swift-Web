@@ -59,7 +59,7 @@ class _DetailScreenState extends State<DetailScreen> {
       appBar: AppBar(
         title: Text(widget.deviceInfo.device.type),
       ),
-      body: Center(child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
+      body: SingleChildScrollView(child: Padding(padding: EdgeInsets.all(20.0), child: Center(
         child: Card(
           child: Padding(padding: EdgeInsets.all(10.0),
             child: Column(
@@ -69,43 +69,20 @@ class _DetailScreenState extends State<DetailScreen> {
                 deviceInfo.device.orgUnit != null ? Text(deviceInfo.device.orgUnit!, style: TextStyle(fontSize: 25)) : Text(""),
                 Divider(),
                 SizedBox(height: 20),
-                Flexible(child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: deviceInfo.imageData != null && deviceInfo.imageData!.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData!)) : Text("no image available"),
-                    ),
-                    SizedBox(width: 30),
-                    Expanded(
-                      flex: 2,
-                      child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(height: 5),
-                          StateScreen(deviceInfo: deviceInfo),
-                          SizedBox(height: 20),
-                          reportWidget,
-                        ]
-                      )
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("Available Documents:", style: TextStyle(fontSize: 25)),
-                          SizedBox(height: 10),
-                          Flexible(child: DocumentScreen(deviceInfo: deviceInfo)),
-                        ],
-                      )
-                    )
-                  ]
-                )),
+                deviceInfo.imageData != null && deviceInfo.imageData!.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData!)) : Text("no image available"),
+                SizedBox(height: 30),
+                StateScreen(deviceInfo: deviceInfo),
+                SizedBox(height: 20),
+                reportWidget,
+                Text("Available Documents:", style: TextStyle(fontSize: 25)),
+                SizedBox(height: 10),
+                DocumentScreen(deviceInfo: deviceInfo),
               ]
             )
           ),
         )
       ))
-    );
+    ));
   }
 }
 
@@ -145,11 +122,11 @@ class _DocumentScreenState extends State<DocumentScreen> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _documents.length > 0 ? Flexible(
-          child: Scrollbar(
+        _documents.length > 0 ? Scrollbar(
             child: ListView.separated(
               padding: const EdgeInsets.all(8),
               itemCount: _documents.length,
+              shrinkWrap: true,
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
                   title: Center(child: Text(_documents[index])),
@@ -158,8 +135,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
               },
               separatorBuilder: (BuildContext context, int index) => const Divider(),
             )
-          )
-        ) : Expanded(child: Center(child: const Text('No documents found'))),
+          ) :  Center(child: const Text('No documents found')),
       ]
     );
   }
