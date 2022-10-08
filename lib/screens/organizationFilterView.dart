@@ -119,6 +119,7 @@ class _OrganizationFilterViewState extends State<OrganizationFilterView> {
   }
 }
 
+//TODO: to ensure consistency this should not include successors -> determine them on server side
 class DepartmentFilter {
   final OrganizationalUnit parent;
   final List<int> successors;

@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:teog_swift/main.dart';
+import 'package:teog_swift/screens/organizationFilterView.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
+import 'package:teog_swift/utilities/organizationalUnit.dart';
 import 'package:teog_swift/utilities/previewDeviceInfo.dart';
 import 'package:teog_swift/screens/deviceInfoScreen.dart';
 
@@ -12,7 +14,6 @@ import 'package:teog_swift/utilities/messageException.dart';
 
 import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
 import 'package:teog_swift/utilities/hospital.dart';
-import 'package:teog_swift/screens/organizationFilterView.dart';
 
 class OverviewScreen extends StatefulWidget {
   static const String route = '/reporting';
@@ -189,9 +190,24 @@ class _FilterFormState extends State<FilterForm> {
 
   final _scrollController = ScrollController();
 
-  DepartmentFilter? _departmentFilter;
+  OrganizationalInfo? _orgInfo;
+  OrganizationalUnit? _department;
   List<PreviewDeviceInfo> _filteredDevices = [];
   bool _loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Comm.getOrganizationalInfo().then((orgInfo) {
+      setState(() {
+        _orgInfo = orgInfo;
+      });
+    }).onError<MessageException>((error, stackTrace) {
+        final snackBar = SnackBar(content: Text(error.message));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    });
+  }
 
   void _processInput() {
     if (_formKey.currentState!.validate()) {
@@ -200,7 +216,15 @@ class _FilterFormState extends State<FilterForm> {
         _loading = true;
       });
 
-      Comm.searchDevices(_typeController.text, _manufacturerController.text, filter: _departmentFilter).then((devices) {
+      DepartmentFilter? filter;
+
+      if(_department != null) {
+        filter = DepartmentFilter(_department!, []);
+      } else {
+        filter = null;
+      }
+
+      Comm.searchDevices(_typeController.text, _manufacturerController.text, filter: filter).then((devices) {
         setState(() {
           _filteredDevices = devices;
           _loading = false;
@@ -230,23 +254,10 @@ class _FilterFormState extends State<FilterForm> {
     });
   }
 
-  void _filterDepartment() {
-    showDialog<DepartmentFilter>(
-      context: context,
-      builder: (BuildContext context) {
-        return OrganizationFilterView(orgUnit: _departmentFilter != null ? _departmentFilter!.parent : null);
-      }
-    ).then((departmentFilter) {
-      setState(() {
-        _departmentFilter = departmentFilter;
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Form(key: _formKey,
-      child: SizedBox(width: 450, height: 400,
+      child: SizedBox(width: 450, height: 400,//TODO: loading animation
         child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -255,18 +266,20 @@ class _FilterFormState extends State<FilterForm> {
               .textTheme
               .headline5),
           SizedBox(height: 10),
-          ButtonBar(
-            alignment: MainAxisAlignment.center,
-            children: [
-              _departmentFilter != null ? Text("Department: " + _departmentFilter!.parent.name, style: TextStyle(fontSize: 25)) : Container(),
-              _departmentFilter != null ? IconButton(
-                iconSize: 25,
-                icon: Icon(Icons.cancel_outlined, color: Colors.red[700]),
-                tooltip: "clear selection",
-                onPressed: () => setState(() => { _departmentFilter = null }), 
-              ): Container(),
-              OutlinedButton(onPressed: () => _filterDepartment(), child: Text("select department...")),
-            ]
+          DropdownButton<OrganizationalUnit>(
+            hint: Text("Department"),
+            value: _department,
+            onChanged: (OrganizationalUnit? unit) {
+              setState(() {
+                _department = unit;
+              });
+            },
+            items: _orgInfo?.units.map<DropdownMenuItem<OrganizationalUnit>>((OrganizationalUnit unit) {
+              return DropdownMenuItem<OrganizationalUnit>(
+                value: unit,
+                child: Text(unit.name),
+              );
+            }).toList(),
           ),
           TextFormField(
             controller: _typeController,
