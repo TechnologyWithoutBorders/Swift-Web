@@ -85,7 +85,9 @@ class _OverviewScreenState extends State<OverviewScreen> {
                 .headline5),
               SizedBox(height: 25),
               Card(child: Padding(padding: EdgeInsets.all(10.0), child: SearchForm())),
+              SizedBox(height: 5),
               Text("OR", style: TextStyle(fontSize: 30)),
+              SizedBox(height: 5),
               Card(child: Padding(padding: EdgeInsets.all(10.0), child: FilterForm())),
             ]
           )
@@ -201,6 +203,8 @@ class _FilterFormState extends State<FilterForm> {
 
     Comm.getOrganizationalInfo().then((orgInfo) {
       setState(() {
+        orgInfo.units.sort((a, b) => a.name.compareTo(b.name));
+
         _orgInfo = orgInfo;
       });
     }).onError<MessageException>((error, stackTrace) {
