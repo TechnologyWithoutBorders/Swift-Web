@@ -91,6 +91,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                 controller: nameController,
                 decoration: new InputDecoration(
                   labelText: 'Name of child department'),
+                maxLength: 25,
                 autofocus: true,
               ),
             ],
@@ -149,6 +150,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                   controller: nameChanger,
                   decoration: new InputDecoration(
                       labelText: 'New name of department'),
+                  maxLength: 25,
                   autofocus: true,
                 ),
               ],
