@@ -164,11 +164,14 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                       controller: titleTextController,
                       decoration: new InputDecoration(
                         labelText: 'Title'),
+                      maxLength: 25,
                     ),
                     TextField(
                       controller: descriptionTextController,
                       decoration: new InputDecoration(
                         labelText: 'Description'),
+                      maxLength: 600,
+                      maxLines: null,
                     ),
                     DropdownButton<int>(
                       hint: Text("Current state"),
