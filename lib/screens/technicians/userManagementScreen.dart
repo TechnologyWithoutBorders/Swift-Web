@@ -34,11 +34,13 @@ class _DetailScreenState extends State<UserManagementScreen> {
                 controller: nameController,
                 decoration: new InputDecoration(
                   labelText: 'Name'),
+                maxLength: 30,
               ),
               TextField(
                 controller: mailController,
                 decoration: new InputDecoration(
                   labelText: 'Mail Address'),
+                maxLength: 50,
               ),
             ],
           ),
