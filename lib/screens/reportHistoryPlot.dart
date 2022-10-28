@@ -67,8 +67,6 @@ class _ReportHistoryPlotState extends State<ReportHistoryPlot> {
           stateCounters[lastReport.currentState] = stateCounters[lastReport.currentState]+1;
         }
 
-        print(stateCounters);
-
         for(int state = 0; state < 6; state++) {
           dataList[state].add(new CategoryData(day, stateCounters[state], charts.ColorUtil.fromDartColor(DeviceState.getColor(state))));
         }
