@@ -194,7 +194,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
       exportList.add([device.type, device.manufacturer, device.model]);
     }
 
-    String csv = const ListToCsvConverter().convert(exportList);
+    String csv = const ListToCsvConverter().convert(exportList, fieldDelimiter: ';');
     final Uint8List data = Uint8List.fromList(csv.codeUnits);
 
     MimeType type = MimeType.CSV;
