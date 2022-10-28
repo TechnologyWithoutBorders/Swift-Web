@@ -3,7 +3,6 @@ import 'package:teog_swift/utilities/detailedReport.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
 
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:teog_swift/utilities/hospitalDevice.dart';
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 import 'package:teog_swift/utilities/organizationalUnit.dart';
 import 'package:teog_swift/utilities/messageException.dart';
@@ -43,7 +42,7 @@ class _ReportHistoryPlotState extends State<ReportHistoryPlot> {
 
       List<List<CategoryData>> dataList = [[], [], [], [], [], []];
 
-      for(int day = 0; day < days; day++) {
+      for(int day = 0; day <= days+1; day++) {
         DateTime current = earliest.add(Duration(days: day));
 
         var stateCounters = [0, 0, 0, 0, 0, 0];
@@ -67,6 +66,8 @@ class _ReportHistoryPlotState extends State<ReportHistoryPlot> {
 
           stateCounters[lastReport.currentState] = stateCounters[lastReport.currentState]+1;
         }
+
+        print(stateCounters);
 
         for(int state = 0; state < 6; state++) {
           dataList[state].add(new CategoryData(day, stateCounters[state], charts.ColorUtil.fromDartColor(DeviceState.getColor(state))));
