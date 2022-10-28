@@ -220,7 +220,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text("Overview", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                        Flexible(child: Padding(padding: EdgeInsets.all(30.0), child: DatumLegendWithMeasures(seriesList))),
+                        Flexible(child: Padding(padding: EdgeInsets.all(30.0), child: StatePieChart(seriesList))),
                         _deviceStats!.maintenanceOverdue > 0 ? Container(
                           padding: EdgeInsets.all(3.0),
                           color: Color(Constants.light_red),
@@ -363,10 +363,10 @@ class _DetailScreenState extends State<DashboardScreen> {
   }
 }
 
-class DatumLegendWithMeasures extends StatelessWidget {
+class StatePieChart extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
 
-  DatumLegendWithMeasures(this.seriesList);
+  StatePieChart(this.seriesList);
 
   @override
   Widget build(BuildContext context) {
