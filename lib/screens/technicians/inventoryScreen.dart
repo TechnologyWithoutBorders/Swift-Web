@@ -3,6 +3,7 @@ import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'package:teog_swift/screens/organizationFilterView.dart';
+import 'package:teog_swift/screens/reportHistoryPlot.dart';
 import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
 import 'package:teog_swift/utilities/constants.dart';
@@ -206,6 +207,15 @@ class _InventoryScreenState extends State<InventoryScreen> {
       mimeType: type);
   }
 
+  void _plotHistory() async {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return ReportHistoryPlot();
+      }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -321,9 +331,18 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       ),
                     ),
                   )),
-                  ElevatedButton(
-                    child: Text("Export list"),
-                    onPressed: () => _csvExportInventory()
+                  ButtonBar(
+                    alignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        child: Text("Export list"),
+                        onPressed: () => _csvExportInventory()
+                      ),
+                      ElevatedButton(
+                        child: Text("Plot history"),
+                        onPressed: _manualButtonDisabled ? null : () => _plotHistory(),
+                      ),
+                    ],
                   ),
                 ]
               ),

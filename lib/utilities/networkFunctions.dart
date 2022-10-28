@@ -603,6 +603,45 @@ Future<List<String>> uploadDocument(String manufacturer, String model, String na
   }
 }
 
+Future<List<DeviceInfo>> getAllDeviceInfos() async {
+  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+
+  final response = await http.post(
+    uri,
+    headers: _headers,
+    body: jsonEncode(await _generateParameterMap(action: DataAction.getDeviceInfos, authentication: true))
+  );
+
+  if(response.statusCode == 200) {
+    SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
+
+    if(swiftResponse.responseCode == 0) {
+      List<DeviceInfo> deviceInfos = [];
+
+      for(var jsonDeviceInfo in swiftResponse.data) {
+        List<DetailedReport> reports = [];
+
+        for(var jsonReport in jsonDeviceInfo["reports"]) {
+          reports.add(DetailedReport.fromJson(jsonReport));
+        }
+
+        reports.sort((a, b) => b.id.compareTo(a.id));
+
+        deviceInfos.add(DeviceInfo(
+          device: HospitalDevice.fromJson(jsonDeviceInfo["device"]),
+          reports: reports,
+        ));
+      }
+
+      return deviceInfos;
+    } else {
+      throw MessageException(swiftResponse.data);
+    }
+  } else {
+    throw MessageException(Constants.generic_error_message);
+  }
+}
+
 Future<OrganizationalInfo> getOrganizationalInfo() async {
   final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
 
