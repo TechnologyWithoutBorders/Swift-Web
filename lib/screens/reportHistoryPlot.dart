@@ -17,7 +17,7 @@ class ReportHistoryPlot extends StatefulWidget {
 }
 
 class _ReportHistoryPlotState extends State<ReportHistoryPlot> {
-  List<charts.Series<CategoryData, int>>? _seriesList;
+  List<charts.Series<CategoryData, DateTime>>? _seriesList;
 
   @override
   void initState() {
@@ -52,31 +52,35 @@ class _ReportHistoryPlotState extends State<ReportHistoryPlot> {
           List<DetailedReport> reports = deviceInfo.reports;
           reports = reports.reversed.toList();
 
-          DetailedReport lastReport = reports.first;
+          DetailedReport? relevantReport;
 
           for(var report in reports) {
             if(report.created.isBefore(current)) {
-              if(report.created.isAfter(lastReport.created)) {
-                lastReport = report;
+              if(relevantReport == null) {
+                relevantReport = report;
+              } else if(report.created.isAfter(relevantReport.created)) {
+                relevantReport = report;
               }
             } else {
               break;
             }
           }
 
-          stateCounters[lastReport.currentState] = stateCounters[lastReport.currentState]+1;
+          if(relevantReport != null) {
+            stateCounters[relevantReport.currentState] = stateCounters[relevantReport.currentState]+1;
+          }
         }
 
         for(int state = 0; state < 6; state++) {
-          dataList[state].add(new CategoryData(day, stateCounters[state], charts.ColorUtil.fromDartColor(DeviceState.getColor(state))));
+          dataList[state].add(new CategoryData(current, stateCounters[state], charts.ColorUtil.fromDartColor(DeviceState.getColor(state))));
         }
       }
 
-      List<charts.Series<CategoryData, int>> seriesList = [];
+      List<charts.Series<CategoryData, DateTime>> seriesList = [];
 
       for(int state = 0; state < 6; state++) {
         seriesList.add(
-          new charts.Series<CategoryData, int>(
+          new charts.Series<CategoryData, DateTime>(
             id: DeviceState.getStateString(state),
             domainFn: (CategoryData categoryData, _) => categoryData.category,
             measureFn: (CategoryData categoryData, _) => categoryData.count,
@@ -114,21 +118,23 @@ class _ReportHistoryPlotState extends State<ReportHistoryPlot> {
 }
 
 class StateLineChart extends StatelessWidget {
-  final List<charts.Series<dynamic, int>> seriesList;
+  final List<charts.Series<dynamic, DateTime>> seriesList;
 
   StateLineChart(this.seriesList);
 
   @override
   Widget build(BuildContext context) {
-    return new charts.LineChart(
+    return new charts.TimeSeriesChart(
       seriesList,
-      defaultRenderer: new charts.LineRendererConfig(includeArea: true, stacked: true),
+      behaviors: [
+        new charts.SeriesLegend()
+      ]
     );
   }
 }
 
 class CategoryData {
-  final int category;
+  final DateTime category;
   final int count;
   final charts.Color color;
 
