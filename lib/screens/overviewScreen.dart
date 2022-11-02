@@ -261,7 +261,7 @@ class _FilterFormState extends State<FilterForm> {
   @override
   Widget build(BuildContext context) {
     return Form(key: _formKey,
-      child: SizedBox(width: 450, height: 400,//TODO: loading animation
+      child: SizedBox(width: 450, height: 600,//TODO: loading animation
         child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -315,7 +315,7 @@ class _FilterFormState extends State<FilterForm> {
                 HospitalDevice device = deviceInfo.device;
 
                 return ListTile(
-                  leading: deviceInfo.imageData != null ? Image.memory(base64Decode(deviceInfo.imageData!)) : Text("no image"),
+                  leading: deviceInfo.imageData != null && deviceInfo.imageData!.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData!)) : Text("no image"),
                   title: Text(device.type),
                   subtitle: Text(device.manufacturer + " " + device.model),
                   trailing: device.orgUnit != null ? Text(device.orgUnit!) : null,
