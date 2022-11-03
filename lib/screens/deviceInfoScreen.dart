@@ -210,67 +210,67 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
     }
   }
 
-  void _createReportDialog(){
+  void _createReportDialog() {
     showDialog<String>(
-        context: context,
-        builder: (BuildContext context){
-          return Form(key: _formKey,
-              child: AlertDialog(
-                contentPadding: const EdgeInsets.all(16.0),
-                content: new Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text("Report a problem", style: Theme
-                        .of(context)
-                        .textTheme
-                        .headline5),
-                    TextFormField(
-                      controller: _reportTitleController,
-                      decoration: new InputDecoration(labelText: 'Title'),
+      context: context,
+      builder: (BuildContext context){
+        return Form(key: _formKey,
+            child: AlertDialog(
+              contentPadding: const EdgeInsets.all(16.0),
+              content: new Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text("Report a problem", style: Theme
+                      .of(context)
+                      .textTheme
+                      .headline5),
+                  TextFormField(
+                    controller: _reportTitleController,
+                    decoration: new InputDecoration(labelText: 'Title'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please give your report a title.";
+                      }
+                      return null;
+                    },
+                    onFieldSubmitted: (value) => _createReport(),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      controller: _problemTextController,
+                      decoration: new InputDecoration(labelText: 'Problem description'),
+                      maxLines: 4,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Please give your report a title.";
+                          return "Please describe the problem in a few sentences.";
                         }
                         return null;
                       },
                       onFieldSubmitted: (value) => _createReport(),
                     ),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: _problemTextController,
-                        decoration: new InputDecoration(labelText: 'Problem description'),
-                        maxLines: 4,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Please describe the problem in a few sentences.";
-                          }
-                          return null;
-                        },
-                        onFieldSubmitted: (value) => _createReport(),
-                      ),
-                    ),
-                  ],
-                ),
-                actions: <Widget>[
-                  ElevatedButton(
-                      child: const Text('Cancel'),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      }
                   ),
-                  ElevatedButton(
-                    child: Text('Request repair'),
-                    onPressed: () async {
-                      bool success = await _createReport();
-                      
-                      if(success) {
-                        Navigator.pop(context);
-                      }
-                    },
-                  )
                 ],
-              )
+              ),
+              actions: <Widget>[
+                ElevatedButton(
+                    child: const Text('Cancel'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    }
+                ),
+                ElevatedButton(
+                  child: Text('Request repair'),
+                  onPressed: () async {
+                    bool success = await _createReport();
+                    
+                    if(success) {
+                      Navigator.pop(context);
+                    }
+                  },
+                )
+              ],
+            )
           );
         }
     );
