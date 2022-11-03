@@ -62,22 +62,26 @@ class _DetailScreenState extends State<DetailScreen> {
       body: SingleChildScrollView(child: Padding(padding: EdgeInsets.all(20.0), child: Center(
         child: Card(
           child: Padding(padding: EdgeInsets.all(10.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(deviceInfo.device.manufacturer + " " + deviceInfo.device.model, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                deviceInfo.device.orgUnit != null ? Text(deviceInfo.device.orgUnit!, style: TextStyle(fontSize: 25)) : Text(""),
-                Divider(),
-                SizedBox(height: 20),
-                deviceInfo.imageData != null && deviceInfo.imageData!.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData!)) : Text("no image available"),
-                SizedBox(height: 30),
-                StateScreen(deviceInfo: deviceInfo),
-                SizedBox(height: 20),
-                reportWidget,
-                Text("Available Documents:", style: TextStyle(fontSize: 25)),
-                SizedBox(height: 10),
-                DocumentScreen(deviceInfo: deviceInfo),
-              ]
+            child: SizedBox(
+              width: 600,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(deviceInfo.device.manufacturer + " " + deviceInfo.device.model, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                  deviceInfo.device.orgUnit != null ? Text(deviceInfo.device.orgUnit!, style: TextStyle(fontSize: 25)) : Text(""),
+                  Divider(),
+                  SizedBox(height: 20),
+                  deviceInfo.imageData != null && deviceInfo.imageData!.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData!)) : Text("no image available"),
+                  SizedBox(height: 30),
+                  StateScreen(deviceInfo: deviceInfo),
+                  SizedBox(height: 20),
+                  reportWidget,
+                  Divider(),
+                  Text("Available Documents:", style: TextStyle(fontSize: 25)),
+                  SizedBox(height: 10),
+                  DocumentScreen(deviceInfo: deviceInfo),
+                ]
+              )
             )
           ),
         )
@@ -278,7 +282,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
 
   @override
   Widget build(BuildContext context) {
-    return  ElevatedButton(
+    return ElevatedButton(
       onPressed: () => _createReportDialog(),
       child: Text('Report a problem'),
     );
