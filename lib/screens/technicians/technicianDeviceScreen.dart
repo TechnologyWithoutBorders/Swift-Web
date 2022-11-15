@@ -394,6 +394,8 @@ class _DocumentScreenState extends State<DocumentScreen> {
 
   bool _uploading = false;
 
+  final _scrollController = ScrollController();
+
   void _uploadDocuments() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -463,9 +465,11 @@ class _DocumentScreenState extends State<DocumentScreen> {
 
     return Column(
       children: [
-        _documents.length > 0
-          ? Flexible(child: Scrollbar(
-              child: ListView.separated(
+        _documents.length > 0 ? Flexible(
+          child: Scrollbar(
+            controller: _scrollController,
+            child: ListView.separated(
+              controller: _scrollController,
               padding: const EdgeInsets.all(8),
               itemCount: _documents.length,
               itemBuilder: (BuildContext context, int index) {
@@ -476,9 +480,9 @@ class _DocumentScreenState extends State<DocumentScreen> {
               },
               separatorBuilder: (BuildContext context, int index) => const Divider(),
             )
-          ))
-          : Expanded(child: Center(child: const Text('No documents found'))),
-          uploadWidget,
+          )
+        ) : Expanded(child: Center(child: const Text('No documents found'))),
+        uploadWidget,
       ]
     );
   }
@@ -504,7 +508,8 @@ class _StateScreenState extends State<StateScreen> {
       children: [
         Container(color: DeviceState.getColor(latestReport.currentState),
           child: Padding(padding: EdgeInsets.all(7.0),
-            child: Row(children: [
+            child: Row(
+              children: [
                 Icon(DeviceState.getIconData(latestReport.currentState)),
                 SizedBox(width: 5),
                 Text(DeviceState.getStateString(latestReport.currentState),

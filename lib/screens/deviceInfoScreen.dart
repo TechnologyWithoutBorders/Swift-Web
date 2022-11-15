@@ -102,6 +102,8 @@ class DocumentScreen extends StatefulWidget {
 class _DocumentScreenState extends State<DocumentScreen> {
   List<String> _documents = [];
 
+  final _scrollController = ScrollController();
+
   void _retrieveDocuments() {
     Comm.retrieveDocuments(widget.deviceInfo.device.manufacturer, widget.deviceInfo.device.model).then((documents) {//TODO catch Exception
       setState(() { _documents = documents; });
@@ -127,19 +129,21 @@ class _DocumentScreenState extends State<DocumentScreen> {
     return Column(
       children: [
         _documents.length > 0 ? Scrollbar(
-            child: ListView.separated(
-              padding: const EdgeInsets.all(8),
-              itemCount: _documents.length,
-              shrinkWrap: true,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  title: Center(child: Text(_documents[index])),
-                  onTap: () => _downloadDocument(_documents[index])
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) => const Divider(),
-            )
-          ) :  Center(child: const Text('No documents found')),
+          controller: _scrollController,
+          child: ListView.separated(
+            controller: _scrollController,
+            padding: const EdgeInsets.all(8),
+            itemCount: _documents.length,
+            shrinkWrap: true,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                title: Center(child: Text(_documents[index])),
+                onTap: () => _downloadDocument(_documents[index])
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) => const Divider(),
+          )
+        ) : Center(child: const Text('No documents found')),
       ]
     );
   }
