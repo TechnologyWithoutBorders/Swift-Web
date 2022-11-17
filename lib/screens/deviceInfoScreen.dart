@@ -241,6 +241,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
                       }
                       return null;
                     },
+                    maxLength: 25,
                     onFieldSubmitted: (value) => _createReport(),
                   ),
                   Padding(
@@ -248,7 +249,8 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
                     child: TextFormField(
                       controller: _problemTextController,
                       decoration: new InputDecoration(labelText: 'Problem description'),
-                      maxLines: 4,
+                      maxLength: 600,
+                      maxLines: null,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Please describe the problem in a few sentences.";
