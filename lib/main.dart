@@ -17,10 +17,12 @@ import 'package:flag/flag.dart';
 
 import 'package:package_info_plus/package_info_plus.dart';
 
-void main() => runApp(SwiftApp());
+void main() => runApp(const SwiftApp());
 
 class SwiftApp extends StatelessWidget {
   static const String route = '/';
+
+  const SwiftApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +30,9 @@ class SwiftApp extends StatelessWidget {
       title: Constants.app_name,
       initialRoute: SwiftApp.route,
       routes: {
-        SwiftApp.route: (context) => LoginScreen(),
-        OverviewScreen.route: (context) => OverviewScreen(),
-        TabScreen.route: (context) => TabScreen(),
+        SwiftApp.route: (context) => const LoginScreen(),
+        OverviewScreen.route: (context) => const OverviewScreen(),
+        TabScreen.route: (context) => const TabScreen(),
       },
       theme: ThemeData(
         appBarTheme: const AppBarTheme(
@@ -50,6 +52,8 @@ class SwiftApp extends StatelessWidget {
 }
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -96,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const Spacer(),
               const Flexible(flex: 6, child: Padding(padding: EdgeInsets.all(10.0), child: Image(image: AssetImage(Constants.logo_path)))),
               const Spacer(),
-              Flexible(flex: 20, child: Card(child: Padding(padding: const EdgeInsets.all(10.0), child: LoginForm()))),
+              const Flexible(flex: 20, child: Card(child: Padding(padding: EdgeInsets.all(10.0), child: LoginForm()))),
               const Spacer(),
               TextButton(
                 onPressed: () => showAboutDialog(
@@ -117,6 +121,8 @@ class _LoginScreenState extends State<LoginScreen> {
 }
 
 class LoginForm extends StatefulWidget {
+  const LoginForm({Key? key}) : super(key: key);
+
   @override
   _LoginFormState createState() => _LoginFormState();
 }
