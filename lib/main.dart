@@ -33,12 +33,12 @@ class SwiftApp extends StatelessWidget {
         TabScreen.route: (context) => TabScreen(),
       },
       theme: ThemeData(
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           backgroundColor: Color(Constants.teog_blue),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Color(Constants.teog_blue_light)
+            backgroundColor: const Color(Constants.teog_blue_light)
           )
         ),
         scrollbarTheme: ScrollbarThemeData(
@@ -84,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: Text(Constants.app_name)
+        title: const Text(Constants.app_name)
       ),
       body: Center(
         child: SizedBox(
@@ -93,21 +93,21 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Spacer(),
-              Flexible(flex: 6, child: Padding(padding: EdgeInsets.all(10.0), child: Image(image: AssetImage(Constants.logo_path)))),
-              Spacer(),
-              Flexible(flex: 20, child: Card(child: Padding(padding: EdgeInsets.all(10.0), child: LoginForm()))),
-              Spacer(),
+              const Spacer(),
+              const Flexible(flex: 6, child: Padding(padding: EdgeInsets.all(10.0), child: Image(image: AssetImage(Constants.logo_path)))),
+              const Spacer(),
+              Flexible(flex: 20, child: Card(child: Padding(padding: const EdgeInsets.all(10.0), child: LoginForm()))),
+              const Spacer(),
               TextButton(
                 onPressed: () => showAboutDialog(
                   context: context,
                   applicationName: _packageInfo.appName,
-                  applicationVersion: " v" + _packageInfo.version + "-" + _packageInfo.buildNumber,
-                  applicationIcon: Image(image: AssetImage(Constants.logo_path))
+                  applicationVersion: " v${_packageInfo.version}-${_packageInfo.buildNumber}",
+                  applicationIcon: const Image(image: AssetImage(Constants.logo_path))
                 ),
-                child: Text('About'),
+                child: const Text('About'),
               ),
-              Spacer(flex: 2),
+              const Spacer(flex: 2),
             ],
           ),
         ),
@@ -155,7 +155,7 @@ class _LoginFormState extends State<LoginForm> {
           String hash = sha256.convert(bytes).toString();
           Prefs.save(countryName, hospitalId, role, hash).then((success) => Navigator.pushNamedAndRemoveUntil(context, route!, (r) => false));
         } else {
-          final snackBar = SnackBar(content: Text("could not determine role of user"));
+          const snackBar = SnackBar(content: Text("could not determine role of user"));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
       }).onError<MessageException>((error, stackTrace) {
@@ -288,12 +288,12 @@ class _LoginFormState extends State<LoginForm> {
       input = Center(
         child: Column(
           children:[
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             ButtonBar(
               alignment: MainAxisAlignment.center,
               children:[
                 Flag.fromString(_selectedCountry!.code, height: 35, width: 35),
-                Text(_selectedCountry!.name + ' - ' + _selectedHospital!.name, style: TextStyle(fontSize: 20)),
+                Text('${_selectedCountry!.name} - ${_selectedHospital!.name}', style: const TextStyle(fontSize: 20)),
                 IconButton(
                   iconSize: 20,
                   icon: Icon(Icons.cancel_outlined, color: Colors.red[700]),
@@ -301,12 +301,12 @@ class _LoginFormState extends State<LoginForm> {
                 )
               ]
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             FractionallySizedBox(
               widthFactor: 0.7,
               child: TextFormField(
                 controller: _passwordTextController,
-                decoration: InputDecoration(hintText: 'Password'),
+                decoration: const InputDecoration(hintText: 'Password'),
                 obscureText: true,
                 autofocus: true,
                 validator: (value) {
@@ -332,16 +332,16 @@ class _LoginFormState extends State<LoginForm> {
               .of(context)
               .textTheme
               .headline6),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           Flexible(
             child: Center(child: input)
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           _selectedHospital != null ? ElevatedButton(
             onPressed: () => _login(),
-            child: Text('Login'),
+            child: const Text('Login'),
           ) : const SizedBox(),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
         ],
       ),
     );
