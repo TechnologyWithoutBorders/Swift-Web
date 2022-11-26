@@ -11,7 +11,7 @@ import 'package:teog_swift/utilities/previewDeviceInfo.dart';
 import 'package:teog_swift/utilities/constants.dart';
 
 class OrganizationScreen extends StatefulWidget {
-  OrganizationScreen({Key? key}) : super(key: key);
+  const OrganizationScreen({Key? key}) : super(key: key);
 
   @override
   _OrganizationScreenState createState() => _OrganizationScreenState();
@@ -19,15 +19,13 @@ class OrganizationScreen extends StatefulWidget {
 
 class _OrganizationScreenState extends State<OrganizationScreen> {
   Graph _graph = Graph();
-  Map<int, String> _nameMap = Map();
+  Map<int, String> _nameMap = {};
   bool _edited = false;
 
   int? _selectedDepartment;
-  Map<int?, List<PreviewDeviceInfo>> _deviceRelations = Map();
+  Map<int?, List<PreviewDeviceInfo>> _deviceRelations = {};
   List<PreviewDeviceInfo> _displayedDevices = [];
   final _scrollController = ScrollController();
-  final _horOrgScrollController = ScrollController();
-  final _vertOrgScrollController = ScrollController();
 
   @override
   void initState() {
@@ -49,7 +47,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
         _edited = true;
       });
     } else {
-      final snackBar = SnackBar(content: Text("cannot set a department as its own child"));
+      const snackBar = SnackBar(content: Text("cannot set a department as its own child"));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -81,15 +79,15 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     showDialog<String>(
         context: context,
         builder: (BuildContext context) {
-          return new AlertDialog(
+          return AlertDialog(
           title: Text("Add child department to \"" + _nameMap[parent].toString() + "\""),
           contentPadding: const EdgeInsets.all(16.0),
-          content: new Column(
+          content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               TextField(
                 controller: nameController,
-                decoration: new InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Name of child department'),
                 maxLength: 25,
                 autofocus: true,
@@ -140,15 +138,15 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     showDialog<String>(
         context: context,
         builder: (BuildContext context) {
-          return new AlertDialog(
+          return AlertDialog(
             title: Text("Change name of \"" + _nameMap[id].toString() + "\""),
             contentPadding: const EdgeInsets.all(16.0),
-            content: new Column(
+            content: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 TextField(
                   controller: nameChanger,
-                  decoration: new InputDecoration(
+                  decoration: const InputDecoration(
                       labelText: 'New name of department'),
                   maxLength: 25,
                   autofocus: true,
@@ -198,37 +196,39 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     showDialog<String>(
       context: context,
       builder: (BuildContext context) {
-        return new AlertDialog(
+        return AlertDialog(
           title: Text("Delete department \"" + _nameMap[id].toString() + "\"?"),
-          content: Text("This will also delete all child departments.", style: TextStyle(color: Colors.red)),
+          content: const Text("This will also delete all child departments.", style: TextStyle(color: Colors.red)),
           actions: <Widget>[
             ElevatedButton(
-                child: const Text('Cancel'),
-                onPressed: () {
-                  Navigator.pop(context);
-                }),
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context);
+              }
+            ),
             ElevatedButton(
-                child: const Text('Delete'),
-                onPressed: () {
-                  Node node = _graph.getNodeUsingId(id);
-                  List<Node> successors = _graph.successorsOf(node);
+              child: const Text('Delete'),
+              onPressed: () {
+                Node node = _graph.getNodeUsingId(id);
+                List<Node> successors = _graph.successorsOf(node);
 
-                  setState(() {
-                    _recursiveDeleteSuccessors(successors);
+                setState(() {
+                  _recursiveDeleteSuccessors(successors);
 
-                    _graph.removeNode(node);
-                    _nameMap.remove(id);
+                  _graph.removeNode(node);
+                  _nameMap.remove(id);
 
-                    if(_deviceRelations.containsKey(id)) {
-                      //put removed devices to unassigned devices
-                      _deviceRelations[null]!.addAll(_deviceRelations.remove(id)!);
-                    }
-                    
-                    _edited = true;
-                  });
+                  if(_deviceRelations.containsKey(id)) {
+                    //put removed devices to unassigned devices
+                    _deviceRelations[null]!.addAll(_deviceRelations.remove(id)!);
+                  }
+                  
+                  _edited = true;
+                });
 
-                  Navigator.pop(context);
-                })
+                Navigator.pop(context);
+              }
+            )
           ],
         );
       }
@@ -239,7 +239,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     OrganizationalInfo orgInfo = await Comm.getOrganizationalInfo();
     Graph graph = Graph();
 
-    Map<int, String> nameMap = Map();
+    Map<int, String> nameMap = {};
 
     for(OrganizationalUnit orgUnit in orgInfo.units) {
       Node node = Node.Id(orgUnit.id);
@@ -254,7 +254,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
 
     List<PreviewDeviceInfo> devices = await Comm.searchDevices(null, null);
 
-    Map<int?, List<PreviewDeviceInfo>> deviceRelations = Map();
+    Map<int?, List<PreviewDeviceInfo>> deviceRelations = {};
     //always add a list for unassigned devices
     deviceRelations[null] = [];
 
@@ -360,7 +360,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
         child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
           child: Card(
             child: Padding(
-              padding: EdgeInsets.all(25.0),
+              padding: const EdgeInsets.all(25.0),
               child: Row(
                 children: [
                   Expanded(
@@ -376,7 +376,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                         ),
                         Expanded(
                           child: InteractiveViewer(
-                            boundaryMargin: EdgeInsets.all(10.0),
+                            boundaryMargin: const EdgeInsets.all(10.0),
                             constrained: false,
                             minScale: 0.1,
                             maxScale: 1.0,
@@ -388,7 +388,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
 
                                 return Draggable<Node>(
                                   data: node,
-                                  feedback: Card(color: Colors.grey[100], child: Padding(padding: EdgeInsets.all(15), child: Text(_nameMap[id]!, style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)))),
+                                  feedback: Card(color: Colors.grey[100], child: Padding(padding: const EdgeInsets.all(15), child: Text(_nameMap[id]!, style: const TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)))),
                                   child: DragTarget<Object>(
                                     builder: (context, candidateItems, rejectedItems) {
                                       return Card(
@@ -396,20 +396,20 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                           borderRadius: BorderRadius.circular(4.0),
                                         ) : RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(4.0),
-                                          side: new BorderSide(color: Color(Constants.teog_blue))
+                                          side: const BorderSide(color: Color(Constants.teog_blue))
                                         ),
                                         color: candidateItems.isNotEmpty ? Colors.grey[300] : Colors.grey[100],
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            TextButton(child: Text(_nameMap[id]!, style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)), onPressed: () => _updateAssignedDevices(id)),
+                                            TextButton(child: Text(_nameMap[id]!, style: const TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)), onPressed: () => _updateAssignedDevices(id)),
                                             ButtonBar(
                                               mainAxisSize: MainAxisSize.min,
                                               buttonPadding: EdgeInsets.zero,
                                               children: [
-                                                id != 1 ? TextButton(child: Icon(Icons.delete), onPressed: () => _removeUnit(node.key!.value)) : Container(),
-                                                id != 1 ? TextButton(child: Icon(Icons.edit), onPressed: ()=> _renameUnit(node.key!.value)) : Container(),
-                                                TextButton(child: Icon(Icons.add), onPressed: () => _addUnit(node.key!.value))
+                                                id != 1 ? TextButton(child: const Icon(Icons.delete), onPressed: () => _removeUnit(node.key!.value)) : Container(),
+                                                id != 1 ? TextButton(child: const Icon(Icons.edit), onPressed: ()=> _renameUnit(node.key!.value)) : Container(),
+                                                TextButton(child: const Icon(Icons.add), onPressed: () => _addUnit(node.key!.value))
                                             ],)
                                           ]
                                         )
@@ -438,15 +438,15 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                           )
                         )
                       ]
-                    ) : Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator())),
+                    ) : const Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator())),
                   ),
-                  VerticalDivider(),
+                  const VerticalDivider(),
                   Expanded(
                     child: Column(
                       children: [
-                        _selectedDepartment != null ? ElevatedButton(onPressed: () => _updateAssignedDevices(null), child: Text("Show unassigned devices")) : SizedBox(height: 0),
-                        SizedBox(height: 10),
-                        Text(_selectedDepartment != null && _nameMap[_selectedDepartment] != null ? _nameMap[_selectedDepartment]! : "Unassigned devices", style: TextStyle(fontSize: 25)),
+                        _selectedDepartment != null ? ElevatedButton(onPressed: () => _updateAssignedDevices(null), child: const Text("Show unassigned devices")) : const SizedBox(height: 0),
+                        const SizedBox(height: 10),
+                        Text(_selectedDepartment != null && _nameMap[_selectedDepartment] != null ? _nameMap[_selectedDepartment]! : "Unassigned devices", style: const TextStyle(fontSize: 25)),
                         Flexible(
                           child: Scrollbar(
                             controller: _scrollController,
@@ -464,21 +464,21 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                   feedback: Card(
                                     color: Colors.grey[100],
                                     child: Padding(
-                                      padding: EdgeInsets.all(10),
+                                      padding: const EdgeInsets.all(10),
                                       child: Row(
                                         children: [
-                                          imageData != null && imageData.isNotEmpty ? SizedBox(width: 50, child: Image.memory(base64Decode(imageData))) : Text(""),
-                                          SizedBox(width: 5,),
-                                          Text(device.type,style: TextStyle(fontSize: 15))
+                                          imageData != null && imageData.isNotEmpty ? SizedBox(width: 50, child: Image.memory(base64Decode(imageData))) : const Text(""),
+                                          const SizedBox(width: 5,),
+                                          Text(device.type,style: const TextStyle(fontSize: 15))
                                         ]
                                       )
                                     )
                                   ),
                                   child: ListTile(
-                                    leading: imageData != null && imageData.isNotEmpty ? Image.memory(base64Decode(imageData)) : Text("no image"),
+                                    leading: imageData != null && imageData.isNotEmpty ? Image.memory(base64Decode(imageData)) : const Text("no image"),
                                     title: Text(device.type),
-                                    subtitle: Text(device.manufacturer + " " + device.model),
-                                    trailing: device.orgUnit != null ? Text(device.orgUnit!) : Text(""),
+                                    subtitle: Text("${device.manufacturer} ${device.model}"),
+                                    trailing: device.orgUnit != null ? Text(device.orgUnit!) : const Text(""),
                                   )
                                 );
                               },
@@ -486,8 +486,8 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                             )
                           )
                         ),
-                        SizedBox(height: 15),
-                        Text("Drag and drop the devices onto the departments in order to assign them.")
+                        const SizedBox(height: 15),
+                        const Text("Drag and drop the devices onto the departments in order to assign them.")
                       ]
                     )
                   ),

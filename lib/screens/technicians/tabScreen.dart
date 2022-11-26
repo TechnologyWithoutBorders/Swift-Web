@@ -18,7 +18,7 @@ import 'package:teog_swift/utilities/hospital.dart';
 class TabScreen extends StatefulWidget {
   static const String route = '/tabs';
 
-  TabScreen({Key? key}) : super(key: key);
+  const TabScreen({Key? key}) : super(key: key);
 
   @override
   _TabScreenState createState() => _TabScreenState();
@@ -94,7 +94,7 @@ class _TabScreenState extends State<TabScreen> {
                         style: Theme.of(context)
                           .textTheme
                           .headline4),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Flexible(
                     child: _users != null ? Scrollbar(
                       controller: _scrollController,
@@ -112,7 +112,7 @@ class _TabScreenState extends State<TabScreen> {
                         },
                         separatorBuilder: (BuildContext context, int index) => const Divider(),
                       ),
-                    ) : Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator()))
+                    ) : const Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator()))
                   )
                 ]
               )
@@ -128,14 +128,14 @@ class _TabScreenState extends State<TabScreen> {
           appBar: AppBar(
             title: _hospital != null && _countryName != null ? Row(
               children: [
-                Text("TeoG Swift - "+ _hospital!.name +  ", " + _countryName!),
+                Text("TeoG Swift - ${_hospital!.name}, ${_countryName!}"),
                 IconButton(
                   tooltip: "show on map",
-                  icon: Icon(Icons.map),
+                  icon: const Icon(Icons.map),
                   onPressed: () => _openMap()
                 )
               ]
-            ) : Text("TeoG Swift"),
+            ) : const Text("TeoG Swift"),
             actions: [
               DropdownButton<User>(
                 value: _user,
@@ -144,7 +144,7 @@ class _TabScreenState extends State<TabScreen> {
                     alignment: Alignment.center,
                     child: Text(
                       user.name,
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                     ),
                   )).toList();
                 },
@@ -153,7 +153,7 @@ class _TabScreenState extends State<TabScreen> {
                       value: user,
                       child: Text(
                         user.name,
-                        style: TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.black),
                       )
                     );
                   }
@@ -164,19 +164,19 @@ class _TabScreenState extends State<TabScreen> {
                   }
                 },
               ),
-              Padding(padding: EdgeInsets.only(right: 20.0),
+              Padding(padding: const EdgeInsets.only(right: 20.0),
                 child: TextButton(
                   style: ButtonStyle(
                     foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
                       return states.contains(MaterialState.disabled) ? Colors.grey : Colors.white;
                     }),
                   ),
-                  child: Text("Logout"),
+                  child: const Text("Logout"),
                   onPressed: () => {_logout(context)},
                 )
               )
             ],
-            bottom: TabBar(
+            bottom: const TabBar(
               indicatorColor: Colors.white,
               tabs: [
                 Tab(text: "Dashboard", icon: Icon(Icons.chair)),
@@ -190,10 +190,10 @@ class _TabScreenState extends State<TabScreen> {
           body: TabBarView(
             children: [
               DashboardScreen(),
-              MaintenanceScreen(),
-              InventoryScreen(),
-              OrganizationScreen(),
-              UserManagementScreen(),
+              const MaintenanceScreen(),
+              const InventoryScreen(),
+              const OrganizationScreen(),
+              const UserManagementScreen(),
             ],
           ),
         ),

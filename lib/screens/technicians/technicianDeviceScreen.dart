@@ -21,7 +21,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 class TechnicianDeviceScreen extends StatefulWidget {
   final int id;
 
-  TechnicianDeviceScreen({Key? key, required this.id}) : super(key: key);
+  const TechnicianDeviceScreen({Key? key, required this.id}) : super(key: key);
 
   @override
   _TechnicianDeviceScreenState createState() => _TechnicianDeviceScreenState();
@@ -53,7 +53,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
 
   void _updateDeviceInfo(DeviceInfo modifiedDeviceInfo) {
     setState(() {
-      this._deviceInfo = modifiedDeviceInfo;
+      _deviceInfo = modifiedDeviceInfo;
     });
   }
 
@@ -70,30 +70,30 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
       showDialog<String>(
         context: context,
         builder: (BuildContext context) {
-          return new AlertDialog(
+          return AlertDialog(
             contentPadding: const EdgeInsets.all(16.0),
             content: StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
-                return new Column(
+                return Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     TextField(
                       controller: typeController,
-                      decoration: new InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Type'),
                     ),
                     TextField(
                       controller: manufacturerController,
-                      decoration: new InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Manufacturer'),
                     ),
                     TextField(
                       controller: modelController,
-                      decoration: new InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Model'),
                     ),
-                    SizedBox(height: 10),
-                    Text("Maintenance interval (months):"),
+                    const SizedBox(height: 10),
+                    const Text("Maintenance interval (months):"),
                     NumberPicker(
                       minValue: 1,
                       maxValue: 24,
@@ -152,8 +152,8 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
       await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
-          return new AlertDialog(
-            title: Text("Create a report"),
+          return AlertDialog(
+            title: const Text("Create a report"),
             contentPadding: const EdgeInsets.all(16.0),
             content: StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
@@ -162,19 +162,19 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                   children: <Widget>[
                     TextField(
                       controller: titleTextController,
-                      decoration: new InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Title'),
                       maxLength: 25,
                     ),
                     TextField(
                       controller: descriptionTextController,
-                      decoration: new InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Description'),
                       maxLength: 600,
                       maxLines: null,
                     ),
                     DropdownButton<int>(
-                      hint: Text("Current state"),
+                      hint: const Text("Current state"),
                       value: selectedState,
                       items: <int>[0, 1, 2, 3, 4, 5]//TODO: das sollte aus DeviceStates kommen
                         .map<DropdownMenuItem<int>>((int state) {
@@ -185,7 +185,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                               child: Row(
                                 children: [
                                   Icon(DeviceState.getIconData(state)),
-                                  SizedBox(width: 5),
+                                  const SizedBox(width: 5),
                                   Text(DeviceState.getStateString(state)),
                                 ]
                               )
@@ -249,7 +249,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
       ),
       body: Center(child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
         child: Card(
-          child: Padding(padding: EdgeInsets.all(10.0),
+          child: Padding(padding: const EdgeInsets.all(10.0),
             child: (_deviceInfo != null && device != null && reports != null && _userId != null) ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -262,12 +262,12 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SelectableText(device.manufacturer + " " + device.model, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                            device.orgUnit != null ? Text(device.orgUnit!, style: TextStyle(fontSize: 25)) : Text(""),
-                            SelectableText("Serial number: " + device.serialNumber),
-                            Text("Maintenance interval: " + (device.maintenanceInterval/4).toString() + " months"),
+                            SelectableText("${device.manufacturer} ${device.model}", style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                            device.orgUnit != null ? Text(device.orgUnit!, style: const TextStyle(fontSize: 25)) : const Text(""),
+                            SelectableText("Serial number: ${device.serialNumber}"),
+                            Text("Maintenance interval: ${device.maintenanceInterval/4} months"),
                             TextButton(
-                              child: Text('edit'),
+                              child: const Text('edit'),
                               onPressed: () => _editDevice(),
                             ),
                           ],
@@ -277,7 +277,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("You can scan this code using the mobile app."),
+                        const Text("You can scan this code using the mobile app."),
                         QrImage(
                           data: device.id.toString(),
                           version: QrVersions.auto,
@@ -287,16 +287,16 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                     )
                   ],
                 ),
-                Divider(),
-                SizedBox(height: 20),
+                const Divider(),
+                const SizedBox(height: 20),
                 Flexible(child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
                       flex: 3,
-                      child: _deviceInfo!.imageData != null && _deviceInfo!.imageData!.isNotEmpty ? Image.memory(base64Decode(_deviceInfo!.imageData!)) : Text("no image available")
+                      child: _deviceInfo!.imageData != null && _deviceInfo!.imageData!.isNotEmpty ? Image.memory(base64Decode(_deviceInfo!.imageData!)) : const Text("no image available")
                     ),
-                    SizedBox(width: 30),
+                    const SizedBox(width: 30),
                     Expanded(
                       flex: 2,
                       child: Column(mainAxisAlignment: MainAxisAlignment.center,
@@ -316,27 +316,27 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                                     String dateStamp = report.created.toString().substring(0, report.created.toString().length-7);
 
                                     return Padding(
-                                      padding: EdgeInsets.all(15.0),
+                                      padding: const EdgeInsets.all(15.0),
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.stretch,
                                         children: [
                                           Text(dateStamp, textAlign: report.authorId == _userId ? TextAlign.right : TextAlign.left),
                                           Card(
-                                            color: report.authorId == _userId ? Color(Constants.teog_blue_lighter) : Colors.white,
+                                            color: report.authorId == _userId ? const Color(Constants.teog_blue_lighter) : Colors.white,
                                             child: Padding(
-                                              padding: EdgeInsets.all(5.0),
+                                              padding: const EdgeInsets.all(5.0),
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Row(
                                                     children: [
-                                                      Expanded(child: Text(report.authorId == _userId ? "You:" : report.author + ":")),
+                                                      Expanded(child: Text(report.authorId == _userId ? "You:" : "${report.author}:")),
                                                       Icon(DeviceState.getIconData(report.currentState),
                                                         color: DeviceState.getColor(report.currentState)
                                                       )
                                                     ]
                                                   ),
-                                                  Text(report.title, style: TextStyle(fontWeight: FontWeight.bold)),
+                                                  Text(report.title, style: const TextStyle(fontWeight: FontWeight.bold)),
                                                   Text(report.description)
                                                 ]
                                               )
@@ -351,7 +351,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                               ),
                             )
                           ),
-                          SizedBox(height: 10,),
+                          const SizedBox(height: 10,),
                           ElevatedButton(
                             child: const Text('Create report'),
                             onPressed: () => _createReport()
@@ -363,8 +363,8 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                       flex: 2,
                       child: Column(mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Available Documents:", style: TextStyle(fontSize: 25)),
-                          SizedBox(height: 10),
+                          const Text("Available Documents:", style: TextStyle(fontSize: 25)),
+                          const SizedBox(height: 10),
                           Flexible(child: DocumentScreen(deviceInfo: _deviceInfo!)),
                         ],
                       )
@@ -372,7 +372,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                   ]
                 )), 
               ]
-            ) : Center(child: CircularProgressIndicator())
+            ) : const Center(child: CircularProgressIndicator())
           ),
         )
       ))
@@ -383,7 +383,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
 class DocumentScreen extends StatefulWidget {
   final DeviceInfo deviceInfo;
 
-  DocumentScreen({Key? key, required this.deviceInfo}) : super(key: key);
+  const DocumentScreen({Key? key, required this.deviceInfo}) : super(key: key);
 
   @override
   _DocumentScreenState createState() => _DocumentScreenState();
@@ -438,7 +438,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
 
   void _downloadDocument(String docName) {
     String url = Comm.getBaseUrl() + "device_documents/" + widget.deviceInfo.device.manufacturer + "/" + widget.deviceInfo.device.model + "/" + docName;
-    html.AnchorElement anchorElement =  new html.AnchorElement(href: url);
+    html.AnchorElement anchorElement =  html.AnchorElement(href: url);
     anchorElement.download = url;
     anchorElement.click();
   }
@@ -455,17 +455,17 @@ class _DocumentScreenState extends State<DocumentScreen> {
     Widget uploadWidget;
 
     if(_uploading) {
-      uploadWidget = CircularProgressIndicator(value: null);
+      uploadWidget = const CircularProgressIndicator(value: null);
     } else {
       uploadWidget = ElevatedButton(
-        child: Text("upload documents"),
+        child: const Text("upload documents"),
         onPressed: () => _uploadDocuments(),
       );
     }
 
     return Column(
       children: [
-        _documents.length > 0 ? Flexible(
+        _documents.isNotEmpty ? Flexible(
           child: Scrollbar(
             controller: _scrollController,
             child: ListView.separated(
@@ -481,7 +481,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
               separatorBuilder: (BuildContext context, int index) => const Divider(),
             )
           )
-        ) : Expanded(child: Center(child: const Text('No documents found'))),
+        ) : const Expanded(child: Center(child: Text('No documents found'))),
         uploadWidget,
       ]
     );
@@ -491,7 +491,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
 class StateScreen extends StatefulWidget {
   final DeviceInfo deviceInfo;
 
-  StateScreen({Key? key, required this.deviceInfo}) : super(key: key);
+  const StateScreen({Key? key, required this.deviceInfo}) : super(key: key);
 
   @override
   _StateScreenState createState() => _StateScreenState();
@@ -507,17 +507,17 @@ class _StateScreenState extends State<StateScreen> {
     return Column(
       children: [
         Container(color: DeviceState.getColor(latestReport.currentState),
-          child: Padding(padding: EdgeInsets.all(7.0),
+          child: Padding(padding: const EdgeInsets.all(7.0),
             child: Row(
               children: [
                 Icon(DeviceState.getIconData(latestReport.currentState)),
-                SizedBox(width: 5),
+                const SizedBox(width: 5),
                 Text(DeviceState.getStateString(latestReport.currentState),
-                  style: TextStyle(fontSize: 25)
+                  style: const TextStyle(fontSize: 25)
                 ),
-                Spacer(),
-                Text(DateTime.now().difference(latestReport.created).inDays.toString() + " days",
-                  style: TextStyle(fontSize: 25))
+                const Spacer(),
+                Text("${DateTime.now().difference(latestReport.created).inDays} days",
+                  style: const TextStyle(fontSize: 25))
               ]
             )
           )

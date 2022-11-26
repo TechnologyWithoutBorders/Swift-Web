@@ -10,7 +10,7 @@ import 'package:teog_swift/utilities/messageException.dart';
 class OrganizationFilterView extends StatefulWidget {
   final OrganizationalUnit? orgUnit;
 
-  OrganizationFilterView({Key? key, this.orgUnit}) : super(key: key);
+  const OrganizationFilterView({Key? key, this.orgUnit}) : super(key: key);
 
   @override
   _OrganizationFilterViewState createState() => _OrganizationFilterViewState();
@@ -18,9 +18,7 @@ class OrganizationFilterView extends StatefulWidget {
 
 class _OrganizationFilterViewState extends State<OrganizationFilterView> {
   Graph _graph = Graph();
-  Map<int, String> _nameMap = Map();
-
-  final _orgScrollController = ScrollController();
+  Map<int, String> _nameMap = {};
 
   @override
   void initState() {
@@ -71,10 +69,10 @@ class _OrganizationFilterViewState extends State<OrganizationFilterView> {
       child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
         child: Card(
           child: Padding(
-            padding: EdgeInsets.all(25.0),
+            padding: const EdgeInsets.all(25.0),
             child: _graph.nodeCount() > 0 ? Center(
               child: InteractiveViewer(
-                boundaryMargin: EdgeInsets.all(10.0),
+                boundaryMargin: const EdgeInsets.all(10.0),
                 constrained: false,
                 minScale: 0.1,
                 maxScale: 1.0,
@@ -85,7 +83,7 @@ class _OrganizationFilterViewState extends State<OrganizationFilterView> {
                     int id = node.key!.value;
 
                     return Card(
-                      color: widget.orgUnit == null || widget.orgUnit!.id != id ? Colors.grey[100] : Color(Constants.teog_blue),
+                      color: widget.orgUnit == null || widget.orgUnit!.id != id ? Colors.grey[100] : const Color(Constants.teog_blue),
                       child: TextButton(
                         child: Text(_nameMap[id]!, style: TextStyle(fontSize: 15, color: widget.orgUnit == null || widget.orgUnit!.id != id ? Colors.black : Colors.white, fontWeight: FontWeight.bold)),
                         onPressed: () {
@@ -105,7 +103,7 @@ class _OrganizationFilterViewState extends State<OrganizationFilterView> {
                   }
                 )
               )
-            ) : Center(child: Text("loading departments..."))
+            ) : const Center(child: Text("loading departments..."))
           )
         )
       )

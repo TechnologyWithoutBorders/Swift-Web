@@ -9,7 +9,7 @@ import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
 import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
 
 class MaintenanceScreen extends StatefulWidget {
-  MaintenanceScreen({Key? key}) : super(key: key);
+  const MaintenanceScreen({Key? key}) : super(key: key);
 
   @override
   _MaintenanceScreenState createState() => _MaintenanceScreenState();
@@ -22,7 +22,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
 
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  Map<String, List<HospitalDevice>> _maintenanceEvents = Map();
+  Map<String, List<HospitalDevice>> _maintenanceEvents = {};
 
   @override
   void initState() {
@@ -34,7 +34,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
   Future<void> _initEvents() async {
     List<MaintenanceEvent> events = await Comm.getMaintenanceEvents();
 
-    Map<String, List<HospitalDevice>> maintenanceEvents = Map();
+    Map<String, List<HospitalDevice>> maintenanceEvents = {};
 
     for(var event in events) {
       String key = event.dateTime.toString().substring(0, 10);
@@ -78,7 +78,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                       weekendDays: const [DateTime.saturday, DateTime.sunday],//TODO: define per locale
                       daysOfWeekHeight: 40.0,
                       firstDay: now,
-                      lastDay: now.add(Duration(days: 365)),
+                      lastDay: now.add(const Duration(days: 365)),
                       focusedDay: _focusedDay,
                       selectedDayPredicate: (day) {
                         return isSameDay(_selectedDay, day);
@@ -107,7 +107,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                           return [];
                         }
                       },
-                      headerStyle: HeaderStyle(
+                      headerStyle: const HeaderStyle(
                         formatButtonVisible: false,
                         titleTextStyle: TextStyle(color: Colors.white, fontSize: 20.0),
                         decoration: BoxDecoration(
@@ -131,13 +131,13 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                       daysOfWeekStyle: const DaysOfWeekStyle(
                         weekendStyle: TextStyle(color: Colors.redAccent),
                       ),
-                      calendarStyle: CalendarStyle(
+                      calendarStyle: const CalendarStyle(
                         weekendTextStyle: TextStyle(color: Colors.redAccent),
                       ),
                       calendarBuilders: CalendarBuilders(
                         markerBuilder: (context, day, events) {
-                          if(events.length > 0) {
-                            return Container(color: Color(Constants.teog_blue_light), child: Padding(padding: EdgeInsets.all(1), child: Text(events.length.toString() + " devices", style: TextStyle(fontSize: 14.0))));
+                          if(events.isNotEmpty) {
+                            return Container(color: const Color(Constants.teog_blue_light), child: Padding(padding: const EdgeInsets.all(1), child: Text("${events.length} devices", style: const TextStyle(fontSize: 14.0))));
                           } else {
                             return null;
                           }
@@ -147,13 +147,13 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                   )
                 ),
                 Expanded(
-                  child: _selectedDevices.length > 0 ? Padding(
-                    padding: EdgeInsets.all(5.0),
+                  child: _selectedDevices.isNotEmpty ? Padding(
+                    padding: const EdgeInsets.all(5.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _selectedDay != null ? Text(_selectedDay.toString().substring(0, 10), style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)) : Text(""),
-                        Flexible(child: Padding(padding: EdgeInsets.all(10.0),
+                        _selectedDay != null ? Text(_selectedDay.toString().substring(0, 10), style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold)) : const Text(""),
+                        Flexible(child: Padding(padding: const EdgeInsets.all(10.0),
                           child: Scrollbar(
                             controller: _scrollController,
                             child: ListView.separated(
@@ -165,7 +165,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
 
                                 return ListTile(
                                   title: Text(device.type),
-                                  subtitle: Text(device.manufacturer + " " + device.model),
+                                  subtitle: Text("${device.manufacturer} ${device.model}"),
                                   trailing: device.orgUnit != null ? Text(device.orgUnit!) : null,
                                   onTap: () => {
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: device.id)))
@@ -178,7 +178,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                         )),
                       ]
                     )
-                  ) : Center(child: Text("Click on a date in the calendar to show the devices that need maintenance."))
+                  ) : const Center(child: Text("Click on a date in the calendar to show the devices that need maintenance."))
                 )
               ]
             )

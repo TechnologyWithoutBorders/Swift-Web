@@ -13,7 +13,7 @@ class DetailScreen extends StatefulWidget {
   //this one is never modified
   final ShortDeviceInfo deviceInfo;
 
-  DetailScreen({Key? key, required this.deviceInfo}) : super(key: key);
+  const DetailScreen({Key? key, required this.deviceInfo}) : super(key: key);
 
   @override
   _DetailScreenState createState() => _DetailScreenState(deviceInfo: deviceInfo);
@@ -26,7 +26,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
   _updateDeviceInfo(ShortDeviceInfo modifiedDeviceInfo) {
     setState(() {
-      this.deviceInfo = modifiedDeviceInfo;
+      deviceInfo = modifiedDeviceInfo;
     });
   }
 
@@ -49,7 +49,7 @@ class _DetailScreenState extends State<DetailScreen> {
     }
 
     if(reasonText != null) {
-      reportWidget = Text(reasonText, style: TextStyle(fontSize: 20));
+      reportWidget = Text(reasonText, style: const TextStyle(fontSize: 20));
     } else {
       reportWidget = ReportProblemForm(deviceInfo: deviceInfo, updateDeviceInfo: _updateDeviceInfo,);
     }
@@ -59,26 +59,26 @@ class _DetailScreenState extends State<DetailScreen> {
       appBar: AppBar(
         title: Text(widget.deviceInfo.device.type),
       ),
-      body: SingleChildScrollView(child: Padding(padding: EdgeInsets.all(20.0), child: Center(
+      body: SingleChildScrollView(child: Padding(padding: const EdgeInsets.all(20.0), child: Center(
         child: Card(
-          child: Padding(padding: EdgeInsets.all(10.0),
+          child: Padding(padding: const EdgeInsets.all(10.0),
             child: SizedBox(
               width: 600,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(deviceInfo.device.manufacturer + " " + deviceInfo.device.model, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                  deviceInfo.device.orgUnit != null ? Text(deviceInfo.device.orgUnit!, style: TextStyle(fontSize: 25)) : Text(""),
-                  Divider(),
-                  SizedBox(height: 20),
-                  deviceInfo.imageData != null && deviceInfo.imageData!.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData!)) : Text("no image available"),
-                  SizedBox(height: 30),
+                  Text("${deviceInfo.device.manufacturer} ${deviceInfo.device.model}", style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                  deviceInfo.device.orgUnit != null ? Text(deviceInfo.device.orgUnit!, style: const TextStyle(fontSize: 25)) : const Text(""),
+                  const Divider(),
+                  const SizedBox(height: 20),
+                  deviceInfo.imageData != null && deviceInfo.imageData!.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData!)) : const Text("no image available"),
+                  const SizedBox(height: 30),
                   StateScreen(deviceInfo: deviceInfo),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   reportWidget,
-                  Divider(),
-                  Text("Available Documents:", style: TextStyle(fontSize: 25)),
-                  SizedBox(height: 10),
+                  const Divider(),
+                  const Text("Available Documents:", style: TextStyle(fontSize: 25)),
+                  const SizedBox(height: 10),
                   DocumentScreen(deviceInfo: deviceInfo),
                 ]
               )
@@ -93,7 +93,7 @@ class _DetailScreenState extends State<DetailScreen> {
 class DocumentScreen extends StatefulWidget {
   final ShortDeviceInfo deviceInfo;
 
-  DocumentScreen({Key? key, required this.deviceInfo}) : super(key: key);
+  const DocumentScreen({Key? key, required this.deviceInfo}) : super(key: key);
 
   @override
   _DocumentScreenState createState() => _DocumentScreenState();
@@ -112,7 +112,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
 
   void _downloadDocument(String docName) {
     String url = Comm.getBaseUrl() + "device_documents/" + widget.deviceInfo.device.manufacturer + "/" + widget.deviceInfo.device.model + "/" + docName;
-    html.AnchorElement anchorElement =  new html.AnchorElement(href: url);
+    html.AnchorElement anchorElement =  html.AnchorElement(href: url);
     anchorElement.download = url;
     anchorElement.click();
   }
@@ -128,7 +128,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _documents.length > 0 ? Scrollbar(
+        _documents.isNotEmpty ? Scrollbar(
           controller: _scrollController,
           child: ListView.separated(
             controller: _scrollController,
@@ -143,7 +143,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
             },
             separatorBuilder: (BuildContext context, int index) => const Divider(),
           )
-        ) : Center(child: const Text('No documents found')),
+        ) : const Center(child: const Text('No documents found')),
       ]
     );
   }
@@ -152,7 +152,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
 class StateScreen extends StatefulWidget {
   final ShortDeviceInfo deviceInfo;
 
-  StateScreen({Key? key, required this.deviceInfo}) : super(key: key);
+  const StateScreen({Key? key, required this.deviceInfo}) : super(key: key);
 
   @override
   _StateScreenState createState() => _StateScreenState();
@@ -167,16 +167,16 @@ class _StateScreenState extends State<StateScreen> {
     return Column(
       children: [
         Container(color: DeviceState.getColor(report.currentState),
-          child: Padding(padding: EdgeInsets.all(7.0),
+          child: Padding(padding: const EdgeInsets.all(7.0),
             child: Row(children: [
                 Icon(DeviceState.getIconData(report.currentState)),
-                SizedBox(width: 5),
+                const SizedBox(width: 5),
                 Text(DeviceState.getStateString(report.currentState),
-                  style: TextStyle(fontSize: 25)
+                  style: const TextStyle(fontSize: 25)
                 ),
-                Spacer(),
-                Text(DateTime.now().difference(report.created).inDays.toString() + " days",
-                  style: TextStyle(fontSize: 25))
+                const Spacer(),
+                Text("${DateTime.now().difference(report.created).inDays} days",
+                  style: const TextStyle(fontSize: 25))
               ]
             )
           )
@@ -191,7 +191,7 @@ class ReportProblemForm extends StatefulWidget {
 
   final ValueChanged<ShortDeviceInfo> updateDeviceInfo;
 
-  ReportProblemForm({Key? key, required this.deviceInfo, required this.updateDeviceInfo}) : super(key: key);
+  const ReportProblemForm({Key? key, required this.deviceInfo, required this.updateDeviceInfo}) : super(key: key);
 
   @override
   _ReportProblemFormState createState() => _ReportProblemFormState();
@@ -225,7 +225,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
         return Form(key: _formKey,
             child: AlertDialog(
               contentPadding: const EdgeInsets.all(16.0),
-              content: new Column(
+              content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Text("Report a problem", style: Theme
@@ -234,7 +234,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
                       .headline5),
                   TextFormField(
                     controller: _reportTitleController,
-                    decoration: new InputDecoration(labelText: 'Title'),
+                    decoration: const InputDecoration(labelText: 'Title'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Please give your report a title.";
@@ -245,10 +245,10 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
                     onFieldSubmitted: (value) => _createReport(),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       controller: _problemTextController,
-                      decoration: new InputDecoration(labelText: 'Problem description'),
+                      decoration: const InputDecoration(labelText: 'Problem description'),
                       maxLength: 600,
                       maxLines: null,
                       validator: (value) {
@@ -270,7 +270,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
                     }
                 ),
                 ElevatedButton(
-                  child: Text('Request repair'),
+                  child: const Text('Request repair'),
                   onPressed: () async {
                     bool success = await _createReport();
                     
@@ -290,7 +290,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () => _createReportDialog(),
-      child: Text('Report a problem'),
+      child: const Text('Report a problem'),
     );
   }
 }

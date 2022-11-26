@@ -18,7 +18,7 @@ import 'package:teog_swift/utilities/hospital.dart';
 class OverviewScreen extends StatefulWidget {
   static const String route = '/reporting';
 
-  OverviewScreen({Key? key}) : super(key: key);
+  const OverviewScreen({Key? key}) : super(key: key);
 
   @override
   _OverviewScreenState createState() => _OverviewScreenState();
@@ -55,16 +55,16 @@ class _OverviewScreenState extends State<OverviewScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: _hospital != null && _countryName != null ? Text("TeoG Swift - "+ _hospital!.name +  ", " + _countryName!) : Text("TeoG Swift"),
+        title: _hospital != null && _countryName != null ? Text("TeoG Swift - ${_hospital!.name}, ${_countryName!}") : const Text("TeoG Swift"),
         actions: [
-          Padding(padding: EdgeInsets.only(right: 20.0),
+          Padding(padding: const EdgeInsets.only(right: 20.0),
             child: TextButton(
               style: ButtonStyle(
                 foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
                   return states.contains(MaterialState.disabled) ? Colors.grey : Colors.white;
                 }),
               ),
-              child: Text("Logout"),
+              child: const Text("Logout"),
               onPressed: () => _logout(context),
             )
           )
@@ -83,12 +83,12 @@ class _OverviewScreenState extends State<OverviewScreen> {
                 .of(context)
                 .textTheme
                 .headline5),
-              SizedBox(height: 25),
-              Card(child: Padding(padding: EdgeInsets.all(10.0), child: SearchForm())),
-              SizedBox(height: 5),
-              Text("OR", style: TextStyle(fontSize: 30)),
-              SizedBox(height: 5),
-              Card(child: Padding(padding: EdgeInsets.all(10.0), child: FilterForm())),
+              const SizedBox(height: 25),
+              Card(child: Padding(padding: const EdgeInsets.all(10.0), child: SearchForm())),
+              const SizedBox(height: 5),
+              const Text("OR", style: TextStyle(fontSize: 30)),
+              const SizedBox(height: 5),
+              Card(child: Padding(padding: const EdgeInsets.all(10.0), child: FilterForm())),
             ]
           )
         )
@@ -98,6 +98,8 @@ class _OverviewScreenState extends State<OverviewScreen> {
 }
 
 class SearchForm extends StatefulWidget {
+  const SearchForm({Key? key}) : super(key: key);
+
   @override
   _SearchFormState createState() => _SearchFormState();
 }
@@ -156,22 +158,22 @@ class _SearchFormState extends State with SessionMixin {
               .of(context)
               .textTheme
               .headline5),
-          SizedBox(height: 10),
-          Text("This is the easiest way. Please look for a barcode like this and enter the marked number:"),
-          SizedBox(height: 5),
-          Flexible(child: Image(image: AssetImage('graphics/barcode.jpg'))),
+          const SizedBox(height: 10),
+          const Text("This is the easiest way. Please look for a barcode like this and enter the marked number:"),
+          const SizedBox(height: 5),
+          const Flexible(child: Image(image: AssetImage('graphics/barcode.jpg'))),
           TextFormField(
             controller: _deviceIDController,
-            decoration: InputDecoration(hintText: 'Barcode Number'),
+            decoration: const InputDecoration(hintText: 'Barcode Number'),
             keyboardType: TextInputType.number,
             autofocus: true,
             validator: (value) => validateDeviceID(value),
             onFieldSubmitted: (value) => _processDeviceId(),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           ElevatedButton(
             onPressed: () => _processDeviceId(),
-            child: Text('Search'),
+            child: const Text('Search'),
           ),
         ],
       ),
@@ -180,6 +182,8 @@ class _SearchFormState extends State with SessionMixin {
 }
 
 class FilterForm extends StatefulWidget {
+  const FilterForm({Key? key}) : super(key: key);
+
   @override
   _FilterFormState createState() => _FilterFormState();
 }
@@ -269,9 +273,9 @@ class _FilterFormState extends State<FilterForm> {
               .of(context)
               .textTheme
               .headline5),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           DropdownButton<OrganizationalUnit>(
-            hint: Text("Department"),
+            hint: const Text("Department"),
             value: _department,
             onChanged: (OrganizationalUnit? unit) {
               setState(() {
@@ -287,23 +291,23 @@ class _FilterFormState extends State<FilterForm> {
           ),
           TextFormField(
             controller: _typeController,
-            decoration: InputDecoration(labelText: 'Device type (e.g. "Ventilator")'),
+            decoration: const InputDecoration(labelText: 'Device type (e.g. "Ventilator")'),
             autofocus: true,
             onFieldSubmitted: (value) => _processInput(),
           ),
           TextFormField(
             controller: _manufacturerController,
-            decoration: InputDecoration(labelText: 'Manufacturer'),
+            decoration: const InputDecoration(labelText: 'Manufacturer'),
             onFieldSubmitted: (value) => _processInput(),
           ),
-          SizedBox(height: 10),
-          _loading ? CircularProgressIndicator() : ElevatedButton(
+          const SizedBox(height: 10),
+          _loading ? const CircularProgressIndicator() : ElevatedButton(
             onPressed: () => _processInput(),
-            child: Text('Search'),
+            child: const Text('Search'),
           ),
-          SizedBox(height: 10),
-          Text(_filteredDevices.length.toString() + " device(s) match the filter:"),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
+          Text("${_filteredDevices.length} device(s) match the filter:"),
+          const SizedBox(height: 10),
           Flexible(
             child: ListView.separated(
               shrinkWrap: true,
@@ -315,9 +319,9 @@ class _FilterFormState extends State<FilterForm> {
                 HospitalDevice device = deviceInfo.device;
 
                 return ListTile(
-                  leading: deviceInfo.imageData != null && deviceInfo.imageData!.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData!)) : Text("no image"),
+                  leading: deviceInfo.imageData != null && deviceInfo.imageData!.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData!)) : const Text("no image"),
                   title: Text(device.type),
-                  subtitle: Text(device.manufacturer + " " + device.model),
+                  subtitle: Text("${device.manufacturer} ${device.model}"),
                   trailing: device.orgUnit != null ? Text(device.orgUnit!) : null,
                   onTap: () => _openDeviceById(device.id)
                 );

@@ -5,7 +5,7 @@ import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/messageException.dart';
 
 class UserManagementScreen extends StatefulWidget {
-  UserManagementScreen({Key? key}) : super(key: key);
+  const UserManagementScreen({Key? key}) : super(key: key);
 
   @override
   _DetailScreenState createState() => _DetailScreenState();
@@ -24,21 +24,21 @@ class _DetailScreenState extends State<UserManagementScreen> {
     showDialog<String>(
       context: context,
       builder: (BuildContext context) {
-        return new AlertDialog(
-          title: Text("The user will receive his/her password for the mobile app via email.\nPlease check the spam folder if it does not show up."),
+        return AlertDialog(
+          title: const Text("The user will receive his/her password for the mobile app via email.\nPlease check the spam folder if it does not show up."),
           contentPadding: const EdgeInsets.all(16.0),
-          content: new Column(
+          content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               TextField(
                 controller: nameController,
-                decoration: new InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Name'),
                 maxLength: 30,
               ),
               TextField(
                 controller: mailController,
-                decoration: new InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Mail Address'),
                 maxLength: 50,
               ),
@@ -97,8 +97,8 @@ class _DetailScreenState extends State<UserManagementScreen> {
     showDialog<String>(
       context: context,
       builder: (BuildContext context) {
-        return new AlertDialog(
-          title: Text("Are you sure you want to delete this user? (Does nothing at the moment)"),
+        return AlertDialog(
+          title: const Text("Are you sure you want to delete this user? (Does nothing at the moment)"),
           actions: <Widget>[
             ElevatedButton(
                 child: const Text('Cancel'),
@@ -125,17 +125,17 @@ class _DetailScreenState extends State<UserManagementScreen> {
       body: Container(alignment: Alignment.center,
         child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
           child: Card(
-            child: Padding(padding: EdgeInsets.all(25.0),
+            child: Padding(padding: const EdgeInsets.all(25.0),
               child: Row(mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
+                  const Expanded(
                     child: Center(),
                   ),
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Manage Staff", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                        const Text("Manage Staff", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                         Flexible(
                           child: Scrollbar(
                             controller: _scrollController,
@@ -147,7 +147,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
 
                                 return ListTile(
                                   title: SelectableText(user.name),
-                                  subtitle: SelectableText(user.mail + "\n" + user.phone),
+                                  subtitle: SelectableText("${user.mail}\n${user.phone}"),
                                   //trailing: TextButton(child: Icon(Icons.delete), onPressed: () =>_deleteUser()),
                                   trailing: Text(_users[index].position),
                                 );
@@ -156,10 +156,10 @@ class _DetailScreenState extends State<UserManagementScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 15,),
+                        const SizedBox(height: 15,),
                         ElevatedButton(
                           onPressed: () => _createUser(),
-                          child: Text('Register user'),
+                          child: const Text('Register user'),
                         )
                       ]
                     )

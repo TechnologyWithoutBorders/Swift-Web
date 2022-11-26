@@ -10,7 +10,7 @@ import 'package:teog_swift/utilities/messageException.dart';
 class ReportHistoryPlot extends StatefulWidget {
   final OrganizationalUnit? orgUnit;
 
-  ReportHistoryPlot({Key? key, this.orgUnit}) : super(key: key);
+  const ReportHistoryPlot({Key? key, this.orgUnit}) : super(key: key);
 
   @override
   _ReportHistoryPlotState createState() => _ReportHistoryPlotState();
@@ -72,7 +72,7 @@ class _ReportHistoryPlotState extends State<ReportHistoryPlot> {
         }
 
         for(int state = 0; state < 6; state++) {
-          dataList[state].add(new CategoryData(current, stateCounters[state], charts.ColorUtil.fromDartColor(DeviceState.getColor(state))));
+          dataList[state].add(CategoryData(current, stateCounters[state], charts.ColorUtil.fromDartColor(DeviceState.getColor(state))));
         }
       }
 
@@ -80,7 +80,7 @@ class _ReportHistoryPlotState extends State<ReportHistoryPlot> {
 
       for(int state = 0; state < 6; state++) {
         seriesList.add(
-          new charts.Series<CategoryData, DateTime>(
+          charts.Series<CategoryData, DateTime>(
             id: DeviceState.getStateString(state),
             domainFn: (CategoryData categoryData, _) => categoryData.category,
             measureFn: (CategoryData categoryData, _) => categoryData.count,
@@ -96,7 +96,6 @@ class _ReportHistoryPlotState extends State<ReportHistoryPlot> {
     }).onError<MessageException>((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.message));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        print(error.message);
     });
   }
 
@@ -106,10 +105,10 @@ class _ReportHistoryPlotState extends State<ReportHistoryPlot> {
       child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
         child: Card(
           child: Padding(
-            padding: EdgeInsets.all(25.0),
+            padding: const EdgeInsets.all(25.0),
             child: _seriesList != null ? Center(
               child: Center(child: StateLineChart(_seriesList!))
-            ) : Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator()))
+            ) : const Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator()))
           )
         )
       )
@@ -120,14 +119,14 @@ class _ReportHistoryPlotState extends State<ReportHistoryPlot> {
 class StateLineChart extends StatelessWidget {
   final List<charts.Series<dynamic, DateTime>> seriesList;
 
-  StateLineChart(this.seriesList);
+  const StateLineChart(this.seriesList, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return new charts.TimeSeriesChart(
+    return charts.TimeSeriesChart(
       seriesList,
       behaviors: [
-        new charts.SeriesLegend()
+        charts.SeriesLegend()
       ]
     );
   }

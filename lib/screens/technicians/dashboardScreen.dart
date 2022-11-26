@@ -14,7 +14,7 @@ import 'package:teog_swift/utilities/detailedReport.dart';
 import 'package:teog_swift/utilities/messageException.dart';
 
 class DashboardScreen extends StatefulWidget {
-  DashboardScreen({Key? key}) : super(key: key);
+  const DashboardScreen({Key? key}) : super(key: key);
 
   @override
   _DetailScreenState createState() => _DetailScreenState();
@@ -79,20 +79,20 @@ class _DetailScreenState extends State<DashboardScreen> {
     showDialog<String>(
       context: context,
       builder: (BuildContext context) {
-        return new AlertDialog(
+        return AlertDialog(
           contentPadding: const EdgeInsets.all(16.0),
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) { 
-              return new Column(
+              return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey)
                     ),
-                    child: Padding(padding: EdgeInsets.all(10), child: TextField(
+                    child: Padding(padding: const EdgeInsets.all(10), child: TextField(
                       controller: idController,
-                      decoration: new InputDecoration(
+                      decoration: const InputDecoration(
                         helperMaxLines: 2,
                         helperText: "Leave empty to determine ID automatically.",//TODO: make user select explicitly
                         labelText: 'ID',
@@ -101,23 +101,23 @@ class _DetailScreenState extends State<DashboardScreen> {
                   ),
                   TextField(
                     controller: typeController,
-                    decoration: new InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Type'),
                   ),
                   TextField(
                     controller: manufacturerController,
-                    decoration: new InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Manufacturer'),
                   ),
                   TextField(
                     controller: modelController,
-                    decoration: new InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Model'),
                   ),
-                  Padding(padding: EdgeInsets.all(10), child: ElevatedButton(onPressed: () {}, child: Text("Choose location..."))),
+                  Padding(padding: const EdgeInsets.all(10), child: ElevatedButton(onPressed: () {}, child: const Text("Choose location..."))),
                   //TODO: select location via organizational chart
                   DropdownButton<int>(
-                    hint: Text("Current state"),
+                    hint: const Text("Current state"),
                     value: selectedState,
                     items: <int>[0, 1, 2, 3, 4, 5]//TODO: das sollte aus DeviceStates kommen
                       .map<DropdownMenuItem<int>>((int state) {
@@ -128,7 +128,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                             child: Row(
                               children: [
                                 Icon(DeviceState.getIconData(state)),
-                                SizedBox(width: 5),
+                                const SizedBox(width: 5),
                                 Text(DeviceState.getStateString(state)),
                               ]
                             )
@@ -144,9 +144,9 @@ class _DetailScreenState extends State<DashboardScreen> {
                   ),
                   selectedState != DeviceState.working ? TextField(
                     controller: stateController,
-                    decoration: new InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Description'),
-                  ) : SizedBox.shrink()
+                  ) : const SizedBox.shrink()
                 ],
               );
             }
@@ -190,12 +190,12 @@ class _DetailScreenState extends State<DashboardScreen> {
 
       for(int state = 0; state < stateList.length; state++) {
         if(stateList[state] > 0) {
-          data.add(new CategoryData(DeviceState.getStateString(stateOrder[state]), stateList[state], charts.ColorUtil.fromDartColor(DeviceState.getColor(stateOrder[state]))));
+          data.add(CategoryData(DeviceState.getStateString(stateOrder[state]), stateList[state], charts.ColorUtil.fromDartColor(DeviceState.getColor(stateOrder[state]))));
         }
       }
 
       seriesList = [
-        new charts.Series<CategoryData, String>(
+        charts.Series<CategoryData, String>(
           id: 'Categories',
           domainFn: (CategoryData categoryData, _) => categoryData.category,
           measureFn: (CategoryData categoryData, _) => categoryData.count,
@@ -212,19 +212,19 @@ class _DetailScreenState extends State<DashboardScreen> {
       body: Container(alignment: Alignment.center,
         child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
           child: Card(
-            child: Padding(padding: EdgeInsets.all(25.0),
+            child: Padding(padding: const EdgeInsets.all(25.0),
               child: _deviceStats != null && _todoDevices != null && _recentReports != null ? Row(mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Overview", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                        Flexible(child: Padding(padding: EdgeInsets.all(30.0), child: StatePieChart(seriesList))),
+                        const Text("Overview", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                        Flexible(child: Padding(padding: const EdgeInsets.all(30.0), child: StatePieChart(seriesList))),
                         _deviceStats!.maintenanceOverdue > 0 ? Container(
-                          padding: EdgeInsets.all(3.0),
-                          color: Color(Constants.light_red),
-                          child: Text(_deviceStats!.maintenanceOverdue.toString() + " devices are overdue for maintenance", style: TextStyle(fontSize: 20))
+                          padding: const EdgeInsets.all(3.0),
+                          color: const Color(Constants.light_red),
+                          child: Text("${_deviceStats!.maintenanceOverdue} devices are overdue for maintenance", style: const TextStyle(fontSize: 20))
                         ) : Container(),
                       ]
                     ),
@@ -233,8 +233,8 @@ class _DetailScreenState extends State<DashboardScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("ToDo", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                        Flexible(child: Padding(padding: EdgeInsets.all(10.0),
+                        const Text("ToDo", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                        Flexible(child: Padding(padding: const EdgeInsets.all(10.0),
                           child: Scrollbar(
                             controller: _scrollController,
                             child: ListView.separated(
@@ -253,19 +253,19 @@ class _DetailScreenState extends State<DashboardScreen> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Container(width: 33, height: 33, color: DeviceState.getColor(report.currentState),
-                                        child: Padding(padding: EdgeInsets.all(4.0),
+                                        child: Padding(padding: const EdgeInsets.all(4.0),
                                           child: Icon(DeviceState.getIconData(report.currentState),
                                               size: 25,
                                               color: Colors.grey[900]
                                             )
                                         )
                                       ),
-                                      SizedBox(height: 1),
-                                      Text(days.toString() + " d", style: TextStyle(fontSize: 12, color: Color(Constants.info_green)))
+                                      const SizedBox(height: 1),
+                                      Text("$days d", style: const TextStyle(fontSize: 12, color: Color(Constants.info_green)))
                                     ]
                                   ),
                                   title: Text(device.type),
-                                  subtitle: Text(device.manufacturer + " " + device.model),
+                                  subtitle: Text("${device.manufacturer} ${device.model}"),
                                   trailing: device.orgUnit != null ? Text(device.orgUnit!) : null,
                                   onTap: () => {
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: device.id))).then((value) => {
@@ -287,12 +287,12 @@ class _DetailScreenState extends State<DashboardScreen> {
                       ]
                     )
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   Expanded(
                     child: Column(
                       children: [
-                        Text("Recent Activity", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                        SizedBox(height: 10),
+                        const Text("Recent Activity", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 10),
                         Flexible(
                           child: _recentReports!.isNotEmpty ? Container(
                             color: Colors.grey[200],
@@ -307,7 +307,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                                   String dateStamp = report.created.toString().substring(0, report.created.toString().length-7);
 
                                   return Padding(
-                                    padding: EdgeInsets.all(15.0),
+                                    padding: const EdgeInsets.all(15.0),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.stretch,
                                       children: [
@@ -316,19 +316,19 @@ class _DetailScreenState extends State<DashboardScreen> {
                                           child: Card(
                                             color: Colors.white,
                                             child: Padding(
-                                              padding: EdgeInsets.all(5.0),
+                                              padding: const EdgeInsets.all(5.0),
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Row(
                                                     children: [
-                                                      Expanded(child: Text(report.author + ":")),
+                                                      Expanded(child: Text("${report.author}:")),
                                                       Icon(DeviceState.getIconData(report.currentState),
                                                         color: DeviceState.getColor(report.currentState)
                                                       )
                                                     ]
                                                   ),
-                                                  Text(report.title, style: TextStyle(fontWeight: FontWeight.bold)),
+                                                  Text(report.title, style: const TextStyle(fontWeight: FontWeight.bold)),
                                                   Text(report.description)
                                                 ]
                                               )
@@ -348,13 +348,13 @@ class _DetailScreenState extends State<DashboardScreen> {
                                 separatorBuilder: (BuildContext context, int index) => Container(),
                               ),
                             ),
-                          ) : Center(child: Text("no activity in the last 7 days"))
+                          ) : const Center(child: Text("no activity in the last 7 days"))
                         ),
                       ]
                     )
                   )
                 ]
-              ) : Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator()))
+              ) : const Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator()))
             ),
           )
         )
@@ -366,17 +366,17 @@ class _DetailScreenState extends State<DashboardScreen> {
 class StatePieChart extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
 
-  StatePieChart(this.seriesList);
+  const StatePieChart(this.seriesList, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return new charts.PieChart<String>(
+    return charts.PieChart<String>(
       seriesList,
       behaviors: [
-        new charts.DatumLegend(
+        charts.DatumLegend(
           position: charts.BehaviorPosition.bottom,
           horizontalFirst: false,
-          cellPadding: new EdgeInsets.only(right: 10.0, top: 4.0),
+          cellPadding: const EdgeInsets.only(right: 10.0, top: 4.0),
           showMeasures: true,
           desiredMaxRows: 3,
           legendDefaultMeasure: charts.LegendDefaultMeasure.firstValue,

@@ -14,7 +14,7 @@ import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
 
 class InventoryScreen extends StatefulWidget {
-  InventoryScreen({Key? key}) : super(key: key);
+  const InventoryScreen({Key? key}) : super(key: key);
 
   @override
   _InventoryScreenState createState() => _InventoryScreenState();
@@ -96,7 +96,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
       try {
         List<String> documents = await Comm.retrieveDocuments(deviceInfo.device.manufacturer, deviceInfo.device.model);
 
-        if(documents.length == 0) {
+        if(documents.isEmpty) {
           _preFilteredDevices.add(deviceInfo);
           setState(() {
             _displayedDevices.add(deviceInfo);
@@ -223,14 +223,14 @@ class _InventoryScreenState extends State<InventoryScreen> {
       body: Container(alignment: Alignment.center,
         child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
           child: Card(
-            child: Padding(padding: EdgeInsets.all(25.0),
+            child: Padding(padding: const EdgeInsets.all(25.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ButtonBar(
                     alignment: MainAxisAlignment.center,
                     children: [
-                      _departmentFilter != null ? Text("Department: " + _departmentFilter!.parent.name, style: TextStyle(fontSize: 25)) : Container(),
+                      _departmentFilter != null ? Text("Department: ${_departmentFilter!.parent.name}", style: const TextStyle(fontSize: 25)) : Container(),
                       _departmentFilter != null ? IconButton(
                         iconSize: 25,
                         icon: Icon(Icons.cancel_outlined, color: Colors.red[700]),
@@ -254,26 +254,26 @@ class _InventoryScreenState extends State<InventoryScreen> {
                           });
                         }, 
                       ): Container(),
-                      OutlinedButton(onPressed: () => _filterDepartment(), child: Text("select department...")),
+                      OutlinedButton(onPressed: () => _filterDepartment(), child: const Text("select department...")),
                     ]
                   ),
                   ButtonBar(
                     alignment: MainAxisAlignment.center,
                     children: [
-                      Text("Select devices by template: ", style: TextStyle(fontSize: 20)),
+                      const Text("Select devices by template: ", style: TextStyle(fontSize: 20)),
                       ElevatedButton(
                         child: Text("All"),
                         onPressed: _manualButtonDisabled ? null : () => _showAllDevices(),
-                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterType == filterNone ? Color(Constants.teog_blue) : Colors.blueGrey))
+                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterType == filterNone ? const Color(Constants.teog_blue) : Colors.blueGrey))
                       ),
                       ElevatedButton(
                         child: Text("No manual attached"),
                         onPressed: _manualButtonDisabled ? null : () => _checkManuals(),
-                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterType == filterMissingManuals ? Color(Constants.teog_blue) : Colors.blueGrey))
+                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterType == filterMissingManuals ? const Color(Constants.teog_blue) : Colors.blueGrey))
                       ),
                     ],
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   TextField(
                     controller: _filterTextController,
                     decoration: const InputDecoration(
@@ -283,13 +283,13 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     onChanged: (text) => _filter(text.trim().toLowerCase()),
                     enabled: !_manualButtonDisabled
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   LinearProgressIndicator(
                     value: _progress
                   ),
-                  SizedBox(height: 10),
-                  Text("Number of devices matching filter: " + _displayedDevices.length.toString(), style: TextStyle(fontSize: 20)),
-                  Flexible(child: Padding(padding: EdgeInsets.all(10.0),
+                  const SizedBox(height: 10),
+                  Text("Number of devices matching filter: ${_displayedDevices.length}", style: const TextStyle(fontSize: 20)),
+                  Flexible(child: Padding(padding: const EdgeInsets.all(10.0),
                     child: Scrollbar(
                       controller: _scrollController,
                       child: ListView.separated(
@@ -303,7 +303,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
                           return ListTile(
                             leading: Container(width: 40, height: 40, color: DeviceState.getColor(report.currentState),
-                              child: Padding(padding: EdgeInsets.all(6.0),
+                              child: Padding(padding: const EdgeInsets.all(6.0),
                                 child: Center(child: (
                                     Icon(DeviceState.getIconData(report.currentState),
                                       size: 28,
@@ -314,7 +314,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                               )
                             ),
                             title: Text(device.type),
-                            subtitle: Text(device.manufacturer + " " + device.model),
+                            subtitle: Text("${device.manufacturer} ${device.model}"),
                             trailing: device.orgUnit != null ? Text(device.orgUnit!) : null,
                             onTap: () => {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: device.id))).then((value) => {
@@ -335,7 +335,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     alignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        child: Text("Export list"),
+                        child: const Text("Export list"),
                         onPressed: () => _csvExportInventory()
                       ),
                       ElevatedButton(
