@@ -8,8 +8,8 @@ import 'package:numberpicker/numberpicker.dart';
 import 'package:teog_swift/utilities/constants.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
 
-import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
-import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
+import 'package:teog_swift/utilities/networkFunctions.dart' as comm;
+import 'package:teog_swift/utilities/preferenceManager.dart' as prefs;
 import 'package:teog_swift/utilities/deviceInfo.dart';
 import 'package:teog_swift/utilities/detailedReport.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
@@ -24,7 +24,7 @@ class TechnicianDeviceScreen extends StatefulWidget {
   const TechnicianDeviceScreen({Key? key, required this.id}) : super(key: key);
 
   @override
-  _TechnicianDeviceScreenState createState() => _TechnicianDeviceScreenState();
+  State<TechnicianDeviceScreen> createState() => _TechnicianDeviceScreenState();
 }
 
 class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
@@ -37,14 +37,14 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
   void initState() {
     super.initState();
 
-    Comm.getDeviceInfo(widget.id).then((deviceInfo) {
+    comm.getDeviceInfo(widget.id).then((deviceInfo) {
       _updateDeviceInfo(deviceInfo);
     }).onError<MessageException>((error, stackTrace) {
       final snackBar = SnackBar(content: Text(error.message));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
 
-    Prefs.getUser().then((userId) => {
+    prefs.getUser().then((userId) => {
       setState(() {
         _userId = userId;
       })
@@ -125,7 +125,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                     String manufacturer = manufacturerController.text;
                     String model = modelController.text;
 
-                    Comm.editDevice(
+                    comm.editDevice(
                       HospitalDevice(id: device.id, type: type, manufacturer: manufacturer, model: model, serialNumber: "", orgUnitId: device.orgUnitId, orgUnit: device.orgUnit, maintenanceInterval: maintenanceInterval*4)).then((modifiedDeviceInfo) {
                       
                       _updateDeviceInfo(modifiedDeviceInfo);
@@ -217,7 +217,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                     String title = titleTextController.text;
                     String description = descriptionTextController.text;
 
-                    Comm.createReport(device.id, title, description, selectedState).then((report) => {
+                    comm.createReport(device.id, title, description, selectedState).then((report) => {
                       setState(() {
                         reports.insert(0, report);//TODO: get reports from server
                       })
@@ -386,7 +386,7 @@ class DocumentScreen extends StatefulWidget {
   const DocumentScreen({Key? key, required this.deviceInfo}) : super(key: key);
 
   @override
-  _DocumentScreenState createState() => _DocumentScreenState();
+  State<DocumentScreen> createState() => _DocumentScreenState();
 }
 
 class _DocumentScreenState extends State<DocumentScreen> {
@@ -414,7 +414,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
         Uint8List? content = file.bytes;
 
         if(file.extension == 'pdf' && content != null) {
-          List<String> documents = await Comm.uploadDocument(widget.deviceInfo.device.manufacturer, widget.deviceInfo.device.model, file.name, content);
+          List<String> documents = await comm.uploadDocument(widget.deviceInfo.device.manufacturer, widget.deviceInfo.device.model, file.name, content);
 
           setState(() {
             _documents = documents;
@@ -429,7 +429,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
   }
 
   void _retrieveDocuments() {
-    Comm.retrieveDocuments(widget.deviceInfo.device.manufacturer, widget.deviceInfo.device.model).then((documents) {
+    comm.retrieveDocuments(widget.deviceInfo.device.manufacturer, widget.deviceInfo.device.model).then((documents) {
       setState(() { _documents = documents; });
     }).onError<MessageException>((error, stackTrace) {
       //ignore
@@ -437,7 +437,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
   }
 
   void _downloadDocument(String docName) {
-    String url = Comm.getBaseUrl() + "device_documents/" + widget.deviceInfo.device.manufacturer + "/" + widget.deviceInfo.device.model + "/" + docName;
+    String url = "${comm.getBaseUrl()}device_documents/${widget.deviceInfo.device.manufacturer}/${widget.deviceInfo.device.model}/$docName";
     html.AnchorElement anchorElement =  html.AnchorElement(href: url);
     anchorElement.download = url;
     anchorElement.click();
@@ -494,7 +494,7 @@ class StateScreen extends StatefulWidget {
   const StateScreen({Key? key, required this.deviceInfo}) : super(key: key);
 
   @override
-  _StateScreenState createState() => _StateScreenState();
+  State<StateScreen> createState() => _StateScreenState();
 }
 
 class _StateScreenState extends State<StateScreen> {

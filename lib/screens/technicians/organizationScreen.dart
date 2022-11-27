@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
 
-import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/networkFunctions.dart' as comm;
 import 'package:teog_swift/utilities/organizationalRelation.dart';
 import 'package:teog_swift/utilities/organizationalUnit.dart';
 import 'package:teog_swift/utilities/messageException.dart';
@@ -14,7 +14,7 @@ class OrganizationScreen extends StatefulWidget {
   const OrganizationScreen({Key? key}) : super(key: key);
 
   @override
-  _OrganizationScreenState createState() => _OrganizationScreenState();
+  State<OrganizationScreen> createState() => _OrganizationScreenState();
 }
 
 class _OrganizationScreenState extends State<OrganizationScreen> {
@@ -80,7 +80,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-          title: Text("Add child department to \"" + _nameMap[parent].toString() + "\""),
+          title: Text("Add child department to \"${_nameMap[parent]}\""),
           contentPadding: const EdgeInsets.all(16.0),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -139,7 +139,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Change name of \"" + _nameMap[id].toString() + "\""),
+            title: Text("Change name of \"${_nameMap[id]}\""),
             contentPadding: const EdgeInsets.all(16.0),
             content: Column(
               mainAxisSize: MainAxisSize.min,
@@ -197,7 +197,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Delete department \"" + _nameMap[id].toString() + "\"?"),
+          title: Text("Delete department \"${_nameMap[id]}\"?"),
           content: const Text("This will also delete all child departments.", style: TextStyle(color: Colors.red)),
           actions: <Widget>[
             ElevatedButton(
@@ -236,7 +236,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   }
 
   Future<void> _reset() async {
-    OrganizationalInfo orgInfo = await Comm.getOrganizationalInfo();
+    OrganizationalInfo orgInfo = await comm.getOrganizationalInfo();
     Graph graph = Graph();
 
     Map<int, String> nameMap = {};
@@ -252,7 +252,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
         graph.addEdge(graph.getNodeUsingId(orgRelation.parent), graph.getNodeUsingId(orgRelation.id));
     }
 
-    List<PreviewDeviceInfo> devices = await Comm.searchDevices(null, null);
+    List<PreviewDeviceInfo> devices = await comm.searchDevices(null, null);
 
     Map<int?, List<PreviewDeviceInfo>> deviceRelations = {};
     //always add a list for unassigned devices
@@ -303,7 +303,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
       }
     }
 
-    Comm.updateOrganizationalInfo(orgUnits, orgRelations, deviceRelations).then((success) {
+    comm.updateOrganizationalInfo(orgUnits, orgRelations, deviceRelations).then((success) {
       if(success) {
         setState(() {
           _edited = false;
@@ -370,8 +370,8 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                         ButtonBar(
                           alignment: MainAxisAlignment.center,
                           children: [
-                            ElevatedButton(child: Text("Save"), onPressed: !_edited ? null : () => _save()),
-                            ElevatedButton(child: Text("Reset"), onPressed: !_edited ? null : () => _reset())
+                            ElevatedButton(onPressed: !_edited ? null : () => _save(), child: const Text("Save")),
+                            ElevatedButton(onPressed: !_edited ? null : () => _reset(), child: const Text("Reset"))
                           ],
                         ),
                         Expanded(

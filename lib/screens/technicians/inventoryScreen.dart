@@ -8,7 +8,7 @@ import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
 import 'package:teog_swift/utilities/hospitalDevice.dart';
 import 'package:teog_swift/utilities/constants.dart';
 
-import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/networkFunctions.dart' as comm;
 import 'package:teog_swift/utilities/shortDeviceInfo.dart';
 import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
@@ -17,7 +17,7 @@ class InventoryScreen extends StatefulWidget {
   const InventoryScreen({Key? key}) : super(key: key);
 
   @override
-  _InventoryScreenState createState() => _InventoryScreenState();
+  State<InventoryScreen> createState() => _InventoryScreenState();
 }
 
 class _InventoryScreenState extends State<InventoryScreen> {
@@ -47,7 +47,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
   }
 
   Future<void> _initDevices() async {
-    List<ShortDeviceInfo> devices = await Comm.getDevices();//TODO: catch Exception
+    List<ShortDeviceInfo> devices = await comm.getDevices();//TODO: catch Exception
     List<ShortDeviceInfo> assignedDevices = [];
     assignedDevices.addAll(devices);
     List<ShortDeviceInfo> prefilteredDevices = [];
@@ -94,7 +94,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
     for(ShortDeviceInfo deviceInfo in _assignedDevices) {
       try {
-        List<String> documents = await Comm.retrieveDocuments(deviceInfo.device.manufacturer, deviceInfo.device.model);
+        List<String> documents = await comm.retrieveDocuments(deviceInfo.device.manufacturer, deviceInfo.device.model);
 
         if(documents.isEmpty) {
           _preFilteredDevices.add(deviceInfo);
@@ -211,7 +211,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
     showDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        return ReportHistoryPlot();
+        return const ReportHistoryPlot();
       }
     );
   }
@@ -262,14 +262,14 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     children: [
                       const Text("Select devices by template: ", style: TextStyle(fontSize: 20)),
                       ElevatedButton(
-                        child: Text("All"),
                         onPressed: _manualButtonDisabled ? null : () => _showAllDevices(),
-                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterType == filterNone ? const Color(Constants.teog_blue) : Colors.blueGrey))
+                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterType == filterNone ? const Color(Constants.teog_blue) : Colors.blueGrey)),
+                        child: const Text("All"),
                       ),
                       ElevatedButton(
-                        child: Text("No manual attached"),
                         onPressed: _manualButtonDisabled ? null : () => _checkManuals(),
-                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterType == filterMissingManuals ? const Color(Constants.teog_blue) : Colors.blueGrey))
+                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterType == filterMissingManuals ? const Color(Constants.teog_blue) : Colors.blueGrey)),
+                        child: const Text("No manual attached"),
                       ),
                     ],
                   ),
@@ -339,8 +339,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         onPressed: () => _csvExportInventory()
                       ),
                       ElevatedButton(
-                        child: Text("Plot history"),
                         onPressed: _manualButtonDisabled ? null : () => _plotHistory(),
+                        child: const Text("Plot history"),
                       ),
                     ],
                   ),

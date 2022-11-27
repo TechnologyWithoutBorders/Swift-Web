@@ -4,7 +4,7 @@ import 'dart:html' as html;
 
 import 'package:flutter/material.dart';
 
-import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/networkFunctions.dart' as comm;
 import 'package:teog_swift/utilities/shortDeviceInfo.dart';
 import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
@@ -16,7 +16,7 @@ class DetailScreen extends StatefulWidget {
   const DetailScreen({Key? key, required this.deviceInfo}) : super(key: key);
 
   @override
-  _DetailScreenState createState() => _DetailScreenState(deviceInfo: deviceInfo);
+  State<DetailScreen> createState() => _DetailScreenState(deviceInfo: deviceInfo);
 }
 
 class _DetailScreenState extends State<DetailScreen> {
@@ -96,7 +96,7 @@ class DocumentScreen extends StatefulWidget {
   const DocumentScreen({Key? key, required this.deviceInfo}) : super(key: key);
 
   @override
-  _DocumentScreenState createState() => _DocumentScreenState();
+  State<DocumentScreen> createState() => _DocumentScreenState();
 }
 
 class _DocumentScreenState extends State<DocumentScreen> {
@@ -105,13 +105,13 @@ class _DocumentScreenState extends State<DocumentScreen> {
   final _scrollController = ScrollController();
 
   void _retrieveDocuments() {
-    Comm.retrieveDocuments(widget.deviceInfo.device.manufacturer, widget.deviceInfo.device.model).then((documents) {//TODO catch Exception
+    comm.retrieveDocuments(widget.deviceInfo.device.manufacturer, widget.deviceInfo.device.model).then((documents) {//TODO catch Exception
       setState(() { _documents = documents; });
     });
   }
 
   void _downloadDocument(String docName) {
-    String url = Comm.getBaseUrl() + "device_documents/" + widget.deviceInfo.device.manufacturer + "/" + widget.deviceInfo.device.model + "/" + docName;
+    String url = "${comm.getBaseUrl()}device_documents/${widget.deviceInfo.device.manufacturer}/${widget.deviceInfo.device.model}/$docName";
     html.AnchorElement anchorElement =  html.AnchorElement(href: url);
     anchorElement.download = url;
     anchorElement.click();
@@ -143,7 +143,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
             },
             separatorBuilder: (BuildContext context, int index) => const Divider(),
           )
-        ) : const Center(child: const Text('No documents found')),
+        ) : const Center(child: Text('No documents found')),
       ]
     );
   }
@@ -155,7 +155,7 @@ class StateScreen extends StatefulWidget {
   const StateScreen({Key? key, required this.deviceInfo}) : super(key: key);
 
   @override
-  _StateScreenState createState() => _StateScreenState();
+  State<StateScreen> createState() => _StateScreenState();
 }
 
 class _StateScreenState extends State<StateScreen> {
@@ -194,7 +194,7 @@ class ReportProblemForm extends StatefulWidget {
   const ReportProblemForm({Key? key, required this.deviceInfo, required this.updateDeviceInfo}) : super(key: key);
 
   @override
-  _ReportProblemFormState createState() => _ReportProblemFormState();
+  State<ReportProblemForm> createState() => _ReportProblemFormState();
 }
 
 class _ReportProblemFormState extends State<ReportProblemForm> {
@@ -205,7 +205,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
 
   Future<bool> _createReport() async {
     if(_formKey.currentState!.validate()) {
-      await Comm.queueRepair(widget.deviceInfo.device.id, _reportTitleController.text, _problemTextController.text).then((newReport) {
+      await comm.queueRepair(widget.deviceInfo.device.id, _reportTitleController.text, _problemTextController.text).then((newReport) {
         widget.updateDeviceInfo(ShortDeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData));
       }).onError((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.toString()));

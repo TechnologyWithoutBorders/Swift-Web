@@ -7,12 +7,12 @@ import 'package:teog_swift/utilities/organizationalUnit.dart';
 import 'package:teog_swift/utilities/previewDeviceInfo.dart';
 import 'package:teog_swift/screens/deviceInfoScreen.dart';
 
-import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/networkFunctions.dart' as comm;
 
 import 'package:teog_swift/utilities/sessionMixin.dart';
 import 'package:teog_swift/utilities/messageException.dart';
 
-import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
+import 'package:teog_swift/utilities/preferenceManager.dart' as prefs;
 import 'package:teog_swift/utilities/hospital.dart';
 
 class OverviewScreen extends StatefulWidget {
@@ -21,7 +21,7 @@ class OverviewScreen extends StatefulWidget {
   const OverviewScreen({Key? key}) : super(key: key);
 
   @override
-  _OverviewScreenState createState() => _OverviewScreenState();
+  State<OverviewScreen> createState() => _OverviewScreenState();
 }
 
 class _OverviewScreenState extends State<OverviewScreen> {
@@ -29,13 +29,13 @@ class _OverviewScreenState extends State<OverviewScreen> {
   Hospital? _hospital;
 
   void _logout(BuildContext context) async {
-    await Prefs.logout();
+    await prefs.logout();
     Navigator.pushNamedAndRemoveUntil(context, SwiftApp.route, (r) => false);
   }
 
   void _setHospitalInfo() async {
-    String? countryName = await Prefs.getCountry();
-    Hospital hospital = await Comm.getHospitalInfo();
+    String? countryName = await prefs.getCountry();
+    Hospital hospital = await comm.getHospitalInfo();
 
     setState(() {
       _countryName = countryName;
@@ -71,7 +71,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Padding(padding: EdgeInsets.all(20.0), child: Center(
+        child: Padding(padding: const EdgeInsets.all(20.0), child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -84,11 +84,11 @@ class _OverviewScreenState extends State<OverviewScreen> {
                 .textTheme
                 .headline5),
               const SizedBox(height: 25),
-              Card(child: Padding(padding: const EdgeInsets.all(10.0), child: SearchForm())),
+              const Card(child: Padding(padding: EdgeInsets.all(10.0), child: SearchForm())),
               const SizedBox(height: 5),
               const Text("OR", style: TextStyle(fontSize: 30)),
               const SizedBox(height: 5),
-              Card(child: Padding(padding: const EdgeInsets.all(10.0), child: FilterForm())),
+              const Card(child: Padding(padding: EdgeInsets.all(10.0), child: FilterForm())),
             ]
           )
         )
@@ -133,7 +133,7 @@ class _SearchFormState extends State with SessionMixin {
 
   void _processDeviceId() {
     if (_formKey.currentState!.validate()) {
-      Comm.fetchDevice(int.parse(_deviceIDController.text)).then((deviceInfo) {
+      comm.fetchDevice(int.parse(_deviceIDController.text)).then((deviceInfo) {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -185,7 +185,7 @@ class FilterForm extends StatefulWidget {
   const FilterForm({Key? key}) : super(key: key);
 
   @override
-  _FilterFormState createState() => _FilterFormState();
+  State<FilterForm> createState() => _FilterFormState();
 }
 
 class _FilterFormState extends State<FilterForm> {
@@ -205,7 +205,7 @@ class _FilterFormState extends State<FilterForm> {
   void initState() {
     super.initState();
 
-    Comm.getOrganizationalInfo().then((orgInfo) {
+    comm.getOrganizationalInfo().then((orgInfo) {
       setState(() {
         orgInfo.units.sort((a, b) => a.name.compareTo(b.name));
 
@@ -232,7 +232,7 @@ class _FilterFormState extends State<FilterForm> {
         filter = null;
       }
 
-      Comm.searchDevices(_typeController.text, _manufacturerController.text, filter: filter).then((devices) {
+      comm.searchDevices(_typeController.text, _manufacturerController.text, filter: filter).then((devices) {
         setState(() {
           _filteredDevices = devices;
           _loading = false;
@@ -249,7 +249,7 @@ class _FilterFormState extends State<FilterForm> {
   }
 
   void _openDeviceById(int id) {
-    Comm.fetchDevice(id).then((deviceInfo) {
+    comm.fetchDevice(id).then((deviceInfo) {
       Navigator.push(
         context,
         MaterialPageRoute(

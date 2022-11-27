@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 
-import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/networkFunctions.dart' as comm;
 import 'package:teog_swift/utilities/constants.dart';
 import 'package:teog_swift/utilities/organizationalRelation.dart';
 import 'package:teog_swift/utilities/organizationalUnit.dart';
@@ -13,7 +13,7 @@ class OrganizationFilterView extends StatefulWidget {
   const OrganizationFilterView({Key? key, this.orgUnit}) : super(key: key);
 
   @override
-  _OrganizationFilterViewState createState() => _OrganizationFilterViewState();
+  State<OrganizationFilterView> createState() => _OrganizationFilterViewState();
 }
 
 class _OrganizationFilterViewState extends State<OrganizationFilterView> {
@@ -24,7 +24,7 @@ class _OrganizationFilterViewState extends State<OrganizationFilterView> {
   void initState() {
     super.initState();
 
-    Comm.getOrganizationalInfo().then((orgInfo) {
+    comm.getOrganizationalInfo().then((orgInfo) {
       Graph graph = Graph();
 
       Map<int, String> nameMap = Map();

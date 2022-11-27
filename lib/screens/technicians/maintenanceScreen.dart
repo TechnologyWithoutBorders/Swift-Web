@@ -6,13 +6,13 @@ import 'package:teog_swift/utilities/constants.dart';
 
 import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
 
-import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/networkFunctions.dart' as comm;
 
 class MaintenanceScreen extends StatefulWidget {
   const MaintenanceScreen({Key? key}) : super(key: key);
 
   @override
-  _MaintenanceScreenState createState() => _MaintenanceScreenState();
+  State<MaintenanceScreen> createState() => _MaintenanceScreenState();
 }
 
 class _MaintenanceScreenState extends State<MaintenanceScreen> {
@@ -32,7 +32,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
   }
 
   Future<void> _initEvents() async {
-    List<MaintenanceEvent> events = await Comm.getMaintenanceEvents();
+    List<MaintenanceEvent> events = await comm.getMaintenanceEvents();
 
     Map<String, List<HospitalDevice>> maintenanceEvents = {};
 

@@ -10,8 +10,8 @@ import 'package:teog_swift/screens/technicians/organizationScreen.dart';
 import 'package:teog_swift/screens/technicians/userManagementScreen.dart';
 import 'package:teog_swift/screens/technicians/maintenanceScreen.dart';
 
-import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
-import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/preferenceManager.dart' as prefs;
+import 'package:teog_swift/utilities/networkFunctions.dart' as comm;
 import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/hospital.dart';
 
@@ -21,7 +21,7 @@ class TabScreen extends StatefulWidget {
   const TabScreen({Key? key}) : super(key: key);
 
   @override
-  _TabScreenState createState() => _TabScreenState();
+  State<TabScreen> createState() => _TabScreenState();
 }
 
 class _TabScreenState extends State<TabScreen> {
@@ -34,13 +34,13 @@ class _TabScreenState extends State<TabScreen> {
   User? _user;
 
   void _logout(BuildContext context) async {
-    await Prefs.logout();
+    await prefs.logout();
     Navigator.pushNamedAndRemoveUntil(context, SwiftApp.route, (r) => false);
   }
 
   void _setHospitalInfo() async {
-    String? countryName = await Prefs.getCountry();
-    Hospital? hospital = await Comm.getHospitalInfo();
+    String? countryName = await prefs.getCountry();
+    Hospital? hospital = await comm.getHospitalInfo();
 
     setState(() {
       _countryName = countryName;
@@ -50,7 +50,7 @@ class _TabScreenState extends State<TabScreen> {
 
   void _openMap() {
     if(_hospital != null) {
-      html.window.open('https://www.openstreetmap.org/?mlat=' + _hospital!.latitude.toString() + '&mlon=' + _hospital!.longitude.toString() + '#map=17/' + _hospital!.latitude.toString() + '/' + _hospital!.longitude.toString(), 'map');
+      html.window.open('https://www.openstreetmap.org/?mlat=${_hospital!.latitude}&mlon=${_hospital!.longitude}#map=17/${_hospital!.latitude}/${_hospital!.longitude}', 'map');
     }
   }
 
@@ -60,7 +60,7 @@ class _TabScreenState extends State<TabScreen> {
 
     _setHospitalInfo();
 
-    Comm.getUsers().then((users) => {
+    comm.getUsers().then((users) => {
       setState(() {
         users.sort((a, b) => a.name.compareTo(b.name));
 
@@ -70,7 +70,7 @@ class _TabScreenState extends State<TabScreen> {
   }
 
   void _saveUser(User user) async {
-    await Prefs.selectUser(user.id);
+    await prefs.selectUser(user.id);
 
     setState(() {
       _user = user;
@@ -187,13 +187,13 @@ class _TabScreenState extends State<TabScreen> {
               ],
             ),
           ),
-          body: TabBarView(
+          body: const TabBarView(
             children: [
               DashboardScreen(),
-              const MaintenanceScreen(),
-              const InventoryScreen(),
-              const OrganizationScreen(),
-              const UserManagementScreen(),
+              MaintenanceScreen(),
+              InventoryScreen(),
+              OrganizationScreen(),
+              UserManagementScreen(),
             ],
           ),
         ),

@@ -3,7 +3,7 @@ import 'package:teog_swift/utilities/detailedReport.dart';
 import 'package:teog_swift/utilities/deviceState.dart';
 
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/networkFunctions.dart' as comm;
 import 'package:teog_swift/utilities/organizationalUnit.dart';
 import 'package:teog_swift/utilities/messageException.dart';
 
@@ -13,7 +13,7 @@ class ReportHistoryPlot extends StatefulWidget {
   const ReportHistoryPlot({Key? key, this.orgUnit}) : super(key: key);
 
   @override
-  _ReportHistoryPlotState createState() => _ReportHistoryPlotState();
+  State<ReportHistoryPlot> createState() => _ReportHistoryPlotState();
 }
 
 class _ReportHistoryPlotState extends State<ReportHistoryPlot> {
@@ -23,7 +23,7 @@ class _ReportHistoryPlotState extends State<ReportHistoryPlot> {
   void initState() {
     super.initState();
 
-    Comm.getAllDeviceInfos().then((deviceInfos) {
+    comm.getAllDeviceInfos().then((deviceInfos) {
       DateTime earliest = DateTime.now();
 
       //find earliest report

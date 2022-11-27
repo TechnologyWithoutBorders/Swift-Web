@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/networkFunctions.dart' as comm;
 import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/messageException.dart';
 
@@ -8,7 +8,7 @@ class UserManagementScreen extends StatefulWidget {
   const UserManagementScreen({Key? key}) : super(key: key);
 
   @override
-  _DetailScreenState createState() => _DetailScreenState();
+  State<UserManagementScreen> createState() => _DetailScreenState();
 }
 
 class _DetailScreenState extends State<UserManagementScreen> {
@@ -57,7 +57,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
                   String mail = mailController.text;
 
                   if (name.isNotEmpty && mail.isNotEmpty) {
-                    Comm.createUser(mail, name).then((users) {
+                    comm.createUser(mail, name).then((users) {
                       setState(() {
                         users.sort((a, b) => a.name.compareTo(b.name));
 
@@ -81,7 +81,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
   void initState() {
     super.initState();
 
-    Comm.getUsers().then((users) {
+    comm.getUsers().then((users) {
       setState(() {
         users.sort((a, b) => a.name.compareTo(b.name));
 
