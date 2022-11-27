@@ -8,8 +8,8 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:teog_swift/utilities/country.dart';
 
-import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
-import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
+import 'package:teog_swift/utilities/networkFunctions.dart' as comm;
+import 'package:teog_swift/utilities/preferenceManager.dart' as prefs;
 import 'package:teog_swift/utilities/hospital.dart';
 import 'package:teog_swift/utilities/messageException.dart';
 
@@ -55,7 +55,7 @@ class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -124,7 +124,7 @@ class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
 
   @override
-  _LoginFormState createState() => _LoginFormState();
+  State<LoginForm> createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm> {
@@ -147,7 +147,7 @@ class _LoginFormState extends State<LoginForm> {
     if(countryName != null && hospitalId != null && _formKey.currentState!.validate()) {
       String password = _passwordTextController.text;
 
-      Comm.checkCredentials(countryName, hospitalId, password).then((role) {
+      comm.checkCredentials(countryName, hospitalId, password).then((role) {
         String? route;
 
         if(role == Constants.role_technical) {
@@ -159,7 +159,7 @@ class _LoginFormState extends State<LoginForm> {
         if(route != null) {
           List<int> bytes = utf8.encode(password);
           String hash = sha256.convert(bytes).toString();
-          Prefs.save(countryName, hospitalId, role, hash).then((success) => Navigator.pushNamedAndRemoveUntil(context, route!, (r) => false));
+          prefs.save(countryName, hospitalId, role, hash).then((success) => Navigator.pushNamedAndRemoveUntil(context, route!, (r) => false));
         } else {
           const snackBar = SnackBar(content: Text("could not determine role of user"));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -180,13 +180,13 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void _checkForPreferences() async{
-    List<Country> countries = await Comm.getCountries();
+    List<Country> countries = await comm.getCountries();
     for (var i = 0; i < countries.length; i++) {
-      if (countries[i].name == await Prefs.getCountry()) {
+      if (countries[i].name == await prefs.getCountry()) {
         _selectedCountry = countries[i];
-        List<Hospital> hospitals = await Comm.getHospitals(countries[i].name);
+        List<Hospital> hospitals = await comm.getHospitals(countries[i].name);
         for (var j = 0; j < hospitals.length; j++) {
-          if (hospitals[j].id == await Prefs.getHospital()) {
+          if (hospitals[j].id == await prefs.getHospital()) {
             _selectedHospital = hospitals[j];
           }
         }
@@ -201,7 +201,7 @@ class _LoginFormState extends State<LoginForm> {
   void initState() {
     super.initState();
 
-    Prefs.checkLogin(syncWithServer: true).then((role) { 
+    prefs.checkLogin(syncWithServer: true).then((role) { 
       if(role == Constants.role_medical) {
         Navigator.pushNamedAndRemoveUntil(context, OverviewScreen.route, (r) => false);
       } else if(role == Constants.role_technical) {
@@ -239,7 +239,7 @@ class _LoginFormState extends State<LoginForm> {
                           leading: Flag.fromString(_countries[index].code, height: 35, width: 35),
                           title: Text(_countries[index].name),
                           onTap: () => {
-                            Comm.getHospitals(_countries[index].name).then((hospitals) {
+                            comm.getHospitals(_countries[index].name).then((hospitals) {
                               setState(() {
                                 _selectedCountry = _countries[index];
                                 _hospitals = hospitals;
