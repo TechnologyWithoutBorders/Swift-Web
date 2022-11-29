@@ -9,10 +9,10 @@ import 'package:teog_swift/utilities/constants.dart';
 Future<String> checkLogin({bool syncWithServer: false}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  String? password = prefs.getString(Constants.key_pw);
-  String? country = prefs.getString(Constants.key_country);
-  String? role = prefs.getString(Constants.key_role);
-  int? hospital = prefs.getInt(Constants.key_hospital);
+  String? password = prefs.getString(Constants.keyPw);
+  String? country = prefs.getString(Constants.keyCountry);
+  String? role = prefs.getString(Constants.keyRole);
+  int? hospital = prefs.getInt(Constants.keyHospital);
 
   if(password != null && country != null && role != null && hospital != null) {
     if(syncWithServer) {
@@ -22,17 +22,17 @@ Future<String> checkLogin({bool syncWithServer: false}) async {
     }
   }
 
-  return Constants.role_invalid;
+  return Constants.roleInvalid;
 }
 
 /// Saves [country], [hospital], [role] and [password] in shared preferences.
 Future<bool> save(String country, int hospital, String role, String password) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  await prefs.setString(Constants.key_country, country);
-  await prefs.setInt(Constants.key_hospital, hospital);
-  await prefs.setString(Constants.key_role, role);
-  await prefs.setString(Constants.key_pw, password);
+  await prefs.setString(Constants.keyCountry, country);
+  await prefs.setInt(Constants.keyHospital, hospital);
+  await prefs.setString(Constants.keyRole, role);
+  await prefs.setString(Constants.keyPw, password);
 
   return true;
 }
@@ -40,7 +40,7 @@ Future<bool> save(String country, int hospital, String role, String password) as
 Future<bool> selectUser(int user) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  await prefs.setInt(Constants.key_user, user);
+  await prefs.setInt(Constants.keyUser, user);
 
   return true;
 }
@@ -54,36 +54,36 @@ Future<void> clear() async {
 Future<void> logout() async{
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  prefs.remove(Constants.key_role);
-  prefs.remove(Constants.key_pw);
+  prefs.remove(Constants.keyRole);
+  prefs.remove(Constants.keyPw);
 }
 
 Future<String?> getPassword() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  return prefs.getString(Constants.key_pw);
+  return prefs.getString(Constants.keyPw);
 }
 
 Future<String?> getCountry() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  return prefs.getString(Constants.key_country);
+  return prefs.getString(Constants.keyCountry);
 }
 
 Future<int?> getHospital() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  return prefs.getInt(Constants.key_hospital);
+  return prefs.getInt(Constants.keyHospital);
 }
 
 Future<String?> getRole() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  return prefs.getString(Constants.key_role);
+  return prefs.getString(Constants.keyRole);
 }
 
 Future<int?> getUser() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  return prefs.getInt(Constants.key_user);
+  return prefs.getInt(Constants.keyUser);
 }

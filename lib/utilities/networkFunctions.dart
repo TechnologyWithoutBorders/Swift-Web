@@ -25,7 +25,7 @@ import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/hospital.dart';
 import 'package:teog_swift/utilities/messageException.dart';
 
-import 'package:teog_swift/utilities/preferenceManager.dart' as Prefs;
+import 'package:teog_swift/utilities/preferenceManager.dart' as prefs;
 
 const String _host = "teog.virlep.de";
 const Map<String, String> _headers = {'Content-Type': 'application/json; charset=UTF-8'};
@@ -40,13 +40,13 @@ String getBaseUrl() {
   return Uri.https(_host, 'interface/').toString();
 }
 
-Future<String> checkCredentials(final String country, final int hospital, String password, {final hashPassword: true}) async {
+Future<String> checkCredentials(final String country, final int hospital, String password, {final hashPassword = true}) async {
   if(hashPassword) {
     List<int> bytes = utf8.encode(password);
     password = sha256.convert(bytes).toString();
   }
 
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
   final Map<String, dynamic> parameterMap = Map();
   parameterMap[_actionIdentifier] = DataAction.login;
@@ -69,12 +69,12 @@ Future<String> checkCredentials(final String country, final int hospital, String
       throw MessageException(swiftResponse.data.toString());
     }
   } else {
-    throw MessageException(Constants.generic_error_message);
+    throw MessageException(Constants.genericErrorMessage);
   }
 }
 
 Future<ShortDeviceInfo> fetchDevice(final int deviceId) async {
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
   final response = await http.post(
     uri,
@@ -97,12 +97,12 @@ Future<ShortDeviceInfo> fetchDevice(final int deviceId) async {
       throw MessageException(swiftResponse.data);
     }
   } else {
-    throw MessageException(Constants.generic_error_message);
+    throw MessageException(Constants.genericErrorMessage);
   }
 }
 
 Future<DeviceInfo> getDeviceInfo(final int deviceId) async {
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
   final response = await http.post(
     uri,
@@ -133,12 +133,12 @@ Future<DeviceInfo> getDeviceInfo(final int deviceId) async {
       throw MessageException(swiftResponse.data);
     }
   } else {
-    throw MessageException(Constants.generic_error_message);
+    throw MessageException(Constants.genericErrorMessage);
   }
 }
 
 Future<DeviceInfo> editDevice(HospitalDevice device) async {
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
   final response = await http.post(
     uri,
@@ -169,12 +169,12 @@ Future<DeviceInfo> editDevice(HospitalDevice device) async {
       throw MessageException(swiftResponse.data);
     }
   } else {
-    throw MessageException(Constants.generic_error_message);
+    throw MessageException(Constants.genericErrorMessage);
   }
 }
 
 Future<List<PreviewDeviceInfo>> searchDevices(String? type, String? manufacturer, {DepartmentFilter? filter}) async {
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
   List<int>? orgUnits;
 
@@ -211,12 +211,12 @@ Future<List<PreviewDeviceInfo>> searchDevices(String? type, String? manufacturer
       throw MessageException(swiftResponse.data);
     }
   } else {
-    throw MessageException(Constants.generic_error_message);
+    throw MessageException(Constants.genericErrorMessage);
   }
 }
 
 Future<List<ShortDeviceInfo>> getDevices() async {
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
   final response = await http.post(
     uri,
@@ -242,12 +242,12 @@ Future<List<ShortDeviceInfo>> getDevices() async {
       throw MessageException(swiftResponse.data);
     }
   } else {
-    throw MessageException(Constants.generic_error_message);
+    throw MessageException(Constants.genericErrorMessage);
   }
 }
 
 Future<List<MaintenanceEvent>> getMaintenanceEvents() async {
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
   final response = await http.post(
     uri,
@@ -273,12 +273,12 @@ Future<List<MaintenanceEvent>> getMaintenanceEvents() async {
       throw MessageException(swiftResponse.data);
     }
   } else {
-    throw MessageException(Constants.generic_error_message);
+    throw MessageException(Constants.genericErrorMessage);
   }
 }
 
 Future<List<ShortDeviceInfo>> getTodoDevices() async {
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
   final response = await http.post(
     uri,
@@ -304,12 +304,12 @@ Future<List<ShortDeviceInfo>> getTodoDevices() async {
       throw MessageException(swiftResponse.data);
     }
   } else {
-    throw MessageException(Constants.generic_error_message);
+    throw MessageException(Constants.genericErrorMessage);
   }
 }
 
 Future<DeviceStats> getDeviceStats() async {
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
   final response = await http.post(
     uri,
@@ -326,12 +326,12 @@ Future<DeviceStats> getDeviceStats() async {
       throw MessageException(swiftResponse.data);
     }
   } else {
-    throw MessageException(Constants.generic_error_message);
+    throw MessageException(Constants.genericErrorMessage);
   }
 }
 
 Future<List<User>> createUser(String mail, String name) async {
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
   final response = await http.post(
     uri,
@@ -356,12 +356,12 @@ Future<List<User>> createUser(String mail, String name) async {
       throw MessageException(swiftResponse.data);
     }
   } else {
-    throw MessageException(Constants.generic_error_message);
+    throw MessageException(Constants.genericErrorMessage);
   }
 }
 
 Future<List<User>> getUsers() async {
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
   final response = await http.post(
     uri,
@@ -384,12 +384,12 @@ Future<List<User>> getUsers() async {
       throw MessageException(swiftResponse.data);
     }
   } else {
-    throw MessageException(Constants.generic_error_message);
+    throw MessageException(Constants.genericErrorMessage);
   }
 }
 
 Future<List<DetailedReport>> getRecentActivity() async {
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
   final response = await http.post(
     uri,
@@ -412,12 +412,12 @@ Future<List<DetailedReport>> getRecentActivity() async {
       throw MessageException(swiftResponse.data);
     }
   } else {
-    throw MessageException(Constants.generic_error_message);
+    throw MessageException(Constants.genericErrorMessage);
   }
 }
 
 Future<List<Hospital>> getHospitals(String country) async {
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
   final response = await http.post(
     uri,
@@ -442,12 +442,12 @@ Future<List<Hospital>> getHospitals(String country) async {
       throw MessageException(swiftResponse.data);
     }
   } else {
-    throw MessageException(Constants.generic_error_message);
+    throw MessageException(Constants.genericErrorMessage);
   }
 }
 
 Future<Hospital> getHospitalInfo() async {
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
   final response = await http.post(
     uri,
@@ -465,12 +465,12 @@ Future<Hospital> getHospitalInfo() async {
       throw MessageException(swiftResponse.data);
     }
   } else {
-    throw MessageException(Constants.generic_error_message);
+    throw MessageException(Constants.genericErrorMessage);
   }
 }
 
 Future<List<Country>> getCountries() async {
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
   final response = await http.post(
     uri,
@@ -493,12 +493,12 @@ Future<List<Country>> getCountries() async {
       throw MessageException(swiftResponse.data);
     }
   } else {
-    throw MessageException(Constants.generic_error_message);
+    throw MessageException(Constants.genericErrorMessage);
   }
 }
 
 Future<List<String>> retrieveDocuments(String manufacturer, String model) async {
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/documents.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/documents.php');
 
   final response = await http.post(
     uri,
@@ -521,12 +521,12 @@ Future<List<String>> retrieveDocuments(String manufacturer, String model) async 
       throw MessageException(swiftResponse.data);
     }
   } else {
-    throw MessageException(Constants.generic_error_message);
+    throw MessageException(Constants.genericErrorMessage);
   }
 }
 
 Future<Report> queueRepair(int deviceId, String title, String problemDescription) async {
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
   
   final response = await http.post(
     uri,
@@ -545,12 +545,12 @@ Future<Report> queueRepair(int deviceId, String title, String problemDescription
       throw MessageException(swiftResponse.data);
     }
   } else {
-    throw MessageException(Constants.generic_error_message);
+    throw MessageException(Constants.genericErrorMessage);
   }
 }
 
 Future<DetailedReport> createReport(int deviceId, String title, String description, int currentState) async {
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
   
   final response = await http.post(
     uri,
@@ -569,12 +569,12 @@ Future<DetailedReport> createReport(int deviceId, String title, String descripti
       throw MessageException(swiftResponse.data);
     }
   } else {
-    throw MessageException(Constants.generic_error_message);
+    throw MessageException(Constants.genericErrorMessage);
   }
 }
 
 Future<List<String>> uploadDocument(String manufacturer, String model, String name, Uint8List bytes) async {
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
   
   final response = await http.post(
     uri,
@@ -599,12 +599,12 @@ Future<List<String>> uploadDocument(String manufacturer, String model, String na
       throw MessageException(swiftResponse.data);
     }
   } else {
-    throw MessageException(Constants.generic_error_message);
+    throw MessageException(Constants.genericErrorMessage);
   }
 }
 
 Future<List<DeviceInfo>> getAllDeviceInfos() async {
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
   final response = await http.post(
     uri,
@@ -638,12 +638,12 @@ Future<List<DeviceInfo>> getAllDeviceInfos() async {
       throw MessageException(swiftResponse.data);
     }
   } else {
-    throw MessageException(Constants.generic_error_message);
+    throw MessageException(Constants.genericErrorMessage);
   }
 }
 
 Future<OrganizationalInfo> getOrganizationalInfo() async {
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
   final response = await http.post(
     uri,
@@ -672,12 +672,12 @@ Future<OrganizationalInfo> getOrganizationalInfo() async {
       throw MessageException(swiftResponse.data);
     }
   } else {
-    throw MessageException(Constants.generic_error_message);
+    throw MessageException(Constants.genericErrorMessage);
   }
 }
 
 Future<bool> updateOrganizationalInfo(List<OrganizationalUnit> orgUnits, List<OrganizationalRelation> orgRelations, List<DeviceRelation> deviceRelations) async {
-  final Uri uri = Uri.https(_host, 'interface/' + Constants.interfaceVersion.toString() + '/test.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
   final Map<String, dynamic> orgInfo = Map();
 
@@ -717,7 +717,7 @@ Future<bool> updateOrganizationalInfo(List<OrganizationalUnit> orgUnits, List<Or
       throw MessageException(swiftResponse.data);
     }
   } else {
-    throw MessageException(Constants.generic_error_message);
+    throw MessageException(Constants.genericErrorMessage);
   }
 }
 
@@ -729,11 +729,11 @@ Future<Map<String, dynamic>> _generateParameterMap({final String action = "", fi
   }
 
   if(authentication) {
-    String? country = await Prefs.getCountry();
-    int? hospital = await Prefs.getHospital();
-    String? role = await Prefs.getRole();
-    int? user = await Prefs.getUser();
-    String? password = await Prefs.getPassword();
+    String? country = await prefs.getCountry();
+    int? hospital = await prefs.getHospital();
+    String? role = await prefs.getRole();
+    int? user = await prefs.getUser();
+    String? password = await prefs.getPassword();
 
     parameterMap[_countryIdentifier] = country;
     parameterMap[_hospitalIdentifier] = hospital;

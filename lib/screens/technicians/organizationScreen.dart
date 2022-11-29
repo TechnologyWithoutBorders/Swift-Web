@@ -396,7 +396,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                           borderRadius: BorderRadius.circular(4.0),
                                         ) : RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(4.0),
-                                          side: const BorderSide(color: Color(Constants.teog_blue))
+                                          side: const BorderSide(color: Color(Constants.teogBlue))
                                         ),
                                         color: candidateItems.isNotEmpty ? Colors.grey[300] : Colors.grey[100],
                                         child: Column(

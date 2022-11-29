@@ -322,7 +322,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                                         children: [
                                           Text(dateStamp, textAlign: report.authorId == _userId ? TextAlign.right : TextAlign.left),
                                           Card(
-                                            color: report.authorId == _userId ? const Color(Constants.teog_blue_lighter) : Colors.white,
+                                            color: report.authorId == _userId ? const Color(Constants.teogBlueLighter) : Colors.white,
                                             child: Padding(
                                               padding: const EdgeInsets.all(5.0),
                                               child: Column(

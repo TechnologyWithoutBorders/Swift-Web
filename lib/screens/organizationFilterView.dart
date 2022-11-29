@@ -27,7 +27,7 @@ class _OrganizationFilterViewState extends State<OrganizationFilterView> {
     comm.getOrganizationalInfo().then((orgInfo) {
       Graph graph = Graph();
 
-      Map<int, String> nameMap = Map();
+      Map<int, String> nameMap = {};
 
       for(OrganizationalUnit orgUnit in orgInfo.units) {
         Node node = Node.Id(orgUnit.id);
@@ -83,7 +83,7 @@ class _OrganizationFilterViewState extends State<OrganizationFilterView> {
                     int id = node.key!.value;
 
                     return Card(
-                      color: widget.orgUnit == null || widget.orgUnit!.id != id ? Colors.grey[100] : const Color(Constants.teog_blue),
+                      color: widget.orgUnit == null || widget.orgUnit!.id != id ? Colors.grey[100] : const Color(Constants.teogBlue),
                       child: TextButton(
                         child: Text(_nameMap[id]!, style: TextStyle(fontSize: 15, color: widget.orgUnit == null || widget.orgUnit!.id != id ? Colors.black : Colors.white, fontWeight: FontWeight.bold)),
                         onPressed: () {

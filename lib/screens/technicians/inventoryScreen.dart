@@ -263,12 +263,12 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       const Text("Select devices by template: ", style: TextStyle(fontSize: 20)),
                       ElevatedButton(
                         onPressed: _manualButtonDisabled ? null : () => _showAllDevices(),
-                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterType == filterNone ? const Color(Constants.teog_blue) : Colors.blueGrey)),
+                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterType == filterNone ? const Color(Constants.teogBlue) : Colors.blueGrey)),
                         child: const Text("All"),
                       ),
                       ElevatedButton(
                         onPressed: _manualButtonDisabled ? null : () => _checkManuals(),
-                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterType == filterMissingManuals ? const Color(Constants.teog_blue) : Colors.blueGrey)),
+                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterType == filterMissingManuals ? const Color(Constants.teogBlue) : Colors.blueGrey)),
                         child: const Text("No manual attached"),
                       ),
                     ],

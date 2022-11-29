@@ -223,7 +223,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                         Flexible(child: Padding(padding: const EdgeInsets.all(30.0), child: StatePieChart(seriesList))),
                         _deviceStats!.maintenanceOverdue > 0 ? Container(
                           padding: const EdgeInsets.all(3.0),
-                          color: const Color(Constants.light_red),
+                          color: const Color(Constants.lightRed),
                           child: Text("${_deviceStats!.maintenanceOverdue} devices are overdue for maintenance", style: const TextStyle(fontSize: 20))
                         ) : Container(),
                       ]
@@ -261,7 +261,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                                         )
                                       ),
                                       const SizedBox(height: 1),
-                                      Text("$days d", style: const TextStyle(fontSize: 12, color: Color(Constants.info_green)))
+                                      Text("$days d", style: const TextStyle(fontSize: 12, color: Color(Constants.infoGreen)))
                                     ]
                                   ),
                                   title: Text(device.type),

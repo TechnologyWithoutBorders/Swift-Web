@@ -111,7 +111,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                         formatButtonVisible: false,
                         titleTextStyle: TextStyle(color: Colors.white, fontSize: 20.0),
                         decoration: BoxDecoration(
-                          color: Color(Constants.teog_blue),
+                          color: Color(Constants.teogBlue),
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(10),
                             topRight: Radius.circular(10)
@@ -137,7 +137,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                       calendarBuilders: CalendarBuilders(
                         markerBuilder: (context, day, events) {
                           if(events.isNotEmpty) {
-                            return Container(color: const Color(Constants.teog_blue_light), child: Padding(padding: const EdgeInsets.all(1), child: Text("${events.length} devices", style: const TextStyle(fontSize: 14.0))));
+                            return Container(color: const Color(Constants.teogBlueLight), child: Padding(padding: const EdgeInsets.all(1), child: Text("${events.length} devices", style: const TextStyle(fontSize: 14.0))));
                           } else {
                             return null;
                           }

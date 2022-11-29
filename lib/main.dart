@@ -27,7 +27,7 @@ class SwiftApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: Constants.app_name,
+      title: Constants.appName,
       initialRoute: SwiftApp.route,
       routes: {
         SwiftApp.route: (context) => const LoginScreen(),
@@ -36,11 +36,11 @@ class SwiftApp extends StatelessWidget {
       },
       theme: ThemeData(
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color(Constants.teog_blue),
+          backgroundColor: Color(Constants.teogBlue),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(Constants.teog_blue_light)
+            backgroundColor: const Color(Constants.teogBlueLight)
           )
         ),
         scrollbarTheme: ScrollbarThemeData(
@@ -88,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: const Text(Constants.app_name)
+        title: const Text(Constants.appName)
       ),
       body: Center(
         child: SizedBox(
@@ -98,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Spacer(),
-              const Flexible(flex: 6, child: Padding(padding: EdgeInsets.all(10.0), child: Image(image: AssetImage(Constants.logo_path)))),
+              const Flexible(flex: 6, child: Padding(padding: EdgeInsets.all(10.0), child: Image(image: AssetImage(Constants.logoPath)))),
               const Spacer(),
               const Flexible(flex: 20, child: Card(child: Padding(padding: EdgeInsets.all(10.0), child: LoginForm()))),
               const Spacer(),
@@ -107,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   context: context,
                   applicationName: _packageInfo.appName,
                   applicationVersion: " v${_packageInfo.version}-${_packageInfo.buildNumber}",
-                  applicationIcon: const Image(image: AssetImage(Constants.logo_path))
+                  applicationIcon: const Image(image: AssetImage(Constants.logoPath))
                 ),
                 child: const Text('About'),
               ),
@@ -150,9 +150,9 @@ class _LoginFormState extends State<LoginForm> {
       comm.checkCredentials(countryName, hospitalId, password).then((role) {
         String? route;
 
-        if(role == Constants.role_technical) {
+        if(role == Constants.roleTechnical) {
           route = TabScreen.route;
-        } else if(role == Constants.role_medical) {
+        } else if(role == Constants.roleMedical) {
           route = OverviewScreen.route;
         }
 
@@ -202,9 +202,9 @@ class _LoginFormState extends State<LoginForm> {
     super.initState();
 
     prefs.checkLogin(syncWithServer: true).then((role) { 
-      if(role == Constants.role_medical) {
+      if(role == Constants.roleMedical) {
         Navigator.pushNamedAndRemoveUntil(context, OverviewScreen.route, (r) => false);
-      } else if(role == Constants.role_technical) {
+      } else if(role == Constants.roleTechnical) {
         Navigator.pushNamedAndRemoveUntil(context, TabScreen.route, (r) => false);
       } else {
         _checkForPreferences();
