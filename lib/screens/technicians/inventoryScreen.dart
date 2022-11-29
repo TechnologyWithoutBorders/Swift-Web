@@ -2,16 +2,16 @@ import 'package:csv/csv.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
-import 'package:teog_swift/screens/organizationFilterView.dart';
-import 'package:teog_swift/screens/reportHistoryPlot.dart';
+import 'package:teog_swift/screens/organization_filter_view.dart';
+import 'package:teog_swift/screens/report_history_plot.dart';
 import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
-import 'package:teog_swift/utilities/hospitalDevice.dart';
+import 'package:teog_swift/utilities/hospital_device.dart';
 import 'package:teog_swift/utilities/constants.dart';
 
-import 'package:teog_swift/utilities/networkFunctions.dart' as comm;
+import 'package:teog_swift/utilities/network_functions.dart' as comm;
 import 'package:teog_swift/utilities/shortDeviceInfo.dart';
 import 'package:teog_swift/utilities/report.dart';
-import 'package:teog_swift/utilities/deviceState.dart';
+import 'package:teog_swift/utilities/device_state.dart';
 
 class InventoryScreen extends StatefulWidget {
   const InventoryScreen({Key? key}) : super(key: key);

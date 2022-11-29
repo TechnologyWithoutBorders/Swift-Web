@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:teog_swift/utilities/hospitalDevice.dart';
-import 'package:teog_swift/utilities/maintenanceEvent.dart';
+import 'package:teog_swift/utilities/hospital_device.dart';
+import 'package:teog_swift/utilities/maintenance_event.dart';
 import 'package:teog_swift/utilities/constants.dart';
 
 import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
 
-import 'package:teog_swift/utilities/networkFunctions.dart' as comm;
+import 'package:teog_swift/utilities/network_functions.dart' as comm;
 
 class MaintenanceScreen extends StatefulWidget {
   const MaintenanceScreen({Key? key}) : super(key: key);

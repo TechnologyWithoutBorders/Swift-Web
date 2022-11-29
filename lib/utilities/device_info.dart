@@ -1,5 +1,5 @@
-import 'hospitalDevice.dart';
-import 'detailedReport.dart';
+import 'hospital_device.dart';
+import 'detailed_report.dart';
 
 class DeviceInfo {
   final HospitalDevice device;

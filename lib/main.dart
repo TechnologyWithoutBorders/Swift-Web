@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:teog_swift/screens/overviewScreen.dart';
+import 'package:teog_swift/screens/overview_screen.dart';
 import 'package:teog_swift/screens/technicians/tabScreen.dart';
 import 'package:teog_swift/utilities/constants.dart';
 
@@ -8,10 +8,10 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:teog_swift/utilities/country.dart';
 
-import 'package:teog_swift/utilities/networkFunctions.dart' as comm;
+import 'package:teog_swift/utilities/network_functions.dart' as comm;
 import 'package:teog_swift/utilities/preferenceManager.dart' as prefs;
 import 'package:teog_swift/utilities/hospital.dart';
-import 'package:teog_swift/utilities/messageException.dart';
+import 'package:teog_swift/utilities/message_exception.dart';
 
 import 'package:flag/flag.dart';
 

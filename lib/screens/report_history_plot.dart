@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:teog_swift/utilities/detailedReport.dart';
-import 'package:teog_swift/utilities/deviceState.dart';
+import 'package:teog_swift/utilities/detailed_report.dart';
+import 'package:teog_swift/utilities/device_state.dart';
 
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:teog_swift/utilities/networkFunctions.dart' as comm;
+import 'package:teog_swift/utilities/network_functions.dart' as comm;
 import 'package:teog_swift/utilities/organizationalUnit.dart';
-import 'package:teog_swift/utilities/messageException.dart';
+import 'package:teog_swift/utilities/message_exception.dart';
 
 class ReportHistoryPlot extends StatefulWidget {
   final OrganizationalUnit? orgUnit;

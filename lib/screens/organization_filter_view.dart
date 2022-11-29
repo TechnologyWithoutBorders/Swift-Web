@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 
-import 'package:teog_swift/utilities/networkFunctions.dart' as comm;
+import 'package:teog_swift/utilities/network_functions.dart' as comm;
 import 'package:teog_swift/utilities/constants.dart';
 import 'package:teog_swift/utilities/organizationalRelation.dart';
 import 'package:teog_swift/utilities/organizationalUnit.dart';
-import 'package:teog_swift/utilities/messageException.dart';
+import 'package:teog_swift/utilities/message_exception.dart';
 
 class OrganizationFilterView extends StatefulWidget {
   final OrganizationalUnit? orgUnit;

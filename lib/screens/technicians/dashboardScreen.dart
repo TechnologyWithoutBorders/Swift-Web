@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:teog_swift/utilities/deviceStats.dart';
-import 'package:teog_swift/utilities/hospitalDevice.dart';
+import 'package:teog_swift/utilities/device_stats.dart';
+import 'package:teog_swift/utilities/hospital_device.dart';
 
-import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/network_functions.dart' as comm;
 import 'package:teog_swift/utilities/constants.dart';
 import 'package:teog_swift/utilities/shortDeviceInfo.dart';
 import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
-import 'package:teog_swift/utilities/deviceState.dart';
+import 'package:teog_swift/utilities/device_state.dart';
 import 'package:teog_swift/utilities/report.dart';
-import 'package:teog_swift/utilities/detailedReport.dart';
-import 'package:teog_swift/utilities/messageException.dart';
+import 'package:teog_swift/utilities/detailed_report.dart';
+import 'package:teog_swift/utilities/message_exception.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -36,7 +36,7 @@ class _DetailScreenState extends State<DashboardScreen> {
   }
 
   void _updateDevices() {
-    Comm.getTodoDevices().then((todoDevices) {
+    comm.getTodoDevices().then((todoDevices) {
       todoDevices.sort((a, b) => a.report.created.compareTo(b.report.created));
 
       setState(() {
@@ -47,7 +47,7 @@ class _DetailScreenState extends State<DashboardScreen> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
 
-    Comm.getDeviceStats().then((deviceStats) {
+    comm.getDeviceStats().then((deviceStats) {
       setState(() {
         _deviceStats = deviceStats;
       });
@@ -56,7 +56,7 @@ class _DetailScreenState extends State<DashboardScreen> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
 
-    Comm.getRecentActivity().then((reports) {
+    comm.getRecentActivity().then((reports) {
       setState(() {
         _recentReports = reports;
       });

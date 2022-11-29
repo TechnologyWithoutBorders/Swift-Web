@@ -1,4 +1,4 @@
-import 'hospitalDevice.dart';
+import 'hospital_device.dart';
 
 class PreviewDeviceInfo {
   final HospitalDevice device;

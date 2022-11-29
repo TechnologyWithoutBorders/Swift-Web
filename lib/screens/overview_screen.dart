@@ -1,16 +1,16 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:teog_swift/main.dart';
-import 'package:teog_swift/screens/organizationFilterView.dart';
-import 'package:teog_swift/utilities/hospitalDevice.dart';
+import 'package:teog_swift/screens/organization_filter_view.dart';
+import 'package:teog_swift/utilities/hospital_device.dart';
 import 'package:teog_swift/utilities/organizationalUnit.dart';
 import 'package:teog_swift/utilities/previewDeviceInfo.dart';
-import 'package:teog_swift/screens/deviceInfoScreen.dart';
+import 'package:teog_swift/screens/device_info_screen.dart';
 
-import 'package:teog_swift/utilities/networkFunctions.dart' as comm;
+import 'package:teog_swift/utilities/network_functions.dart' as comm;
 
 import 'package:teog_swift/utilities/sessionMixin.dart';
-import 'package:teog_swift/utilities/messageException.dart';
+import 'package:teog_swift/utilities/message_exception.dart';
 
 import 'package:teog_swift/utilities/preferenceManager.dart' as prefs;
 import 'package:teog_swift/utilities/hospital.dart';

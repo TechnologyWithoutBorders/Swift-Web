@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:teog_swift/utilities/networkFunctions.dart' as Comm;
+import 'package:teog_swift/utilities/network_functions.dart' as comm;
 import 'package:teog_swift/utilities/constants.dart';
 
 /// Checks whether the login data is present within the shared preferences and returns the current role.
@@ -16,7 +16,7 @@ Future<String> checkLogin({bool syncWithServer: false}) async {
 
   if(password != null && country != null && role != null && hospital != null) {
     if(syncWithServer) {
-      return await Comm.checkCredentials(country, hospital, password, hashPassword: false);
+      return await comm.checkCredentials(country, hospital, password, hashPassword: false);
     } else {
       return role;
     }

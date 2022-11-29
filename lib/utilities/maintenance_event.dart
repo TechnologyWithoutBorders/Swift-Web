@@ -1,4 +1,4 @@
-import 'package:teog_swift/utilities/hospitalDevice.dart';
+import 'package:teog_swift/utilities/hospital_device.dart';
 
 class MaintenanceEvent {
   final DateTime dateTime;

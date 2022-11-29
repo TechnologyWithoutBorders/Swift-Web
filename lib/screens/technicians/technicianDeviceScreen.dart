@@ -6,14 +6,14 @@ import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:teog_swift/utilities/constants.dart';
-import 'package:teog_swift/utilities/hospitalDevice.dart';
+import 'package:teog_swift/utilities/hospital_device.dart';
 
-import 'package:teog_swift/utilities/networkFunctions.dart' as comm;
+import 'package:teog_swift/utilities/network_functions.dart' as comm;
 import 'package:teog_swift/utilities/preferenceManager.dart' as prefs;
-import 'package:teog_swift/utilities/deviceInfo.dart';
-import 'package:teog_swift/utilities/detailedReport.dart';
-import 'package:teog_swift/utilities/deviceState.dart';
-import 'package:teog_swift/utilities/messageException.dart';
+import 'package:teog_swift/utilities/device_info.dart';
+import 'package:teog_swift/utilities/detailed_report.dart';
+import 'package:teog_swift/utilities/device_state.dart';
+import 'package:teog_swift/utilities/message_exception.dart';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:qr_flutter/qr_flutter.dart';
