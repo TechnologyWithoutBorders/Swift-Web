@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:html' as html;
 
 import 'package:teog_swift/main.dart';
-import 'package:teog_swift/screens/technicians/dashBoardScreen.dart';
+import 'package:teog_swift/screens/technicians/dashboard_screen.dart';
 import 'package:teog_swift/screens/technicians/inventory_screen.dart';
 import 'package:teog_swift/screens/technicians/organization_screen.dart';
 import 'package:teog_swift/screens/technicians/user_management_screen.dart';
