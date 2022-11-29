@@ -56,13 +56,9 @@ class _DetailScreenState extends State<UserManagementScreen> {
                   String name = nameController.text;
                   String mail = mailController.text;
 
-                  if (name.isNotEmpty && mail.isNotEmpty) {
-                    comm.createUser(mail, name).then((users) {
-                      setState(() {
-                        users.sort((a, b) => a.name.compareTo(b.name));
-
-                        _users = users;
-                      });
+                  if(name.isNotEmpty && mail.isNotEmpty) {
+                    comm.createUser(mail, name).then((_) {
+                      _updateUsers();
                     }).onError<MessageException>((error, stackTrace) {
                       final snackBar = SnackBar(content: Text(error.message));
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -81,11 +77,23 @@ class _DetailScreenState extends State<UserManagementScreen> {
   void initState() {
     super.initState();
 
-    comm.getUsers().then((users) {
-      setState(() {
-        users.sort((a, b) => a.name.compareTo(b.name));
+    _updateUsers();
+  }
 
-        _users = users;
+  void _updateUsers() {
+    comm.getUsers().then((users) {
+      List<User> validUsers = [];
+
+      for(var user in users) {
+        if(user.valid) {
+          validUsers.add(user);
+        }
+      }
+
+      validUsers.sort((a, b) => a.name.compareTo(b.name));
+
+      setState(() {
+        _users = validUsers;
       });
     }).onError<MessageException>((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.message));
@@ -93,12 +101,12 @@ class _DetailScreenState extends State<UserManagementScreen> {
     });
   }
 
-  void _deleteUser() {
+  void _deleteUser(User user) {
     showDialog<String>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Are you sure you want to delete this user? (Does nothing at the moment)"),
+          title: const Text("Are you sure you want to delete this user?"),
           actions: <Widget>[
             ElevatedButton(
                 child: const Text('Cancel'),
@@ -108,7 +116,21 @@ class _DetailScreenState extends State<UserManagementScreen> {
             ElevatedButton(
                 child: const Text('Delete'),
                 onPressed: () {
-                  //TODO: implement
+                  final User deletedUser = User(
+                    id: user.id,
+                    name: user.name,
+                    phone: user.phone,
+                    mail: user.mail,
+                    position: user.position,
+                    valid: false
+                  );
+
+                  comm.editUser(deletedUser).then((_) {
+                    _updateUsers();
+                  }).onError<MessageException>((error, stackTrace) {
+                    final snackBar = SnackBar(content: Text(error.message));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  });
 
                   Navigator.pop(context);
                 })
@@ -147,9 +169,8 @@ class _DetailScreenState extends State<UserManagementScreen> {
 
                                 return ListTile(
                                   title: SelectableText(user.name),
-                                  subtitle: SelectableText("${user.mail}\n${user.phone}"),
-                                  //trailing: TextButton(child: Icon(Icons.delete), onPressed: () =>_deleteUser()),
-                                  trailing: Text(_users[index].position),
+                                  subtitle: SelectableText("${user.position}\n${user.mail}\n${user.phone}"),
+                                  trailing: TextButton(child: const Icon(Icons.delete), onPressed: () =>_deleteUser(user)),
                                 );
                               },
                               separatorBuilder: (BuildContext context, int index) => const Divider(),

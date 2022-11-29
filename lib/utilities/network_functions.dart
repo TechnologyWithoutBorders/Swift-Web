@@ -173,6 +173,38 @@ Future<DeviceInfo> editDevice(HospitalDevice device) async {
   }
 }
 
+Future<User> editUser(User user) async {
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
+
+  final response = await http.post(
+    uri,
+    headers: _headers,
+    body: jsonEncode(await _generateParameterMap(action: DataAction.editUser, authentication: true,
+        additional: <String, dynamic> {'user': user.toJson()}),
+    ),
+  );
+
+  if(response.statusCode == 200) {
+    SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
+
+    if(swiftResponse.responseCode == 0) {
+      List<DetailedReport> reports = [];
+
+      for(var jsonReport in swiftResponse.data["reports"]) {
+        reports.add(DetailedReport.fromJson(jsonReport));
+      }
+
+      reports.sort((a, b) => b.id.compareTo(a.id));
+
+      return User.fromJson(swiftResponse.data["device"]);
+    } else {
+      throw MessageException(swiftResponse.data);
+    }
+  } else {
+    throw MessageException(Constants.genericErrorMessage);
+  }
+}
+
 Future<List<PreviewDeviceInfo>> searchDevices(String? type, String? manufacturer, {DepartmentFilter? filter}) async {
   final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
