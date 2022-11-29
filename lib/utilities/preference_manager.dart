@@ -6,7 +6,7 @@ import 'package:teog_swift/utilities/constants.dart';
 /// Checks whether the login data is present within the shared preferences and returns the current role.
 ///
 /// If [syncWithServer] is set to true, the login data is checked against the server.
-Future<String> checkLogin({bool syncWithServer: false}) async {
+Future<String> checkLogin({bool syncWithServer = false}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   String? password = prefs.getString(Constants.keyPw);
