@@ -6,7 +6,7 @@ import 'package:teog_swift/utilities/hospital_device.dart';
 
 import 'package:teog_swift/utilities/network_functions.dart' as comm;
 import 'package:teog_swift/utilities/constants.dart';
-import 'package:teog_swift/utilities/shortDeviceInfo.dart';
+import 'package:teog_swift/utilities/short_device_info.dart';
 import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
 import 'package:teog_swift/utilities/device_state.dart';
 import 'package:teog_swift/utilities/report.dart';

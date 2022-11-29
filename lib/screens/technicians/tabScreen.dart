@@ -10,7 +10,7 @@ import 'package:teog_swift/screens/technicians/organizationScreen.dart';
 import 'package:teog_swift/screens/technicians/userManagementScreen.dart';
 import 'package:teog_swift/screens/technicians/maintenanceScreen.dart';
 
-import 'package:teog_swift/utilities/preferenceManager.dart' as prefs;
+import 'package:teog_swift/utilities/preference_manager.dart' as prefs;
 import 'package:teog_swift/utilities/network_functions.dart' as comm;
 import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/hospital.dart';

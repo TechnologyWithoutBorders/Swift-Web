@@ -10,14 +10,14 @@ import 'package:teog_swift/utilities/device_info.dart';
 import 'package:teog_swift/utilities/device_state.dart';
 import 'package:teog_swift/utilities/device_stats.dart';
 import 'package:teog_swift/utilities/maintenance_event.dart';
-import 'package:teog_swift/utilities/organizationalRelation.dart';
-import 'package:teog_swift/utilities/organizationalUnit.dart';
-import 'package:teog_swift/utilities/previewDeviceInfo.dart';
+import 'package:teog_swift/utilities/organizational_relation.dart';
+import 'package:teog_swift/utilities/organizational_unit.dart';
+import 'package:teog_swift/utilities/preview_device_info.dart';
 
-import 'package:teog_swift/utilities/swiftResponse.dart';
+import 'package:teog_swift/utilities/swift_response.dart';
 
 import 'package:teog_swift/utilities/constants.dart';
-import 'package:teog_swift/utilities/shortDeviceInfo.dart';
+import 'package:teog_swift/utilities/short_device_info.dart';
 import 'package:teog_swift/utilities/hospital_device.dart';
 import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/detailed_report.dart';
@@ -25,7 +25,7 @@ import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/hospital.dart';
 import 'package:teog_swift/utilities/message_exception.dart';
 
-import 'package:teog_swift/utilities/preferenceManager.dart' as prefs;
+import 'package:teog_swift/utilities/preference_manager.dart' as prefs;
 
 const String _host = "teog.virlep.de";
 const Map<String, String> _headers = {'Content-Type': 'application/json; charset=UTF-8'};

@@ -5,7 +5,7 @@ import 'dart:html' as html;
 import 'package:flutter/material.dart';
 
 import 'package:teog_swift/utilities/network_functions.dart' as comm;
-import 'package:teog_swift/utilities/shortDeviceInfo.dart';
+import 'package:teog_swift/utilities/short_device_info.dart';
 import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/device_state.dart';
 

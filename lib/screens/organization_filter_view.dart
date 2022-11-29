@@ -3,8 +3,8 @@ import 'package:graphview/GraphView.dart';
 
 import 'package:teog_swift/utilities/network_functions.dart' as comm;
 import 'package:teog_swift/utilities/constants.dart';
-import 'package:teog_swift/utilities/organizationalRelation.dart';
-import 'package:teog_swift/utilities/organizationalUnit.dart';
+import 'package:teog_swift/utilities/organizational_relation.dart';
+import 'package:teog_swift/utilities/organizational_unit.dart';
 import 'package:teog_swift/utilities/message_exception.dart';
 
 class OrganizationFilterView extends StatefulWidget {

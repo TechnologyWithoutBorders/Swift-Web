@@ -4,7 +4,7 @@ import 'package:teog_swift/utilities/device_state.dart';
 
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:teog_swift/utilities/network_functions.dart' as comm;
-import 'package:teog_swift/utilities/organizationalUnit.dart';
+import 'package:teog_swift/utilities/organizational_unit.dart';
 import 'package:teog_swift/utilities/message_exception.dart';
 
 class ReportHistoryPlot extends StatefulWidget {

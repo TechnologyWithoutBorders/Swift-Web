@@ -9,7 +9,7 @@ import 'package:teog_swift/utilities/constants.dart';
 import 'package:teog_swift/utilities/hospital_device.dart';
 
 import 'package:teog_swift/utilities/network_functions.dart' as comm;
-import 'package:teog_swift/utilities/preferenceManager.dart' as prefs;
+import 'package:teog_swift/utilities/preference_manager.dart' as prefs;
 import 'package:teog_swift/utilities/device_info.dart';
 import 'package:teog_swift/utilities/detailed_report.dart';
 import 'package:teog_swift/utilities/device_state.dart';

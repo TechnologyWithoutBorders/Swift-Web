@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:teog_swift/main.dart';
 import 'package:teog_swift/screens/organization_filter_view.dart';
 import 'package:teog_swift/utilities/hospital_device.dart';
-import 'package:teog_swift/utilities/organizationalUnit.dart';
-import 'package:teog_swift/utilities/previewDeviceInfo.dart';
+import 'package:teog_swift/utilities/organizational_unit.dart';
+import 'package:teog_swift/utilities/preview_device_info.dart';
 import 'package:teog_swift/screens/device_info_screen.dart';
 
 import 'package:teog_swift/utilities/network_functions.dart' as comm;
 
-import 'package:teog_swift/utilities/sessionMixin.dart';
+import 'package:teog_swift/utilities/session_mixin.dart';
 import 'package:teog_swift/utilities/message_exception.dart';
 
-import 'package:teog_swift/utilities/preferenceManager.dart' as prefs;
+import 'package:teog_swift/utilities/preference_manager.dart' as prefs;
 import 'package:teog_swift/utilities/hospital.dart';
 
 class OverviewScreen extends StatefulWidget {

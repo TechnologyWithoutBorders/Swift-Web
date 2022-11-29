@@ -1,4 +1,4 @@
-import 'package:teog_swift/utilities/organizationalRelation.dart';
+import 'package:teog_swift/utilities/organizational_relation.dart';
 
 class OrganizationalUnit {
   final int id;
