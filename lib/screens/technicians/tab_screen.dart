@@ -5,10 +5,10 @@ import 'dart:html' as html;
 
 import 'package:teog_swift/main.dart';
 import 'package:teog_swift/screens/technicians/dashBoardScreen.dart';
-import 'package:teog_swift/screens/technicians/inventoryScreen.dart';
-import 'package:teog_swift/screens/technicians/organizationScreen.dart';
-import 'package:teog_swift/screens/technicians/userManagementScreen.dart';
-import 'package:teog_swift/screens/technicians/maintenanceScreen.dart';
+import 'package:teog_swift/screens/technicians/inventory_screen.dart';
+import 'package:teog_swift/screens/technicians/organization_screen.dart';
+import 'package:teog_swift/screens/technicians/user_management_screen.dart';
+import 'package:teog_swift/screens/technicians/maintenance_screen.dart';
 
 import 'package:teog_swift/utilities/preference_manager.dart' as prefs;
 import 'package:teog_swift/utilities/network_functions.dart' as comm;

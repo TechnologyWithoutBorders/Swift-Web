@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teog_swift/screens/overview_screen.dart';
-import 'package:teog_swift/screens/technicians/tabScreen.dart';
+import 'package:teog_swift/screens/technicians/tab_screen.dart';
 import 'package:teog_swift/utilities/constants.dart';
 
 import 'dart:convert';

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'package:teog_swift/screens/organization_filter_view.dart';
 import 'package:teog_swift/screens/report_history_plot.dart';
-import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
+import 'package:teog_swift/screens/technicians/technician_device_screen.dart';
 import 'package:teog_swift/utilities/hospital_device.dart';
 import 'package:teog_swift/utilities/constants.dart';
 

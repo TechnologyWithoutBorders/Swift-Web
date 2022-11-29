@@ -4,7 +4,7 @@ import 'package:teog_swift/utilities/hospital_device.dart';
 import 'package:teog_swift/utilities/maintenance_event.dart';
 import 'package:teog_swift/utilities/constants.dart';
 
-import 'package:teog_swift/screens/technicians/technicianDeviceScreen.dart';
+import 'package:teog_swift/screens/technicians/technician_device_screen.dart';
 
 import 'package:teog_swift/utilities/network_functions.dart' as comm;
 
