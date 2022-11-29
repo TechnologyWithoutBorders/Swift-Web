@@ -188,15 +188,7 @@ Future<User> editUser(User user) async {
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
 
     if(swiftResponse.responseCode == 0) {
-      List<DetailedReport> reports = [];
-
-      for(var jsonReport in swiftResponse.data["reports"]) {
-        reports.add(DetailedReport.fromJson(jsonReport));
-      }
-
-      reports.sort((a, b) => b.id.compareTo(a.id));
-
-      return User.fromJson(swiftResponse.data["device"]);
+      return User.fromJson(swiftResponse.data);
     } else {
       throw MessageException(swiftResponse.data);
     }
