@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:teog_swift/utilities/detailed_report.dart';
 import 'package:teog_swift/utilities/device_state.dart';
 
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:community_charts_flutter/community_charts_flutter.dart' as charts;
 import 'package:teog_swift/utilities/network_functions.dart' as comm;
 import 'package:teog_swift/utilities/organizational_unit.dart';
 import 'package:teog_swift/utilities/message_exception.dart';
