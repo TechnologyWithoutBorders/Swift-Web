@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:community_charts_flutter/community_charts_flutter.dart' as charts;
 import 'package:teog_swift/utilities/device_stats.dart';
 import 'package:teog_swift/utilities/hospital_device.dart';
 

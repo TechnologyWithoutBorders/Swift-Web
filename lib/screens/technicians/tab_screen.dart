@@ -60,12 +60,20 @@ class _TabScreenState extends State<TabScreen> {
 
     _setHospitalInfo();
 
-    comm.getUsers().then((users) => {
-      setState(() {
-        users.sort((a, b) => a.name.compareTo(b.name));
+    comm.getUsers().then((users) {
+      List<User> validUsers = [];
 
-        _users = users;
-      })
+      for(var user in users) {
+        if(user.valid) {
+          validUsers.add(user);
+        }
+      }
+
+      validUsers.sort((a, b) => a.name.compareTo(b.name));
+
+      setState(() {
+        _users = validUsers;
+      });
     });
   }
 
