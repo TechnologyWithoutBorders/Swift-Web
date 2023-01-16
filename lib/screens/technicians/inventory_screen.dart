@@ -187,12 +187,13 @@ class _InventoryScreenState extends State<InventoryScreen> {
   }
 
   void _csvExportInventory() async {
-    List<List<dynamic>> exportList = [["Type", "Manufacturer", "Model"]];
+    List<List<dynamic>> exportList = [["ID", "Type", "Manufacturer", "Model", "Serial Number", "State"]];
 
     for(ShortDeviceInfo deviceInfo in _displayedDevices) {
       HospitalDevice device = deviceInfo.device;
+      Report report = deviceInfo.report;
 
-      exportList.add([device.type, device.manufacturer, device.model]);
+      exportList.add([device.id, device.type, device.manufacturer, device.model, device.serialNumber, DeviceState.getStateString(report.currentState)]);
     }
 
     String csv = const ListToCsvConverter().convert(exportList, fieldDelimiter: ';');
