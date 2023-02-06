@@ -219,7 +219,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
 
                     comm.createReport(device.id, title, description, selectedState).then((report) => {
                       setState(() {
-                        reports.insert(0, report);//TODO: get reports from server
+                        reports.add(report);//TODO: get reports from server
                       })
                     });
 
@@ -502,7 +502,7 @@ class _StateScreenState extends State<StateScreen> {
   @override
   Widget build(BuildContext context) {
     List<DetailedReport> reports = widget.deviceInfo.reports;
-    DetailedReport latestReport = reports[0];
+    DetailedReport latestReport = reports.last;
 
     return Column(
       children: [
