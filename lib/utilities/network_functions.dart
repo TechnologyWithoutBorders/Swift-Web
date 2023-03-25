@@ -48,7 +48,7 @@ Future<String> checkCredentials(final String country, final int hospital, String
 
   final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
-  final Map<String, dynamic> parameterMap = Map();
+  final Map<String, dynamic> parameterMap = {};
   parameterMap[_actionIdentifier] = DataAction.login;
   parameterMap[_countryIdentifier] = country;
   parameterMap[_hospitalIdentifier] = hospital;
@@ -703,7 +703,7 @@ Future<OrganizationalInfo> getOrganizationalInfo() async {
 Future<bool> updateOrganizationalInfo(List<OrganizationalUnit> orgUnits, List<OrganizationalRelation> orgRelations, List<DeviceRelation> deviceRelations) async {
   final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
-  final Map<String, dynamic> orgInfo = Map();
+  final Map<String, dynamic> orgInfo = {};
 
   List<Map<String, dynamic>> orgUnitList = [];
   for(var orgUnit in orgUnits) {
@@ -746,7 +746,7 @@ Future<bool> updateOrganizationalInfo(List<OrganizationalUnit> orgUnits, List<Or
 }
 
 Future<Map<String, dynamic>> _generateParameterMap({final String action = "", final bool authentication = false, final Map<String, dynamic> additional = const {}}) async {
-  final Map<String, dynamic> parameterMap = Map();
+  final Map<String, dynamic> parameterMap = {};
 
   if(action.isNotEmpty) {
     parameterMap[_actionIdentifier] = action;
