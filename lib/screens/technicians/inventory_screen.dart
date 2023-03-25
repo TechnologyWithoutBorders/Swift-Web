@@ -205,12 +205,12 @@ class _InventoryScreenState extends State<InventoryScreen> {
     String csv = const ListToCsvConverter().convert(exportList, fieldDelimiter: ';');
     final Uint8List data = Uint8List.fromList(csv.codeUnits);
 
-    MimeType type = MimeType.CSV;
+    MimeType type = MimeType.csv;
 
     await FileSaver.instance.saveFile(
-      "inventory.csv",
-      data,
-      "csv",
+      name: "inventory.csv",
+      bytes: data,
+      ext: "csv",
       mimeType: type);
   }
 
