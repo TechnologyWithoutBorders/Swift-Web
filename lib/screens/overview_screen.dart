@@ -78,11 +78,11 @@ class _OverviewScreenState extends State<OverviewScreen> {
               Text('Welcome', style: Theme
                 .of(context)
                 .textTheme
-                .headline4),
+                .headlineMedium),
               Text('Please tell us which device you are looking for', style: Theme
                 .of(context)
                 .textTheme
-                .headline5),
+                .headlineSmall),
               const SizedBox(height: 25),
               const Card(child: Padding(padding: EdgeInsets.all(10.0), child: SearchForm())),
               const SizedBox(height: 5),
@@ -108,11 +108,6 @@ class _SearchFormState extends State with SessionMixin {
   final _formKey = GlobalKey<FormState>();
 
   final _deviceIDController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   ///Validates whether a given [value] is a valid device ID.
   ///
@@ -157,7 +152,7 @@ class _SearchFormState extends State with SessionMixin {
           Text('By entering a barcode number', style: Theme
               .of(context)
               .textTheme
-              .headline5),
+              .headlineSmall),
           const SizedBox(height: 10),
           const Text("This is the easiest way. Please look for a barcode like this and enter the marked number:"),
           const SizedBox(height: 5),
@@ -272,7 +267,7 @@ class _FilterFormState extends State<FilterForm> {
           Text('By searching', style: Theme
               .of(context)
               .textTheme
-              .headline5),
+              .headlineSmall),
           const SizedBox(height: 10),
           DropdownButton<OrganizationalUnit>(
             hint: const Text("Department"),

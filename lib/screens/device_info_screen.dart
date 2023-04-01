@@ -231,7 +231,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
                   Text("Report a problem", style: Theme
                       .of(context)
                       .textTheme
-                      .headline5),
+                      .headlineSmall),
                   TextFormField(
                     controller: _reportTitleController,
                     decoration: const InputDecoration(labelText: 'Title'),

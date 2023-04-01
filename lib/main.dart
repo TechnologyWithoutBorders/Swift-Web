@@ -226,7 +226,7 @@ class _LoginFormState extends State<LoginForm> {
                 Text("Country",
                   style: Theme.of(context)
                     .textTheme
-                    .headline5),
+                    .headlineSmall),
                 Flexible(
                   child: Scrollbar(
                     controller: _countryScrollController,
@@ -262,7 +262,7 @@ class _LoginFormState extends State<LoginForm> {
                 Text("Hospital",
                   style: Theme.of(context)
                     .textTheme
-                    .headline5),
+                    .headlineSmall),
                 Flexible(
                   child: Scrollbar(
                     controller: _hospitalScrollController,
@@ -337,7 +337,7 @@ class _LoginFormState extends State<LoginForm> {
           Text('Sign in to report problems with devices or download user manuals.', style: Theme
               .of(context)
               .textTheme
-              .headline6),
+              .titleLarge),
           const SizedBox(height: 15),
           Flexible(
             child: Center(child: input)

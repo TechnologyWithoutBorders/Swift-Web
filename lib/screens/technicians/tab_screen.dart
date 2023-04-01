@@ -101,7 +101,7 @@ class _TabScreenState extends State<TabScreen> {
                   Text("Please select your user:",
                         style: Theme.of(context)
                           .textTheme
-                          .headline4),
+                          .headlineMedium),
                   const SizedBox(height: 15),
                   Flexible(
                     child: _users != null ? Scrollbar(
