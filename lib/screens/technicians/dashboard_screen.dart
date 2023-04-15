@@ -37,7 +37,7 @@ class _DetailScreenState extends State<DashboardScreen> {
 
   void _updateDevices() {
     comm.getTodoDevices().then((todoDevices) {
-      todoDevices.sort((a, b) => a.report.created.compareTo(b.report.created));
+      todoDevices.sort((a, b) => b.report.created.compareTo(a.report.created));
 
       setState(() {
         _todoDevices = todoDevices;
