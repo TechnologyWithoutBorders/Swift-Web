@@ -342,8 +342,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     alignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
+                        onPressed: _manualButtonDisabled ? null : () => _csvExportInventory(),
                         child: const Text("Export list"),
-                        onPressed: () => _csvExportInventory()
                       ),
                       ElevatedButton(
                         onPressed: _manualButtonDisabled ? null : () => _plotHistory(),
