@@ -33,11 +33,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   bool _manualButtonDisabled = false;
 
-  static const int filterNone = 0;
-  static const int filterMissingManuals = 1;
+  static const int filterNone = -1;
 
   DepartmentFilter? _departmentFilter;
-  int _filterType = filterNone;
+  int _filterState = filterNone;
 
   @override
   void initState() {
@@ -61,7 +60,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
       _preFilteredDevices = prefilteredDevices;
       _displayedDevices = displayedDevices;
       _filterTextController.clear();
-      _filterType = filterNone;
+      _filterState = filterNone;
     });
   }
 
@@ -74,7 +73,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
     setState(() {
       _filterTextController.clear();
-      _filterType = filterNone;
+      _filterState = filterNone;
       _preFilteredDevices = prefilteredDevices;
       _displayedDevices = displayedDevices;
     });
@@ -87,7 +86,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
       _preFilteredDevices.clear();
       _displayedDevices.clear();
       _filterTextController.clear();
-      _filterType = filterMissingManuals;
+      //_filterType = filterMissingManuals;
     });
 
     int counter = 0;
@@ -153,8 +152,27 @@ class _InventoryScreenState extends State<InventoryScreen> {
         _preFilteredDevices = preFilteredDevices;
         _displayedDevices = displayedDevices;
         _filterTextController.clear();
-        _filterType = filterNone;
+        _filterState = filterNone;
       });
+    });
+  }
+
+  void _filterByState(int state) {
+    List<ShortDeviceInfo> preFilteredDevices = [];
+    List<ShortDeviceInfo> displayedDevices = [];
+
+    for(ShortDeviceInfo deviceInfo in _devices) {
+      if(deviceInfo.report.currentState == state) {
+        preFilteredDevices.add(deviceInfo);
+        displayedDevices.add(deviceInfo);
+      }
+    }
+
+    setState(() {
+        _preFilteredDevices = preFilteredDevices;
+        _displayedDevices = displayedDevices;
+        _filterTextController.clear();
+        _filterState = state;
     });
   }
 
@@ -225,6 +243,28 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> templateButtons = [
+      ElevatedButton(
+        onPressed: _manualButtonDisabled ? null : () => _showAllDevices(),
+        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterState == filterNone ? const Color(Constants.teogBlue) : Colors.blueGrey)),
+        child: const Text("All"),
+      ),
+      /*ElevatedButton(
+        onPressed: _manualButtonDisabled ? null : () => _checkManuals(),
+        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterType == filterMissingManuals ? const Color(Constants.teogBlue) : Colors.blueGrey)),
+        child: const Text("No manual attached"),
+      ),*/
+    ];
+
+    for(int i = 0; i < DeviceState.names.length; i++) {
+      TextButton stateButton = TextButton(
+        onPressed: () => _filterByState(i),
+        child: Icon(DeviceState.getIconData(i), color: DeviceState.getColor(i)),
+      );
+
+      templateButtons.add(stateButton);
+    }
+
     return Scaffold(
       backgroundColor: Colors.grey[200],
       body: Container(alignment: Alignment.center,
@@ -257,7 +297,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                             _preFilteredDevices = preFilteredDevices;
                             _displayedDevices = displayedDevices;
                             _filterTextController.clear();
-                            _filterType = filterNone;
+                            _filterState = filterNone;
                           });
                         }, 
                       ): Container(),
@@ -266,19 +306,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   ),
                   ButtonBar(
                     alignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("Select devices by template: ", style: TextStyle(fontSize: 20)),
-                      ElevatedButton(
-                        onPressed: _manualButtonDisabled ? null : () => _showAllDevices(),
-                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterType == filterNone ? const Color(Constants.teogBlue) : Colors.blueGrey)),
-                        child: const Text("All"),
-                      ),
-                      ElevatedButton(
-                        onPressed: _manualButtonDisabled ? null : () => _checkManuals(),
-                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterType == filterMissingManuals ? const Color(Constants.teogBlue) : Colors.blueGrey)),
-                        child: const Text("No manual attached"),
-                      ),
-                    ],
+                    children: templateButtons,
                   ),
                   const SizedBox(height: 5),
                   TextField(
@@ -325,11 +353,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                             trailing: device.orgUnit != null ? Text(device.orgUnit!) : null,
                             onTap: () => {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: device.id))).then((value) => {
-                                if(_filterType == filterMissingManuals) {
-                                  _showAllDevices().then((value) => _checkManuals())
-                                } else {
-                                  _showAllDevices()
-                                }
+                                //TODO: Geräte ohne Handbuch zeigen, falls das vorher ausgewählt war
                               })
                             }
                           );
