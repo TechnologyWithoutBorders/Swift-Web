@@ -8,19 +8,19 @@ class DeviceState {
   static const int salvage = 4;
   static const int limitations = 5;
 
-  static const _names = ["working", "maintenance", "broken", "work in progress", "beyond repair", "working with limitations"];
-  static const _colors = [Colors.green, Colors.blue, Colors.orange, Colors.lightGreen, Colors.red, Colors.redAccent];
-  static const _icons = [Icons.check, Icons.access_alarm, Icons.build, Icons.hourglass_empty, Icons.block, Icons.warning];
+  static const names = ["working", "maintenance", "broken", "work in progress", "beyond repair", "working with limitations"];
+  static const colors = [Colors.green, Colors.blue, Colors.orange, Colors.lightGreen, Colors.red, Colors.redAccent];
+  static const icons = [Icons.check, Icons.access_alarm, Icons.build, Icons.hourglass_empty, Icons.block, Icons.warning];
 
   static String getStateString(final int state) {
-    return _names[state];
+    return names[state];
   }
 
   static Color getColor(final int state) {
-    return _colors[state];
+    return colors[state];
   }
 
   static IconData getIconData(final int state) {
-    return _icons[state];
+    return icons[state];
   }
 }
