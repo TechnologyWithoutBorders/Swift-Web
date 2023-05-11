@@ -198,7 +198,7 @@ Future<User> editUser(User user) async {
 }
 
 Future<bool> deleteDevice(HospitalDevice device) async {
-  /*final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
   final response = await http.post(
     uri,
@@ -218,8 +218,7 @@ Future<bool> deleteDevice(HospitalDevice device) async {
     }
   } else {
     throw MessageException(Constants.genericErrorMessage);
-  }*/
-  return true;
+  }
 }
 
 Future<List<PreviewDeviceInfo>> searchDevices(String? type, String? manufacturer, {DepartmentFilter? filter}) async {
