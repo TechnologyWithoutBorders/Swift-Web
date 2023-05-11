@@ -12,6 +12,7 @@ import 'package:teog_swift/utilities/network_functions.dart' as comm;
 import 'package:teog_swift/utilities/short_device_info.dart';
 import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/device_state.dart';
+import 'package:teog_swift/utilities/message_exception.dart';
 
 class InventoryScreen extends StatefulWidget {
   const InventoryScreen({Key? key}) : super(key: key);
@@ -242,6 +243,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
   }
 
   void _deleteDevice(ShortDeviceInfo deviceInfo) {
+    HospitalDevice device = deviceInfo.device;
+
     showDialog<String>(
       context: context,
       builder: (BuildContext context) {
@@ -256,21 +259,17 @@ class _InventoryScreenState extends State<InventoryScreen> {
             ElevatedButton(
                 child: const Text('Delete'),
                 onPressed: () {
-                  /*final User deletedUser = User(
-                    id: user.id,
-                    name: user.name,
-                    phone: user.phone,
-                    mail: user.mail,
-                    position: user.position,
-                    valid: false
-                  );
-
-                  comm.editUser(deletedUser).then((_) {
-                    _updateUsers();
+                  comm.deleteDevice(device).then((_) {
+                    setState(() {
+                    _devices.remove(deviceInfo);
+                    _assignedDevices.remove(deviceInfo);
+                    _preFilteredDevices.remove(deviceInfo);
+                    _displayedDevices.remove(deviceInfo);
+                  });
                   }).onError<MessageException>((error, stackTrace) {
                     final snackBar = SnackBar(content: Text(error.message));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  });*/
+                  });
 
                   Navigator.pop(context);
                 })
