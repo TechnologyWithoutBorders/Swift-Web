@@ -66,7 +66,7 @@ class _DetailScreenState extends State<DashboardScreen> {
     });
   }
 
-  void _registerDevice() {
+  /*void _registerDevice() {
     int? selectedState = DeviceState.working;
 
     //TODO: should those be disposed?
@@ -176,7 +176,7 @@ class _DetailScreenState extends State<DashboardScreen> {
         );
       }
     ).then((value) => _updateDevices());
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
