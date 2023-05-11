@@ -12,6 +12,7 @@ import 'package:teog_swift/utilities/network_functions.dart' as comm;
 import 'package:teog_swift/utilities/short_device_info.dart';
 import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/device_state.dart';
+import 'package:teog_swift/utilities/message_exception.dart';
 
 class InventoryScreen extends StatefulWidget {
   const InventoryScreen({Key? key}) : super(key: key);
@@ -241,6 +242,43 @@ class _InventoryScreenState extends State<InventoryScreen> {
     );
   }
 
+  void _deleteDevice(ShortDeviceInfo deviceInfo) {
+    HospitalDevice device = deviceInfo.device;
+
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Are you sure you want to delete this device?"),
+          actions: <Widget>[
+            ElevatedButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+            ElevatedButton(
+                child: const Text('Delete'),
+                onPressed: () {
+                  comm.deleteDevice(device).then((_) {
+                    setState(() {
+                    _devices.remove(deviceInfo);
+                    _assignedDevices.remove(deviceInfo);
+                    _preFilteredDevices.remove(deviceInfo);
+                    _displayedDevices.remove(deviceInfo);
+                  });
+                  }).onError<MessageException>((error, stackTrace) {
+                    final snackBar = SnackBar(content: Text(error.message));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  });
+
+                  Navigator.pop(context);
+                })
+          ],
+        );
+      }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> templateButtons = [
@@ -350,7 +388,13 @@ class _InventoryScreenState extends State<InventoryScreen> {
                             ),
                             title: Text(device.type),
                             subtitle: Text("${device.manufacturer} ${device.model}"),
-                            trailing: device.orgUnit != null ? Text(device.orgUnit!) : null,
+                            trailing: ButtonBar(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                device.orgUnit != null ? Text(device.orgUnit!) : const SizedBox.shrink(),
+                                TextButton(child: const Icon(Icons.delete, color: Colors.red), onPressed: () => _deleteDevice(deviceInfo))
+                              ],
+                            ),
                             onTap: () => {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: device.id))).then((value) => {
                                 //TODO: Geräte ohne Handbuch zeigen, falls das vorher ausgewählt war

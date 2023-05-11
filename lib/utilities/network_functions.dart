@@ -197,6 +197,30 @@ Future<User> editUser(User user) async {
   }
 }
 
+Future<bool> deleteDevice(HospitalDevice device) async {
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
+
+  final response = await http.post(
+    uri,
+    headers: _headers,
+    body: jsonEncode(await _generateParameterMap(action: DataAction.deleteDevice, authentication: true,
+        additional: <String, dynamic> {'device': device.toJson()}),
+    ),
+  );
+
+  if(response.statusCode == 200) {
+    SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
+
+    if(swiftResponse.responseCode == 0) {
+      return true;
+    } else {
+      throw MessageException(swiftResponse.data);
+    }
+  } else {
+    throw MessageException(Constants.genericErrorMessage);
+  }
+}
+
 Future<List<PreviewDeviceInfo>> searchDevices(String? type, String? manufacturer, {DepartmentFilter? filter}) async {
   final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 

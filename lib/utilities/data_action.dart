@@ -20,4 +20,5 @@ class DataAction {
   static const String getMaintenanceEvents = "get_maintenance_events";
   static const String getRecentActivity = "get_recent_activity";
   static const String editUser = "edit_user";
+  static const String deleteDevice = "delete_device";
 }
