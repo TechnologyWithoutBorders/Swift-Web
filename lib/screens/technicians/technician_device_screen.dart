@@ -278,7 +278,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text("You can scan this code using the mobile app."),
-                        QrImage(
+                        QrImageView(
                           data: device.id.toString(),
                           version: QrVersions.auto,
                           size: 100.0,
