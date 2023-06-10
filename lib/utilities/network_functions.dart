@@ -158,7 +158,7 @@ Future<DeviceInfo> editDevice(HospitalDevice device) async {
         reports.add(DetailedReport.fromJson(jsonReport));
       }
 
-      reports.sort((a, b) => b.id.compareTo(a.id));
+      reports.sort((a, b) => a.id.compareTo(b.id));
 
       return DeviceInfo(
         device: HospitalDevice.fromJson(swiftResponse.data["device"]),
