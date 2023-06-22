@@ -61,7 +61,6 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
     HospitalDevice? device = _deviceInfo?.device;
 
     if(device != null) {
-      //TODO: should those be disposed?
       TextEditingController typeController = TextEditingController(text: device.type);
       TextEditingController manufacturerController = TextEditingController(text: device.manufacturer);
       TextEditingController modelController = TextEditingController(text: device.model);
@@ -117,6 +116,10 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                   child: const Text('Cancel'),
                   onPressed: () {
                     Navigator.pop(context);
+
+                    typeController.dispose();
+                    manufacturerController.dispose();
+                    modelController.dispose();
                   }),
               ElevatedButton(
                   child: const Text('Save'),
@@ -132,6 +135,10 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                     });
 
                     Navigator.pop(context);
+
+                    typeController.dispose();
+                    manufacturerController.dispose();
+                    modelController.dispose();
                   })
             ],
           );

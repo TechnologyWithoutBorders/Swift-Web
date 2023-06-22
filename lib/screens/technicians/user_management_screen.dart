@@ -17,7 +17,6 @@ class _DetailScreenState extends State<UserManagementScreen> {
   List<User> _users = [];
 
   void _createUser() {
-    //TODO: should those be disposed?
     TextEditingController nameController = TextEditingController();
     TextEditingController mailController = TextEditingController();
 
@@ -49,6 +48,9 @@ class _DetailScreenState extends State<UserManagementScreen> {
                 child: const Text('Cancel'),
                 onPressed: () {
                   Navigator.pop(context);
+
+                  nameController.dispose();
+                  mailController.dispose();
                 }),
             ElevatedButton(
                 child: const Text('Register'),
@@ -66,6 +68,9 @@ class _DetailScreenState extends State<UserManagementScreen> {
                   }
 
                   Navigator.pop(context);
+
+                  nameController.dispose();
+                  mailController.dispose();
                 })
           ],
         );
