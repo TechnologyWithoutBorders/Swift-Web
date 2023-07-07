@@ -101,7 +101,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
         if(documents.isEmpty) {
           devicesMissingDocuments.add(deviceInfo);
         }
-      } catch(e) {//TODO: specific exception
+      } catch(e) {
         devicesMissingDocuments.add(deviceInfo);
       }
 
@@ -116,7 +116,26 @@ class _InventoryScreenState extends State<InventoryScreen> {
       _totalDevices = -1;
     });
 
-    //TODO: download list
+    List<List<dynamic>> exportList = [["Manufacturer", "Type", "Model"]];
+
+    for(ShortDeviceInfo deviceInfo in devicesMissingDocuments) {
+      HospitalDevice device = deviceInfo.device;
+
+      exportList.add([device.manufacturer, device.type, device.model]);
+    }
+
+    exportList.sort((a, b) => a.join(' ').compareTo(b.join(' ')));
+
+    String csv = const ListToCsvConverter().convert(exportList, fieldDelimiter: ';');
+    final Uint8List data = Uint8List.fromList(csv.codeUnits);
+
+    MimeType type = MimeType.csv;
+
+    await FileSaver.instance.saveFile(
+      name: "devices_with_missing_documents.csv",
+      bytes: data,
+      ext: "csv",
+      mimeType: type);
   }
 
   void _filterDepartment() {
