@@ -32,8 +32,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   final _filterTextController = TextEditingController();
 
-  bool _manualButtonDisabled = false;
-
   static const int filterNone = -1;
 
   DepartmentFilter? _departmentFilter;
@@ -82,12 +80,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   void _checkManuals() async {
     setState(() {
-      _manualButtonDisabled = true;
-
       _preFilteredDevices.clear();
       _displayedDevices.clear();
       _filterTextController.clear();
-      //_filterType = filterMissingManuals;
     });
 
     int counter = 0;
@@ -115,10 +110,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
         _progress = counter/_assignedDevices.length;
       });
     }
-
-    setState(() {
-      _manualButtonDisabled = false;
-    });
   }
 
   void _filterDepartment() {
@@ -283,7 +274,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
   Widget build(BuildContext context) {
     List<Widget> templateButtons = [
       ElevatedButton(
-        onPressed: _manualButtonDisabled ? null : () => _showAllDevices(),
+        onPressed: () => _showAllDevices(),
         style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterState == filterNone ? const Color(Constants.teogBlue) : Colors.blueGrey)),
         child: const Text("All"),
       ),
@@ -357,7 +348,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         labelText: "filter by searching...",
                       ),
                       onChanged: (text) => _filter(text.trim().toLowerCase()),
-                      enabled: !_manualButtonDisabled
                     )
                   ),
                   const SizedBox(height: 15),
@@ -410,13 +400,17 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     alignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: _manualButtonDisabled ? null : () => _csvExportInventory(),
+                        onPressed: () => _csvExportInventory(),
                         child: const Text("Export list"),
                       ),
                       ElevatedButton(
-                        onPressed: _manualButtonDisabled ? null : () => _plotHistory(),
+                        onPressed: () => _plotHistory(),
                         child: const Text("Plot history"),
                       ),
+                      ElevatedButton(
+                        onPressed: () => _checkManuals,
+                        child: const Text("Get devices with missing documents")
+                      )
                     ],
                   ),
                 ]
