@@ -139,7 +139,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
     MimeType type = MimeType.csv;
 
     await FileSaver.instance.saveFile(
-      name: "devices_with_missing_documents.csv",
+      name: "devices_with_missing_documents",
       bytes: data,
       ext: "csv",
       mimeType: type);
@@ -251,7 +251,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
     MimeType type = MimeType.csv;
 
     await FileSaver.instance.saveFile(
-      name: "inventory.csv",
+      name: "inventory",
       bytes: data,
       ext: "csv",
       mimeType: type);
