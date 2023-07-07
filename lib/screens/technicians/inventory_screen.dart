@@ -123,7 +123,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
       _totalDevices = -1;
     });
 
-    List<List<dynamic>> exportList = [["Manufacturer", "Type", "Model"]];
+    List<List<dynamic>> headerList = [["Manufacturer", "Type", "Model"]];
+    List<List<dynamic>> exportList = [];
 
     for(ShortDeviceInfo deviceInfo in devicesMissingDocuments) {
       HospitalDevice device = deviceInfo.device;
@@ -133,7 +134,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
     exportList.sort((a, b) => a.join(' ').compareTo(b.join(' ')));
 
-    String csv = const ListToCsvConverter().convert(exportList, fieldDelimiter: ';');
+    headerList.addAll(exportList);
+
+    String csv = const ListToCsvConverter().convert(headerList, fieldDelimiter: ';');
     final Uint8List data = Uint8List.fromList(csv.codeUnits);
 
     MimeType type = MimeType.csv;
