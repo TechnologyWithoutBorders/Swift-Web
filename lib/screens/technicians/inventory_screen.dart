@@ -79,37 +79,30 @@ class _InventoryScreenState extends State<InventoryScreen> {
   }
 
   void _checkManuals() async {
-    setState(() {
-      _preFilteredDevices.clear();
-      _displayedDevices.clear();
-      _filterTextController.clear();
-    });
-
     int counter = 0;
 
-    for(ShortDeviceInfo deviceInfo in _assignedDevices) {
+    List<ShortDeviceInfo> devices = await comm.getDevices();
+    List<ShortDeviceInfo> devicesMissingDocuments = [];
+
+    for(ShortDeviceInfo deviceInfo in devices) {
       try {
         List<String> documents = await comm.retrieveDocuments(deviceInfo.device.manufacturer, deviceInfo.device.model);
 
         if(documents.isEmpty) {
-          _preFilteredDevices.add(deviceInfo);
-          setState(() {
-            _displayedDevices.add(deviceInfo);
-          });
+          devicesMissingDocuments.add(deviceInfo);
         }
-      } catch(e) {//TODO specific exception
-        _preFilteredDevices.add(deviceInfo);
-        setState(() {
-          _displayedDevices.add(deviceInfo);
-        });
+      } catch(e) {//TODO: specific exception
+        devicesMissingDocuments.add(deviceInfo);
       }
 
       counter++;
 
       setState(() {
-        _progress = counter/_assignedDevices.length;
+        _progress = counter/devices.length;
       });
     }
+
+    //TODO: download list
   }
 
   void _filterDepartment() {
@@ -396,16 +389,17 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     children: [
                       ElevatedButton(
                         onPressed: () => _csvExportInventory(),
-                        child: const Text("Export list"),
+                        child: const Text("Export current list"),
                       ),
                       ElevatedButton(
                         onPressed: () => _plotHistory(),
-                        child: const Text("Plot history"),
+                        child: const Text("Plot state history"),
                       ),
                       ElevatedButton(
                         onPressed: () => _checkManuals,
                         child: const Text("Get devices with missing documents")
-                      )
+                      ),
+                      CircularProgressIndicator(value: _progress)
                     ],
                   ),
                 ]
