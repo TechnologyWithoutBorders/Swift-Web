@@ -91,18 +91,25 @@ class _InventoryScreenState extends State<InventoryScreen> {
     });
 
     List<ShortDeviceInfo> devicesMissingDocuments = [];
+    List<String> alreadyChecked = [];
 
     int counter = 0;
 
     for(ShortDeviceInfo deviceInfo in devices) {
-      try {
-        List<String> documents = await comm.retrieveDocuments(deviceInfo.device.manufacturer, deviceInfo.device.model);
+      HospitalDevice device = deviceInfo.device;
 
-        if(documents.isEmpty) {
+      if(!alreadyChecked.contains("${device.manufacturer.toLowerCase()} ${device.model.toLowerCase()}")) {
+        try {
+          List<String> documents = await comm.retrieveDocuments(device.manufacturer, device.model);
+
+          if(documents.isEmpty) {
+            devicesMissingDocuments.add(deviceInfo);
+          }
+        } catch(e) {
           devicesMissingDocuments.add(deviceInfo);
         }
-      } catch(e) {
-        devicesMissingDocuments.add(deviceInfo);
+
+        alreadyChecked.add("${device.manufacturer.toLowerCase()} ${device.model.toLowerCase()}");
       }
 
       counter++;
