@@ -356,11 +356,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     onChanged: (text) => _filter(text.trim().toLowerCase()),
                     enabled: !_manualButtonDisabled
                   ),
-                  const SizedBox(height: 10),
-                  LinearProgressIndicator(
-                    value: _progress
-                  ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 15),
                   Text("Number of devices matching filter: ${_displayedDevices.length}", style: const TextStyle(fontSize: 20)),
                   Flexible(child: Padding(padding: const EdgeInsets.all(10.0),
                     child: Scrollbar(
