@@ -409,12 +409,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         onPressed: () => _plotHistory(),
                         child: const Text("Plot state history"),
                       ),
-                      ElevatedButton(
+                      _totalDevices >= 0 ? Text("checking devices for missing documents... $_checkedDevices/$_totalDevices")
+                      : ElevatedButton(
                         onPressed: () => _checkManuals(),
                         child: const Text("Get devices with missing documents")
-                      ),
-                      _totalDevices >= 0 ? const CircularProgressIndicator() : const SizedBox.shrink(),
-                      _totalDevices >= 0 ? Text("$_checkedDevices/$_totalDevices") : const SizedBox.shrink()
+                      ), 
                     ],
                   ),
                 ]
