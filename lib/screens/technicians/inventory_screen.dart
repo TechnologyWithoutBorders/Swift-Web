@@ -347,14 +347,18 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     children: templateButtons,
                   ),
                   const SizedBox(height: 5),
-                  TextField(
-                    controller: _filterTextController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "filter by searching...",
-                    ),
-                    onChanged: (text) => _filter(text.trim().toLowerCase()),
-                    enabled: !_manualButtonDisabled
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child:
+                    TextField(
+                      controller: _filterTextController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "filter by searching...",
+                      ),
+                      onChanged: (text) => _filter(text.trim().toLowerCase()),
+                      enabled: !_manualButtonDisabled
+                    )
                   ),
                   const SizedBox(height: 15),
                   Text("Number of devices matching filter: ${_displayedDevices.length}", style: const TextStyle(fontSize: 20)),
