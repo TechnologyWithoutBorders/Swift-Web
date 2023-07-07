@@ -278,11 +278,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
         style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterState == filterNone ? const Color(Constants.teogBlue) : Colors.blueGrey)),
         child: const Text("All"),
       ),
-      /*ElevatedButton(
-        onPressed: _manualButtonDisabled ? null : () => _checkManuals(),
-        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterType == filterMissingManuals ? const Color(Constants.teogBlue) : Colors.blueGrey)),
-        child: const Text("No manual attached"),
-      ),*/
     ];
 
     for(int i = 0; i < DeviceState.names.length; i++) {
