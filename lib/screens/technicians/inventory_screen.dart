@@ -23,7 +23,8 @@ class InventoryScreen extends StatefulWidget {
 
 class _InventoryScreenState extends State<InventoryScreen> {
   final _scrollController = ScrollController();
-  double _progress = 0;
+  int _totalDevices = -1;
+  int _checkedDevices = 0;
 
   List<ShortDeviceInfo> _devices = [];
   List<ShortDeviceInfo> _assignedDevices = [];
@@ -79,10 +80,19 @@ class _InventoryScreenState extends State<InventoryScreen> {
   }
 
   void _checkManuals() async {
-    int counter = 0;
+    setState(() {
+      _totalDevices = 0;
+    });
 
     List<ShortDeviceInfo> devices = await comm.getDevices();
+
+    setState(() {
+      _totalDevices = devices.length;
+    });
+
     List<ShortDeviceInfo> devicesMissingDocuments = [];
+
+    int counter = 0;
 
     for(ShortDeviceInfo deviceInfo in devices) {
       try {
@@ -98,9 +108,13 @@ class _InventoryScreenState extends State<InventoryScreen> {
       counter++;
 
       setState(() {
-        _progress = counter/devices.length;
+        _checkedDevices = counter;
       });
     }
+
+    setState(() {
+      _totalDevices = -1;
+    });
 
     //TODO: download list
   }
@@ -396,10 +410,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         child: const Text("Plot state history"),
                       ),
                       ElevatedButton(
-                        onPressed: () => _checkManuals,
+                        onPressed: () => _checkManuals(),
                         child: const Text("Get devices with missing documents")
                       ),
-                      CircularProgressIndicator(value: _progress)
+                      _totalDevices >= 0 ? const CircularProgressIndicator() : const SizedBox.shrink(),
+                      _totalDevices >= 0 ? Text("$_checkedDevices/$_totalDevices") : const SizedBox.shrink()
                     ],
                   ),
                 ]
