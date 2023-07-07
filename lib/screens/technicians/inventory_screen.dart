@@ -339,7 +339,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                           });
                         }, 
                       ): Container(),
-                      OutlinedButton(onPressed: () => _filterDepartment(), child: const Text("select department...")),
+                      FilledButton(onPressed: () => _filterDepartment(), child: const Text("select department...")),
                     ]
                   ),
                   ButtonBar(
