@@ -209,26 +209,32 @@ class _InventoryScreenState extends State<InventoryScreen> {
       _displayedDevices.clear();
     });
 
-    List<String> filterTexts = text.trim().split(" ");
+    if(text.isNotEmpty) {
+      List<String> filterTexts = text.trim().toLowerCase().split(" ");
 
-    for(ShortDeviceInfo deviceInfo in _preFilteredDevices) {
-      HospitalDevice device = deviceInfo.device;
+      for(ShortDeviceInfo deviceInfo in _preFilteredDevices) {
+        HospitalDevice device = deviceInfo.device;
 
-      bool skip = false;
+        bool skip = false;
 
-      for(String filterText in filterTexts) {
-        if(device.type.toLowerCase().contains(filterText) || device.manufacturer.toLowerCase().contains(filterText) || device.model.toLowerCase().contains(filterText) || device.serialNumber.toLowerCase().contains(filterText)) {
-          continue;
-        } else {
-          skip = true;
+        for(String filterText in filterTexts) {
+          if(device.type.toLowerCase().contains(filterText) || device.manufacturer.toLowerCase().contains(filterText) || device.model.toLowerCase().contains(filterText) || device.serialNumber.toLowerCase().contains(filterText)) {
+            continue;
+          } else {
+            skip = true;
+          }
+        }
+
+        if(!skip) {
+          setState(() {
+            _displayedDevices.add(deviceInfo);
+          });
         }
       }
-
-      if(!skip) {
-        setState(() {
-          _displayedDevices.add(deviceInfo);
-        });
-      }
+    } else {
+      setState(() {
+        _displayedDevices.addAll(_preFilteredDevices);
+      });
     }
   }
 
@@ -378,7 +384,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         border: OutlineInputBorder(),
                         labelText: "filter by searching...",
                       ),
-                      onChanged: (text) => _filter(text.trim().toLowerCase()),
+                      onChanged: (text) => _filter(text),
                     )
                   ),
                   const SizedBox(height: 15),
