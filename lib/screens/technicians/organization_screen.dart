@@ -376,9 +376,9 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                         ),
                         Expanded(
                           child: InteractiveViewer(
-                            boundaryMargin: const EdgeInsets.all(10.0),
+                            boundaryMargin: const EdgeInsets.all(double.infinity),
                             constrained: false,
-                            minScale: 0.1,
+                            minScale: 0.3,
                             maxScale: 1.0,
                             child: GraphView(
                               graph: _graph,
@@ -407,7 +407,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                               mainAxisSize: MainAxisSize.min,
                                               buttonPadding: EdgeInsets.zero,
                                               children: [
-                                                id != 1 ? TextButton(child: const Icon(Icons.delete), onPressed: () => _removeUnit(node.key!.value)) : Container(),
+                                                id != 1 ? TextButton(child: const Icon(Icons.delete, color: Colors.red), onPressed: () => _removeUnit(node.key!.value)) : Container(),
                                                 id != 1 ? TextButton(child: const Icon(Icons.edit), onPressed: ()=> _renameUnit(node.key!.value)) : Container(),
                                                 TextButton(child: const Icon(Icons.add), onPressed: () => _addUnit(node.key!.value))
                                             ],)
