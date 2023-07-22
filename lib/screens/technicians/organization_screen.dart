@@ -353,6 +353,10 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   @override
   Widget build(BuildContext context) {
     BuchheimWalkerConfiguration builder = BuchheimWalkerConfiguration();
+    builder.orientation = BuchheimWalkerConfiguration.ORIENTATION_LEFT_RIGHT;
+    builder.levelSeparation = 40;
+    builder.subtreeSeparation = 25;
+    builder.siblingSeparation = 5;
 
     return Scaffold(
       backgroundColor: Colors.grey[200],
