@@ -254,7 +254,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
       appBar: AppBar(
         title: Text(device != null ? device.type : "loading..."),
       ),
-      body: Center(child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
+      body: Center(child: FractionallySizedBox(widthFactor: 0.95, heightFactor: 0.9,
         child: Card(
           child: Padding(padding: const EdgeInsets.all(10.0),
             child: (_deviceInfo != null && device != null && reports != null && _userId != null) ? Column(

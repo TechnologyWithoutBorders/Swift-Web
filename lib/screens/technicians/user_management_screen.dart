@@ -150,7 +150,7 @@ class _DetailScreenState extends State<UserManagementScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       body: Container(alignment: Alignment.center,
-        child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
+        child: FractionallySizedBox(widthFactor: 0.95, heightFactor: 0.9,
           child: Card(
             child: Padding(padding: const EdgeInsets.all(25.0),
               child: Row(mainAxisAlignment: MainAxisAlignment.center,

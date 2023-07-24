@@ -59,7 +59,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
       backgroundColor: Colors.grey[200],
       body: 
       Container(alignment: Alignment.center,
-        child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
+        child: FractionallySizedBox(widthFactor: 0.95, heightFactor: 0.9,
           child: Card(
             child: Row(
               children: [
