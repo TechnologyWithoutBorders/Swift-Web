@@ -491,7 +491,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                           )
                         ),
                         const SizedBox(height: 15),
-                        const Text("Drag and drop the devices onto the departments in order to assign them.")
+                        const Padding(padding: EdgeInsets.symmetric(horizontal: 15), child: Text("Drag and drop the devices onto the departments in order to assign them."))
                       ]
                     )
                   ),
