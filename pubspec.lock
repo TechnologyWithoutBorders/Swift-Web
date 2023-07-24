@@ -117,10 +117,10 @@ packages:
     dependency: "direct main"
     description:
       name: file_picker
-      sha256: b1729fc96627dd44012d0a901558177418818d6bd428df59dcfeb594e5f66432
+      sha256: "21145c9c268d54b1f771d8380c195d2d6f655e0567dc1ca2f9c134c02c819e0a"
       url: "https://pub.dev"
     source: hosted
-    version: "5.3.2"
+    version: "5.3.3"
   file_saver:
     dependency: "direct main"
     description:
@@ -364,10 +364,10 @@ packages:
     dependency: transitive
     description:
       name: plugin_platform_interface
-      sha256: "6a2128648c854906c53fa8e33986fc0247a1116122f9534dd20e3ab9e16a32bc"
+      sha256: "43798d895c929056255600343db8f049921cbec94d31ec87f1dc5c16c01935dd"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.4"
+    version: "2.1.5"
   qr:
     dependency: transitive
     description:
