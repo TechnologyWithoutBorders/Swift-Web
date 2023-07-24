@@ -368,7 +368,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
               child: Row(
                 children: [
                   Expanded(
-                    flex: 4,
+                    flex: 3,
                     child: _graph.nodeCount() > 0 ? Column(
                       children: [
                         ButtonBar(
