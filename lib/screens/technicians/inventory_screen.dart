@@ -323,8 +323,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
     ];
 
     for(int i = 0; i < DeviceState.names.length; i++) {
-      TextButton stateButton = TextButton(
+      OutlinedButton stateButton = OutlinedButton(
         onPressed: () => _filterByState(i),
+        style: _filterState == i ? OutlinedButton.styleFrom(
+          side: const BorderSide(color: Color(Constants.teogBlue)),
+        ) : OutlinedButton.styleFrom(),
         child: Icon(DeviceState.getIconData(i), color: DeviceState.getColor(i)),
       );
 
