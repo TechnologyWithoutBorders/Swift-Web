@@ -566,7 +566,24 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                     children: [
                                       device.orgUnit != null ? Text(device.orgUnit!) : const SizedBox.shrink(),
                                       Tooltip(message: "show/download barcode", child: TextButton(child: const Icon(Icons.qr_code), onPressed: () => _showBarcode(deviceInfo))),
-                                      Tooltip(message: "edit device", child: TextButton(child: const Icon(Icons.edit), onPressed: () => _editDevice(deviceInfo))),
+                                      Tooltip(message: "edit device", child: TextButton(child: const Icon(Icons.edit), onPressed: () => _editDevice(deviceInfo).then((modifiedDeviceInfo) {
+                                        if(modifiedDeviceInfo != null) {
+                                          ShortDeviceInfo modifiedDevice = ShortDeviceInfo(device: modifiedDeviceInfo.device, report: deviceInfo.report, imageData: deviceInfo.imageData);
+
+                                          final devicesIndex = _devices.indexWhere((deviceInfo) => deviceInfo.device.id == modifiedDevice.device.id);
+                                          final assignedDevicesIndex = _assignedDevices.indexWhere((deviceInfo) => deviceInfo.device.id == modifiedDevice.device.id);
+                                          final prefilteredDevicesIndex = _preFilteredDevices.indexWhere((deviceInfo) => deviceInfo.device.id == modifiedDevice.device.id);
+                                          final displayedDevicesIndex = _displayedDevices.indexWhere((deviceInfo) => deviceInfo.device.id == modifiedDevice.device.id);
+
+                                          setState(() {
+                                            if(devicesIndex >= 0) _devices[devicesIndex] = modifiedDevice;
+                                            if(assignedDevicesIndex >= 0) _assignedDevices[assignedDevicesIndex] = modifiedDevice;
+                                            if(prefilteredDevicesIndex >= 0) _preFilteredDevices[prefilteredDevicesIndex] = modifiedDevice;
+                                            if(displayedDevicesIndex >= 0) _displayedDevices[displayedDevicesIndex] = modifiedDevice;
+                                            if(_selectedDeviceInfo != null && _selectedDeviceInfo!.device.id == modifiedDeviceInfo.device.id) _selectedDeviceInfo = modifiedDeviceInfo; 
+                                          });
+                                        }
+                                      }))),
                                       Tooltip(message: "delete device", child: TextButton(child: const Icon(Icons.delete, color: Colors.red), onPressed: () => _deleteDevice(deviceInfo)))
                                     ],
                                   ),
