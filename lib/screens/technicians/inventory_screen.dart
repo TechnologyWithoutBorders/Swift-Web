@@ -487,13 +487,16 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   ),
                   Expanded(child: _selectedDeviceInfo != null ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(flex: 3, child: _selectedDeviceInfo!.imageData != null && _selectedDeviceInfo!.imageData!.isNotEmpty ? Image.memory(base64Decode(_selectedDeviceInfo!.imageData!)) : const Text("no image available")),
                           Expanded(flex: 2, child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               SelectableText("${_selectedDeviceInfo!.device.manufacturer} ${_selectedDeviceInfo!.device.model}", style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                               _selectedDeviceInfo!.device.orgUnit != null ? Text(_selectedDeviceInfo!.device.orgUnit!, style: const TextStyle(fontSize: 25)) : const Text(""),
@@ -501,11 +504,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
                               Text("Maintenance interval: ${_selectedDeviceInfo!.device.maintenanceInterval/4} months"),
                             ]
                           )),
-                          Expanded(flex: 1, child: Center(child: QrImageView(
+                          Expanded(flex: 1, child: QrImageView(
                             data: _selectedDeviceInfo!.device.id.toString(),
                             version: QrVersions.auto,
                             size: 100.0,
-                          ))),
+                          )),
                         ]
                       )),
                       const SizedBox(height: 10),
