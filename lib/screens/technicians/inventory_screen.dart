@@ -11,6 +11,7 @@ import 'package:teog_swift/utilities/hospital_device.dart';
 import 'package:teog_swift/utilities/constants.dart';
 
 import 'package:teog_swift/utilities/network_functions.dart' as comm;
+import 'package:teog_swift/utilities/preference_manager.dart' as prefs;
 import 'package:teog_swift/utilities/device_info.dart';
 import 'package:teog_swift/utilities/short_device_info.dart';
 import 'package:teog_swift/utilities/report.dart';
@@ -324,20 +325,26 @@ class _InventoryScreenState extends State<InventoryScreen> {
   @override
   Widget build(BuildContext context) {
     List<Widget> templateButtons = [
-      ElevatedButton(
-        onPressed: () => _showAllDevices(),
-        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterState == filterNone ? const Color(Constants.teogBlue) : Colors.blueGrey)),
-        child: const Text("All"),
+      Tooltip(
+        message: "show all devices",
+        child: ElevatedButton(
+          onPressed: () => _showAllDevices(),
+          style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterState == filterNone ? const Color(Constants.teogBlue) : Colors.blueGrey)),
+          child: const Text("All"),
+        )
       ),
     ];
 
     for(int i = 0; i < DeviceState.names.length; i++) {
-      OutlinedButton stateButton = OutlinedButton(
-        onPressed: () => _filterByState(i),
-        style: _filterState == i ? OutlinedButton.styleFrom(
-          side: const BorderSide(color: Color(Constants.teogBlue)),
-        ) : OutlinedButton.styleFrom(),
-        child: Icon(DeviceState.getIconData(i), color: DeviceState.getColor(i)),
+      Tooltip stateButton = Tooltip(
+        message: DeviceState.getStateString(i),
+        child: OutlinedButton(
+          onPressed: () => _filterByState(i),
+          style: _filterState == i ? OutlinedButton.styleFrom(
+            side: const BorderSide(color: Color(Constants.teogBlue)),
+          ) : OutlinedButton.styleFrom(),
+          child: Icon(DeviceState.getIconData(i), color: DeviceState.getColor(i)),
+        )
       );
 
       templateButtons.add(stateButton);
@@ -353,7 +360,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
-                    flex: 3,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -439,7 +445,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       device.orgUnit != null ? Text(device.orgUnit!) : const SizedBox.shrink(),
-                                      TextButton(child: const Icon(Icons.delete, color: Colors.red), onPressed: () => _deleteDevice(deviceInfo))
+                                      Tooltip(message: "delete device", child: TextButton(child: const Icon(Icons.delete, color: Colors.red), onPressed: () => _deleteDevice(deviceInfo)))
                                     ],
                                   ),
                                   onTap: () => {
@@ -479,32 +485,37 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       ]
                     )
                   ),
-                  Expanded(flex: 2, child: _selectedDeviceInfo != null ? Column(
+                  Expanded(child: _selectedDeviceInfo != null ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Row(
+                      Expanded(child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Column(
+                          Expanded(flex: 3, child: _selectedDeviceInfo!.imageData != null && _selectedDeviceInfo!.imageData!.isNotEmpty ? Image.memory(base64Decode(_selectedDeviceInfo!.imageData!)) : const Text("no image available")),
+                          Expanded(flex: 2, child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SelectableText("${_selectedDeviceInfo!.device.manufacturer} ${_selectedDeviceInfo!.device.model}", style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                               _selectedDeviceInfo!.device.orgUnit != null ? Text(_selectedDeviceInfo!.device.orgUnit!, style: const TextStyle(fontSize: 25)) : const Text(""),
                               SelectableText("Serial number: ${_selectedDeviceInfo!.device.serialNumber}"),
                               Text("Maintenance interval: ${_selectedDeviceInfo!.device.maintenanceInterval/4} months"),
                             ]
-                          ),
-                          const SizedBox(width: 25),
-                          QrImageView(
+                          )),
+                          Expanded(flex: 1, child: Center(child: QrImageView(
                             data: _selectedDeviceInfo!.device.id.toString(),
                             version: QrVersions.auto,
                             size: 100.0,
-                          ),
+                          ))),
                         ]
-                      ),
+                      )),
                       const SizedBox(height: 10),
-                      _selectedDeviceInfo!.imageData != null && _selectedDeviceInfo!.imageData!.isNotEmpty ? Expanded(child: Image.memory(base64Decode(_selectedDeviceInfo!.imageData!))) : const Text("no image available"),
-                      Expanded(child: ReportHistoryScreen(deviceInfo: _selectedDeviceInfo!)),
-                      Expanded(child: DocumentScreen(deviceInfo: _selectedDeviceInfo!))
+                      Expanded(flex: 2, child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(child: ReportHistoryScreen(deviceInfo: _selectedDeviceInfo!)),
+                          Expanded(child: DocumentScreen(deviceInfo: _selectedDeviceInfo!))
+                        ]
+                      )),
                     ]
                   ) : const Center())
                 ]
@@ -527,6 +538,19 @@ class ReportHistoryScreen extends StatefulWidget {
 }
 
 class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
+  final _scrollController = ScrollController();
+  int? _userId;
+
+  @override
+  void initState() {
+    super.initState();
+
+    prefs.getUser().then((userId) => {
+      setState(() {
+        _userId = userId;
+      })
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -550,6 +574,60 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
               ]
             )
           )
+        ),
+        Flexible(
+          child: Container(
+            color: Colors.grey[200],
+            child: Scrollbar(
+              controller: _scrollController,
+              child: ListView.separated(
+                controller: _scrollController,
+                itemCount: reports.length,
+                itemBuilder: (BuildContext context, int index) {
+                  DetailedReport report = reports![index];
+                  // Flutter does not support date formatting without libraries
+                  String dateStamp = report.created.toString().substring(0, report.created.toString().length-7);
+
+                  return Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(dateStamp, textAlign: report.authorId == _userId ? TextAlign.right : TextAlign.left),
+                        Card(
+                          color: report.authorId == _userId ? const Color(Constants.teogBlueLighter) : Colors.white,
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(child: Text(report.authorId == _userId ? "You:" : "${report.author}:")),
+                                    Icon(DeviceState.getIconData(report.currentState),
+                                      color: DeviceState.getColor(report.currentState)
+                                    )
+                                  ]
+                                ),
+                                Text(report.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                Text(report.description)
+                              ]
+                            )
+                          )
+                        )
+                      ]
+                    )
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) => Container(),
+              ),
+            ),
+          )
+        ),
+        const SizedBox(height: 10,),
+        ElevatedButton(
+          child: const Text('Create report'),
+          onPressed: () => {}
         ),
       ]
     );
@@ -641,7 +719,9 @@ class _DocumentScreenState extends State<DocumentScreen> {
 
     return Column(
       children: [
-        _documents.isNotEmpty ? Flexible(
+        const Text("Available Documents:", style: TextStyle(fontSize: 25)),
+        const SizedBox(height: 10),
+        _documents.isNotEmpty ? Expanded(
           child: Scrollbar(
             controller: _scrollController,
             child: ListView.separated(
