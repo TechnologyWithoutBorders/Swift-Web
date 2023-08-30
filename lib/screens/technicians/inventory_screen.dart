@@ -21,6 +21,7 @@ import 'package:teog_swift/utilities/message_exception.dart';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 class InventoryScreen extends StatefulWidget {
   final User user;
@@ -317,6 +318,94 @@ class _InventoryScreenState extends State<InventoryScreen> {
     );
   }
 
+  void _editDevice(ShortDeviceInfo deviceInfo) {
+    HospitalDevice device = deviceInfo.device;
+
+    TextEditingController typeController = TextEditingController(text: device.type);
+    TextEditingController manufacturerController = TextEditingController(text: device.manufacturer);
+    TextEditingController modelController = TextEditingController(text: device.model);
+    int maintenanceInterval = (device.maintenanceInterval/4).ceil();
+
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: const EdgeInsets.all(16.0),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    controller: typeController,
+                    decoration: const InputDecoration(
+                      labelText: 'Type'),
+                  ),
+                  TextField(
+                    controller: manufacturerController,
+                    decoration: const InputDecoration(
+                      labelText: 'Manufacturer'),
+                  ),
+                  TextField(
+                    controller: modelController,
+                    decoration: const InputDecoration(
+                      labelText: 'Model'),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text("Maintenance interval (months):"),
+                  NumberPicker(
+                    minValue: 1,
+                    maxValue: 24,
+                    value: maintenanceInterval,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.black26),
+                    ),
+                    onChanged: (value) => {
+                      setState(() {
+                        maintenanceInterval = value;
+                      })
+                    }
+                  )
+                ],
+              );
+            }
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.pop(context);
+
+                  typeController.dispose();
+                  manufacturerController.dispose();
+                  modelController.dispose();
+                }),
+            ElevatedButton(
+                child: const Text('Save'),
+                onPressed: () {
+                  String type = typeController.text;
+                  String manufacturer = manufacturerController.text;
+                  String model = modelController.text;
+
+                  comm.editDevice(
+                    HospitalDevice(id: device.id, type: type, manufacturer: manufacturer, model: model, serialNumber: "", orgUnitId: device.orgUnitId, orgUnit: device.orgUnit, maintenanceInterval: maintenanceInterval*4)).then((modifiedDeviceInfo) {
+                    
+                    //_updateDeviceInfo(modifiedDeviceInfo);
+                  });
+
+                  Navigator.pop(context);
+
+                  typeController.dispose();
+                  manufacturerController.dispose();
+                  modelController.dispose();
+                })
+          ],
+        );
+      }
+    );
+  }
+
   void _deleteDevice(ShortDeviceInfo deviceInfo) {
     HospitalDevice device = deviceInfo.device;
 
@@ -478,7 +567,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                     children: [
                                       device.orgUnit != null ? Text(device.orgUnit!) : const SizedBox.shrink(),
                                       Tooltip(message: "show/download barcode", child: TextButton(child: const Icon(Icons.qr_code), onPressed: () => _showBarcode(deviceInfo))),
-                                      Tooltip(message: "edit device", child: TextButton(child: const Icon(Icons.edit), onPressed: () => _deleteDevice(deviceInfo))),
+                                      Tooltip(message: "edit device", child: TextButton(child: const Icon(Icons.edit), onPressed: () => _editDevice(deviceInfo))),
                                       Tooltip(message: "delete device", child: TextButton(child: const Icon(Icons.delete, color: Colors.red), onPressed: () => _deleteDevice(deviceInfo)))
                                     ],
                                   ),
