@@ -11,10 +11,10 @@ import 'package:teog_swift/utilities/hospital_device.dart';
 import 'package:teog_swift/utilities/constants.dart';
 
 import 'package:teog_swift/utilities/network_functions.dart' as comm;
-import 'package:teog_swift/utilities/preference_manager.dart' as prefs;
 import 'package:teog_swift/utilities/device_info.dart';
 import 'package:teog_swift/utilities/short_device_info.dart';
 import 'package:teog_swift/utilities/report.dart';
+import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/detailed_report.dart';
 import 'package:teog_swift/utilities/device_state.dart';
 import 'package:teog_swift/utilities/message_exception.dart';
@@ -23,7 +23,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class InventoryScreen extends StatefulWidget {
-  const InventoryScreen({Key? key}) : super(key: key);
+  final User user;
+
+  const InventoryScreen({Key? key, required this.user}) : super(key: key);
 
   @override
   State<InventoryScreen> createState() => _InventoryScreenState();
@@ -515,7 +517,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       Expanded(flex: 2, child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Expanded(child: ReportHistoryScreen(deviceInfo: _selectedDeviceInfo!)),
+                          Expanded(child: ReportHistoryScreen(deviceInfo: _selectedDeviceInfo!, user: widget.user)),
                           Expanded(child: DocumentScreen(deviceInfo: _selectedDeviceInfo!))
                         ]
                       )),
@@ -533,8 +535,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
 class ReportHistoryScreen extends StatefulWidget {
   final DeviceInfo deviceInfo;
+  final User user;
 
-  const ReportHistoryScreen({Key? key, required this.deviceInfo}) : super(key: key);
+  const ReportHistoryScreen({Key? key, required this.deviceInfo, required this.user}) : super(key: key);
 
   @override
   State<ReportHistoryScreen> createState() => _ReportHistoryScreenState();
@@ -542,18 +545,6 @@ class ReportHistoryScreen extends StatefulWidget {
 
 class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
   final _scrollController = ScrollController();
-  int? _userId;
-
-  @override
-  void initState() {
-    super.initState();
-
-    prefs.getUser().then((userId) => {
-      setState(() {
-        _userId = userId;
-      })
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -596,9 +587,9 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text(dateStamp, textAlign: report.authorId == _userId ? TextAlign.right : TextAlign.left),
+                        Text(dateStamp, textAlign: report.authorId == widget.user.id ? TextAlign.right : TextAlign.left),
                         Card(
-                          color: report.authorId == _userId ? const Color(Constants.teogBlueLighter) : Colors.white,
+                          color: report.authorId == widget.user.id ? const Color(Constants.teogBlueLighter) : Colors.white,
                           child: Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: Column(
@@ -606,7 +597,7 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
                               children: [
                                 Row(
                                   children: [
-                                    Expanded(child: Text(report.authorId == _userId ? "You:" : "${report.author}:")),
+                                    Expanded(child: Text(report.authorId == widget.user.id ? "You:" : "${report.author}:")),
                                     Icon(DeviceState.getIconData(report.currentState),
                                       color: DeviceState.getColor(report.currentState)
                                     )
@@ -686,6 +677,10 @@ class _DocumentScreenState extends State<DocumentScreen> {
   }
 
   void _retrieveDocuments() {
+    setState(() {
+      _documents.clear();
+    });
+
     comm.retrieveDocuments(widget.deviceInfo.device.manufacturer, widget.deviceInfo.device.model).then((documents) {
       setState(() { _documents = documents; });
     }).onError<MessageException>((error, stackTrace) {
@@ -705,6 +700,15 @@ class _DocumentScreenState extends State<DocumentScreen> {
     super.initState();
 
     _retrieveDocuments();
+  }
+
+   @override
+  void didUpdateWidget(DocumentScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if(widget.deviceInfo.device.id != oldWidget.deviceInfo.device.id) {
+      _retrieveDocuments();
+    }
   }
 
   @override
