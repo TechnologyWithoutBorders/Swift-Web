@@ -523,7 +523,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Expanded(child: Row(
+                      Expanded(flex: 2, child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -541,7 +541,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         ]
                       )),
                       const SizedBox(height: 10),
-                      Expanded(flex: 2, child: Row(
+                      Expanded(flex: 3, child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Expanded(child: ReportHistoryScreen(deviceInfo: _selectedDeviceInfo!, user: widget.user)),
