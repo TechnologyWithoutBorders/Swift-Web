@@ -443,7 +443,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                           )
                         ),
                         const SizedBox(height: 15),
-                        Text("Number of devices matching filter: ${_displayedDevices.length}", style: const TextStyle(fontSize: 20)),
+                        Text("${_displayedDevices.length} devices match the filter.", style: const TextStyle(fontSize: 20)),
                         Flexible(child: Padding(padding: const EdgeInsets.all(10.0),
                           child: Scrollbar(
                             controller: _scrollController,
