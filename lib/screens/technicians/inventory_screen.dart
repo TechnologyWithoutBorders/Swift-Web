@@ -287,6 +287,36 @@ class _InventoryScreenState extends State<InventoryScreen> {
     );
   }
 
+  void _showBarcode(ShortDeviceInfo deviceInfo) async {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Barcode'),
+          content: SizedBox(
+            width: 200,
+            height: 200,
+            child: Center(
+              child: QrImageView(
+                data: deviceInfo.device.id.toString(),
+                version: QrVersions.auto,
+                size: 150.0
+              )
+            )
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _deleteDevice(ShortDeviceInfo deviceInfo) {
     HospitalDevice device = deviceInfo.device;
 
@@ -447,6 +477,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       device.orgUnit != null ? Text(device.orgUnit!) : const SizedBox.shrink(),
+                                      Tooltip(message: "show/download barcode", child: TextButton(child: const Icon(Icons.qr_code), onPressed: () => _showBarcode(deviceInfo))),
+                                      Tooltip(message: "edit device", child: TextButton(child: const Icon(Icons.edit), onPressed: () => _deleteDevice(deviceInfo))),
                                       Tooltip(message: "delete device", child: TextButton(child: const Icon(Icons.delete, color: Colors.red), onPressed: () => _deleteDevice(deviceInfo)))
                                     ],
                                   ),
@@ -495,8 +527,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Expanded(flex: 3, child: _selectedDeviceInfo!.imageData != null && _selectedDeviceInfo!.imageData!.isNotEmpty ? Image.memory(base64Decode(_selectedDeviceInfo!.imageData!)) : const Text("no image available")),
-                          Expanded(flex: 2, child: Column(
+                          Expanded(child: _selectedDeviceInfo!.imageData != null && _selectedDeviceInfo!.imageData!.isNotEmpty ? Image.memory(base64Decode(_selectedDeviceInfo!.imageData!)) : const Text("no image available")),
+                          Expanded(child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -505,11 +537,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
                               SelectableText("Serial number: ${_selectedDeviceInfo!.device.serialNumber}"),
                               Text("Maintenance interval: ${_selectedDeviceInfo!.device.maintenanceInterval/4} months"),
                             ]
-                          )),
-                          Expanded(flex: 1, child: QrImageView(
-                            data: _selectedDeviceInfo!.device.id.toString(),
-                            version: QrVersions.auto,
-                            size: 100.0,
                           )),
                         ]
                       )),
