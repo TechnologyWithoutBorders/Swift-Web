@@ -14,6 +14,7 @@ import 'package:teog_swift/utilities/network_functions.dart' as comm;
 import 'package:teog_swift/utilities/device_info.dart';
 import 'package:teog_swift/utilities/short_device_info.dart';
 import 'package:teog_swift/utilities/report.dart';
+import 'package:teog_swift/utilities/detailed_report.dart';
 import 'package:teog_swift/utilities/device_state.dart';
 import 'package:teog_swift/utilities/message_exception.dart';
 
@@ -417,6 +418,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                 Report report = deviceInfo.report;
 
                                 return ListTile(
+                                  selected: _selectedDeviceInfo != null && _selectedDeviceInfo!.device.id == device.id,
+                                  selectedColor: Colors.black,
+                                  selectedTileColor: const Color(Constants.teogBlueLighter),
                                   leading: Container(width: 40, height: 40, color: DeviceState.getColor(report.currentState),
                                     child: Padding(padding: const EdgeInsets.all(6.0),
                                       child: Center(child: (
@@ -478,6 +482,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       _selectedDeviceInfo!.imageData != null && _selectedDeviceInfo!.imageData!.isNotEmpty ? Expanded(child: Image.memory(base64Decode(_selectedDeviceInfo!.imageData!))) : const Text("no image available"),
+                      Expanded(child: ReportHistoryScreen(deviceInfo: _selectedDeviceInfo!)),
                       Expanded(child: DocumentScreen(deviceInfo: _selectedDeviceInfo!))
                     ]
                   ) : const Center())
@@ -487,6 +492,45 @@ class _InventoryScreenState extends State<InventoryScreen> {
           )     
         )
       )
+    );
+  }
+}
+
+class ReportHistoryScreen extends StatefulWidget {
+  final DeviceInfo deviceInfo;
+
+  const ReportHistoryScreen({Key? key, required this.deviceInfo}) : super(key: key);
+
+  @override
+  State<ReportHistoryScreen> createState() => _ReportHistoryScreenState();
+}
+
+class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
+
+  @override
+  Widget build(BuildContext context) {
+    List<DetailedReport> reports = widget.deviceInfo.reports;
+    DetailedReport latestReport = reports.last;
+
+    return Column(
+      children: [
+        Container(color: DeviceState.getColor(latestReport.currentState),
+          child: Padding(padding: const EdgeInsets.all(7.0),
+            child: Row(
+              children: [
+                Icon(DeviceState.getIconData(latestReport.currentState)),
+                const SizedBox(width: 5),
+                Text(DeviceState.getStateString(latestReport.currentState),
+                  style: const TextStyle(fontSize: 25)
+                ),
+                const Spacer(),
+                Text("${DateTime.now().difference(latestReport.created).inDays} days",
+                  style: const TextStyle(fontSize: 25))
+              ]
+            )
+          )
+        ),
+      ]
     );
   }
 }
