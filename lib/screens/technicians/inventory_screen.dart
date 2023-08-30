@@ -318,7 +318,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
     );
   }
 
-  void _editDevice(ShortDeviceInfo deviceInfo) {
+  Future<DeviceInfo?> _editDevice(ShortDeviceInfo deviceInfo) {
     HospitalDevice device = deviceInfo.device;
 
     TextEditingController typeController = TextEditingController(text: device.type);
@@ -326,7 +326,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
     TextEditingController modelController = TextEditingController(text: device.model);
     int maintenanceInterval = (device.maintenanceInterval/4).ceil();
 
-    showDialog<String>(
+    return showDialog<DeviceInfo?>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -382,24 +382,23 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   modelController.dispose();
                 }),
             ElevatedButton(
-                child: const Text('Save'),
-                onPressed: () {
-                  String type = typeController.text;
-                  String manufacturer = manufacturerController.text;
-                  String model = modelController.text;
+              child: const Text('Save'),
+              onPressed: () {
+                String type = typeController.text;
+                String manufacturer = manufacturerController.text;
+                String model = modelController.text;
 
-                  comm.editDevice(
-                    HospitalDevice(id: device.id, type: type, manufacturer: manufacturer, model: model, serialNumber: "", orgUnitId: device.orgUnitId, orgUnit: device.orgUnit, maintenanceInterval: maintenanceInterval*4)).then((modifiedDeviceInfo) {
-                    
-                    //_updateDeviceInfo(modifiedDeviceInfo);
-                  });
+                comm.editDevice(
+                  HospitalDevice(id: device.id, type: type, manufacturer: manufacturer, model: model, serialNumber: "", orgUnitId: device.orgUnitId, orgUnit: device.orgUnit, maintenanceInterval: maintenanceInterval*4)).then((modifiedDeviceInfo) {
 
-                  Navigator.pop(context);
+                  Navigator.pop(context, modifiedDeviceInfo);
 
                   typeController.dispose();
                   manufacturerController.dispose();
                   modelController.dispose();
-                })
+                });
+              }
+            )
           ],
         );
       }
