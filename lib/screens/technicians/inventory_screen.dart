@@ -422,7 +422,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                 });
                               }, 
                             ): Container(),
-                            FilledButton(onPressed: () => _filterDepartment(), child: const Text("select department...")),
+                            FilledButton(onPressed: () => _filterDepartment(), child: const Text("Select department...")),
                           ]
                         ),
                         ButtonBar(
@@ -437,7 +437,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                             controller: _filterTextController,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
-                              labelText: "filter by searching...",
+                              labelText: "Filter by searching...",
                             ),
                             onChanged: (text) => _filter(text),
                           )
@@ -746,7 +746,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
       uploadWidget = const CircularProgressIndicator(value: null);
     } else {
       uploadWidget = ElevatedButton(
-        child: const Text("upload documents"),
+        child: const Text("Upload documents"),
         onPressed: () => _uploadDocuments(),
       );
     }
