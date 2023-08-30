@@ -587,7 +587,7 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
                 controller: _scrollController,
                 itemCount: reports.length,
                 itemBuilder: (BuildContext context, int index) {
-                  DetailedReport report = reports![index];
+                  DetailedReport report = reports[index];
                   // Flutter does not support date formatting without libraries
                   String dateStamp = report.created.toString().substring(0, report.created.toString().length-7);
 
