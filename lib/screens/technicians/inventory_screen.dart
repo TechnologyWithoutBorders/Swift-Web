@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:csv/csv.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
@@ -350,6 +351,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
+                    flex: 2,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -472,7 +474,13 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       ]
                     )
                   ),
-                  Expanded(child: _selectedDeviceInfo != null ? DocumentScreen(deviceInfo: _selectedDeviceInfo!) : const Center())
+                  Expanded(flex: 1, child: _selectedDeviceInfo != null ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _selectedDeviceInfo!.imageData != null && _selectedDeviceInfo!.imageData!.isNotEmpty ? Expanded(child: Image.memory(base64Decode(_selectedDeviceInfo!.imageData!))) : const Text("no image available"),
+                      Expanded(child: DocumentScreen(deviceInfo: _selectedDeviceInfo!))
+                    ]
+                  ) : const Center())
                 ]
               ),
             ),
