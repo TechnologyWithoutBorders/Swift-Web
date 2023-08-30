@@ -19,6 +19,7 @@ import 'package:teog_swift/utilities/device_state.dart';
 import 'package:teog_swift/utilities/message_exception.dart';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class InventoryScreen extends StatefulWidget {
   const InventoryScreen({Key? key}) : super(key: key);
@@ -352,7 +353,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
-                    flex: 2,
+                    flex: 3,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -478,9 +479,29 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       ]
                     )
                   ),
-                  Expanded(flex: 1, child: _selectedDeviceInfo != null ? Column(
+                  Expanded(flex: 2, child: _selectedDeviceInfo != null ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            children: [
+                              SelectableText("${_selectedDeviceInfo!.device.manufacturer} ${_selectedDeviceInfo!.device.model}", style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                              _selectedDeviceInfo!.device.orgUnit != null ? Text(_selectedDeviceInfo!.device.orgUnit!, style: const TextStyle(fontSize: 25)) : const Text(""),
+                              SelectableText("Serial number: ${_selectedDeviceInfo!.device.serialNumber}"),
+                              Text("Maintenance interval: ${_selectedDeviceInfo!.device.maintenanceInterval/4} months"),
+                            ]
+                          ),
+                          const SizedBox(width: 25),
+                          QrImageView(
+                            data: _selectedDeviceInfo!.device.id.toString(),
+                            version: QrVersions.auto,
+                            size: 100.0,
+                          ),
+                        ]
+                      ),
+                      const SizedBox(height: 10),
                       _selectedDeviceInfo!.imageData != null && _selectedDeviceInfo!.imageData!.isNotEmpty ? Expanded(child: Image.memory(base64Decode(_selectedDeviceInfo!.imageData!))) : const Text("no image available"),
                       Expanded(child: ReportHistoryScreen(deviceInfo: _selectedDeviceInfo!)),
                       Expanded(child: DocumentScreen(deviceInfo: _selectedDeviceInfo!))
