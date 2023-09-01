@@ -98,11 +98,13 @@ class _TabScreenState extends State<TabScreen> {
             child: Card(
               child: Column(
                 children: [
-                  Text("Please select your name in the list:",
-                        style: Theme.of(context)
-                          .textTheme
-                          .headlineMedium),
-                  const SizedBox(height: 15),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text("Please select your name in the list:",
+                      style: Theme.of(context)
+                        .textTheme
+                        .headlineSmall),
+                  ),
                   Flexible(
                     child: _users != null ? Scrollbar(
                       controller: _scrollController,
