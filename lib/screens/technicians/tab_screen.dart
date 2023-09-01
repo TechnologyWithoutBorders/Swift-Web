@@ -98,7 +98,7 @@ class _TabScreenState extends State<TabScreen> {
             child: Card(
               child: Column(
                 children: [
-                  Text("Please select your user:",
+                  Text("Please select your name in the list:",
                         style: Theme.of(context)
                           .textTheme
                           .headlineMedium),
