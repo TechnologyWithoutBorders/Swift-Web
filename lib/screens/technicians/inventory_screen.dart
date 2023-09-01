@@ -307,12 +307,13 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      QrImageView(
+                    Text(deviceInfo.device.type),
+                    QrImageView(
                       data: deviceInfo.device.id.toString(),
                       version: QrVersions.auto,
                       size: 150.0
                     ),
-                    Text("Swift ID: ${deviceInfo.device.id.toString()}")
+                    Text(deviceInfo.device.id.toString())
                   ]
                 )
               )
@@ -326,7 +327,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   MimeType type = MimeType.png;
 
                   FileSaver.instance.saveFile(
-                    name: "barcode_${deviceInfo.device.id}",
+                    name: "barcode_${deviceInfo.device.type.replaceAll(" ", "_")}_${deviceInfo.device.id}",
                     bytes: data,
                     ext: "png",
                     mimeType: type);
