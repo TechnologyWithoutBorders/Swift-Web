@@ -22,6 +22,7 @@ import 'package:teog_swift/utilities/message_exception.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:screenshot/screenshot.dart';
 
 class InventoryScreen extends StatefulWidget {
   final User user;
@@ -272,7 +273,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
     MimeType type = MimeType.csv;
 
-    await FileSaver.instance.saveFile(
+    FileSaver.instance.saveFile(
       name: "inventory",
       bytes: data,
       ext: "csv",
@@ -289,6 +290,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
   }
 
   void _showBarcode(ShortDeviceInfo deviceInfo) async {
+    ScreenshotController screenshotController = ScreenshotController();
+
     showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -297,15 +300,40 @@ class _InventoryScreenState extends State<InventoryScreen> {
           content: SizedBox(
             width: 200,
             height: 200,
-            child: Center(
-              child: QrImageView(
-                data: deviceInfo.device.id.toString(),
-                version: QrVersions.auto,
-                size: 150.0
+            child: Screenshot(
+              controller: screenshotController,
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      QrImageView(
+                      data: deviceInfo.device.id.toString(),
+                      version: QrVersions.auto,
+                      size: 150.0
+                    ),
+                    Text("Swift ID: ${deviceInfo.device.id.toString()}")
+                  ]
+                )
               )
             )
           ),
           actions: <Widget>[
+            TextButton(
+              child: const Text('Download'),
+              onPressed: () async {
+                screenshotController.capture().then((data) {
+                  MimeType type = MimeType.png;
+
+                  FileSaver.instance.saveFile(
+                    name: "barcode_${deviceInfo.device.id}",
+                    bytes: data,
+                    ext: "png",
+                    mimeType: type);
+                  }
+                );
+              },
+            ),
             TextButton(
               child: const Text('Close'),
               onPressed: () {
