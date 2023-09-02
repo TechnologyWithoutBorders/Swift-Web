@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:teog_swift/screens/organization_filter_view.dart';
 import 'package:teog_swift/utilities/country.dart';
@@ -509,6 +510,33 @@ Future<Hospital> getHospitalInfo() async {
     
     if(swiftResponse.responseCode == 0) {
       return Hospital.fromJson(swiftResponse.data);
+    } else {
+      throw MessageException(swiftResponse.data);
+    }
+  } else {
+    throw MessageException(Constants.genericErrorMessage);
+  }
+}
+
+Future<Image?> getHospitalImage() async {
+  final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
+
+  final response = await http.post(
+    uri,
+    headers: _headers,
+    body: jsonEncode(await _generateParameterMap(action: DataAction.getHospitalImage, authentication: true),
+    )
+  );
+
+  if(response.statusCode == 200) {
+    SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
+    
+    if(swiftResponse.responseCode == 0) {
+      if(swiftResponse.data != null && swiftResponse.data.isNotEmpty) {
+        return Image.memory(base64Decode(swiftResponse.data));
+      } else {
+        return null;
+      }
     } else {
       throw MessageException(swiftResponse.data);
     }
