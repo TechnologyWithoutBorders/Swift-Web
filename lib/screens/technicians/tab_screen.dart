@@ -33,6 +33,8 @@ class _TabScreenState extends State<TabScreen> {
   List<User>? _users;
   User? _user;
 
+  Image? _hospitalImage;
+
   void _logout(BuildContext context) async {
     await prefs.logout();
     Navigator.pushNamedAndRemoveUntil(context, SwiftApp.route, (r) => false);
@@ -88,6 +90,14 @@ class _TabScreenState extends State<TabScreen> {
   @override
   Widget build(BuildContext context) {
     if(_user == null) {
+      if(_hospitalImage == null) {
+        comm.getHospitalImage().then((image) {
+          setState(() {
+            _hospitalImage = image;
+          });
+        });
+      }
+
       return Scaffold(
         backgroundColor: Colors.grey[200],
         body: Container(
@@ -113,7 +123,7 @@ class _TabScreenState extends State<TabScreen> {
                               style: Theme.of(context).textTheme.headlineMedium
                               ) : const Text("loading..."),
                           ),
-                          const Flexible(child: Image(image: AssetImage('graphics/dhulikhel.jpg')))
+                          _hospitalImage != null ? Flexible(child: _hospitalImage!) : const Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator()))
                         ]
                       )
                     )
