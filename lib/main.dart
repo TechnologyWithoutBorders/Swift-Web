@@ -35,6 +35,7 @@ class SwiftApp extends StatelessWidget {
         TabScreen.route: (context) => const TabScreen(),
       },
       theme: ThemeData(
+        useMaterial3: false,
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(Constants.teogBlue),
         ),
