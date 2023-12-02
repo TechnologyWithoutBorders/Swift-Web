@@ -9,13 +9,21 @@ import 'package:teog_swift/utilities/hospital_device.dart';
 import 'package:teog_swift/utilities/constants.dart';
 
 import 'package:teog_swift/utilities/network_functions.dart' as comm;
+import 'package:teog_swift/utilities/device_info.dart';
 import 'package:teog_swift/utilities/short_device_info.dart';
 import 'package:teog_swift/utilities/report.dart';
+import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/device_state.dart';
 import 'package:teog_swift/utilities/message_exception.dart';
 
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:numberpicker/numberpicker.dart';
+import 'package:screenshot/screenshot.dart';
+
 class InventoryScreen extends StatefulWidget {
-  const InventoryScreen({Key? key}) : super(key: key);
+  final User user;
+
+  const InventoryScreen({Key? key, required this.user}) : super(key: key);
 
   @override
   State<InventoryScreen> createState() => _InventoryScreenState();
@@ -37,6 +45,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   DepartmentFilter? _departmentFilter;
   int _filterState = filterNone;
+
+  DeviceInfo? _selectedDeviceInfo;
 
   @override
   void initState() {
@@ -259,7 +269,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
     MimeType type = MimeType.csv;
 
-    await FileSaver.instance.saveFile(
+    FileSaver.instance.saveFile(
       name: "inventory",
       bytes: data,
       ext: "csv",
@@ -271,6 +281,151 @@ class _InventoryScreenState extends State<InventoryScreen> {
       context: context,
       builder: (BuildContext context) {
         return const ReportHistoryPlot();
+      }
+    );
+  }
+
+  void _showBarcode(ShortDeviceInfo deviceInfo) async {
+    ScreenshotController screenshotController = ScreenshotController();
+
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Barcode'),
+          content: SizedBox(
+            width: 200,
+            height: 200,
+            child: Screenshot(
+              controller: screenshotController,
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                    Text(deviceInfo.device.type),
+                    QrImageView(
+                      data: deviceInfo.device.id.toString(),
+                      version: QrVersions.auto,
+                      size: 150.0
+                    ),
+                    Text(deviceInfo.device.id.toString())
+                  ]
+                )
+              )
+            )
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Download'),
+              onPressed: () async {
+                screenshotController.capture().then((data) {
+                  MimeType type = MimeType.png;
+
+                  FileSaver.instance.saveFile(
+                    name: "barcode_${deviceInfo.device.type.replaceAll(" ", "_")}_${deviceInfo.device.id}",
+                    bytes: data,
+                    ext: "png",
+                    mimeType: type);
+                  }
+                );
+              },
+            ),
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<DeviceInfo?> _editDevice(ShortDeviceInfo deviceInfo) {
+    HospitalDevice device = deviceInfo.device;
+
+    TextEditingController typeController = TextEditingController(text: device.type);
+    TextEditingController manufacturerController = TextEditingController(text: device.manufacturer);
+    TextEditingController modelController = TextEditingController(text: device.model);
+    int maintenanceInterval = (device.maintenanceInterval/4).ceil();
+
+    return showDialog<DeviceInfo?>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: const EdgeInsets.all(16.0),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    controller: typeController,
+                    decoration: const InputDecoration(
+                      labelText: 'Type'),
+                  ),
+                  TextField(
+                    controller: manufacturerController,
+                    decoration: const InputDecoration(
+                      labelText: 'Manufacturer'),
+                  ),
+                  TextField(
+                    controller: modelController,
+                    decoration: const InputDecoration(
+                      labelText: 'Model'),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text("Maintenance interval (months):"),
+                  NumberPicker(
+                    minValue: 1,
+                    maxValue: 24,
+                    value: maintenanceInterval,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.black26),
+                    ),
+                    onChanged: (value) => {
+                      setState(() {
+                        maintenanceInterval = value;
+                      })
+                    }
+                  )
+                ],
+              );
+            }
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.pop(context);
+
+                  typeController.dispose();
+                  manufacturerController.dispose();
+                  modelController.dispose();
+                }),
+            ElevatedButton(
+              child: const Text('Save'),
+              onPressed: () {
+                String type = typeController.text;
+                String manufacturer = manufacturerController.text;
+                String model = modelController.text;
+
+                comm.editDevice(
+                  HospitalDevice(id: device.id, type: type, manufacturer: manufacturer, model: model, serialNumber: "", orgUnitId: device.orgUnitId, orgUnit: device.orgUnit, maintenanceInterval: maintenanceInterval*4)).then((modifiedDeviceInfo) {
+
+                  Navigator.pop(context, modifiedDeviceInfo);
+
+                  typeController.dispose();
+                  manufacturerController.dispose();
+                  modelController.dispose();
+                });
+              }
+            )
+          ],
+        );
       }
     );
   }
@@ -315,20 +470,26 @@ class _InventoryScreenState extends State<InventoryScreen> {
   @override
   Widget build(BuildContext context) {
     List<Widget> templateButtons = [
-      ElevatedButton(
-        onPressed: () => _showAllDevices(),
-        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterState == filterNone ? const Color(Constants.teogBlue) : Colors.blueGrey)),
-        child: const Text("All"),
+      Tooltip(
+        message: "show all devices",
+        child: ElevatedButton(
+          onPressed: () => _showAllDevices(),
+          style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterState == filterNone ? const Color(Constants.teogBlue) : Colors.blueGrey)),
+          child: const Text("All"),
+        )
       ),
     ];
 
     for(int i = 0; i < DeviceState.names.length; i++) {
-      OutlinedButton stateButton = OutlinedButton(
-        onPressed: () => _filterByState(i),
-        style: _filterState == i ? OutlinedButton.styleFrom(
-          side: const BorderSide(color: Color(Constants.teogBlue)),
-        ) : OutlinedButton.styleFrom(),
-        child: Icon(DeviceState.getIconData(i), color: DeviceState.getColor(i)),
+      Tooltip stateButton = Tooltip(
+        message: DeviceState.getStateString(i),
+        child: OutlinedButton(
+          onPressed: () => _filterByState(i),
+          style: _filterState == i ? OutlinedButton.styleFrom(
+            side: const BorderSide(color: Color(Constants.teogBlue)),
+          ) : OutlinedButton.styleFrom(),
+          child: Icon(DeviceState.getIconData(i), color: DeviceState.getColor(i)),
+        )
       );
 
       templateButtons.add(stateButton);
@@ -340,120 +501,155 @@ class _InventoryScreenState extends State<InventoryScreen> {
         child: FractionallySizedBox(widthFactor: 0.95, heightFactor: 0.9,
           child: Card(
             child: Padding(padding: const EdgeInsets.all(25.0),
-              child: Column(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ButtonBar(
-                    alignment: MainAxisAlignment.center,
-                    children: [
-                      _departmentFilter != null ? Text("Department: ${_departmentFilter!.parent.name}", style: const TextStyle(fontSize: 25)) : Container(),
-                      _departmentFilter != null ? IconButton(
-                        iconSize: 25,
-                        icon: Icon(Icons.cancel_outlined, color: Colors.red[700]),
-                        tooltip: "clear selection",
-                        onPressed: () {
-                          List<ShortDeviceInfo> assignedDevices = [];
-                          List<ShortDeviceInfo> preFilteredDevices = [];
-                          List<ShortDeviceInfo> displayedDevices = [];
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ButtonBar(
+                          alignment: MainAxisAlignment.center,
+                          children: [
+                            _departmentFilter != null ? Text("Department: ${_departmentFilter!.parent.name}", style: const TextStyle(fontSize: 25)) : Container(),
+                            _departmentFilter != null ? IconButton(
+                              iconSize: 25,
+                              icon: Icon(Icons.cancel_outlined, color: Colors.red[700]),
+                              tooltip: "clear selection",
+                              onPressed: () {
+                                List<ShortDeviceInfo> assignedDevices = [];
+                                List<ShortDeviceInfo> preFilteredDevices = [];
+                                List<ShortDeviceInfo> displayedDevices = [];
 
-                          assignedDevices.addAll(_devices);
-                          preFilteredDevices.addAll(assignedDevices);
-                          displayedDevices.addAll(preFilteredDevices);
-                          
-                          setState(() {
-                            _departmentFilter = null;
-                            _assignedDevices = assignedDevices;
-                            _preFilteredDevices = preFilteredDevices;
-                            _displayedDevices = displayedDevices;
-                            _filterTextController.clear();
-                            _filterState = filterNone;
-                          });
-                        }, 
-                      ): Container(),
-                      FilledButton(onPressed: () => _filterDepartment(), child: const Text("select department...")),
-                    ]
-                  ),
-                  ButtonBar(
-                    alignment: MainAxisAlignment.center,
-                    children: templateButtons,
-                  ),
-                  const SizedBox(height: 5),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child:
-                    TextField(
-                      controller: _filterTextController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "filter by searching...",
-                      ),
-                      onChanged: (text) => _filter(text),
+                                assignedDevices.addAll(_devices);
+                                preFilteredDevices.addAll(assignedDevices);
+                                displayedDevices.addAll(preFilteredDevices);
+                                
+                                setState(() {
+                                  _departmentFilter = null;
+                                  _assignedDevices = assignedDevices;
+                                  _preFilteredDevices = preFilteredDevices;
+                                  _displayedDevices = displayedDevices;
+                                  _filterTextController.clear();
+                                  _filterState = filterNone;
+                                });
+                              }, 
+                            ): Container(),
+                            FilledButton(onPressed: () => _filterDepartment(), child: const Text("Select department...")),
+                          ]
+                        ),
+                        ButtonBar(
+                          alignment: MainAxisAlignment.center,
+                          children: templateButtons,
+                        ),
+                        const SizedBox(height: 5),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          child:
+                          TextField(
+                            controller: _filterTextController,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: "Filter by searching...",
+                            ),
+                            onChanged: (text) => _filter(text),
+                          )
+                        ),
+                        const SizedBox(height: 15),
+                        Text("${_displayedDevices.length} devices match the filter.", style: const TextStyle(fontSize: 20)),
+                        Flexible(child: Padding(padding: const EdgeInsets.all(10.0),
+                          child: Scrollbar(
+                            controller: _scrollController,
+                            child: ListView.separated(
+                              controller: _scrollController,
+                              padding: const EdgeInsets.all(3),
+                              itemCount: _displayedDevices.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                ShortDeviceInfo deviceInfo = _displayedDevices[index];
+                                HospitalDevice device = deviceInfo.device;
+                                Report report = deviceInfo.report;
+
+                                return ListTile(
+                                  selected: _selectedDeviceInfo != null && _selectedDeviceInfo!.device.id == device.id,
+                                  selectedColor: Colors.black,
+                                  selectedTileColor: const Color(Constants.teogBlueLighter),
+                                  leading: Container(width: 40, height: 40, color: DeviceState.getColor(report.currentState),
+                                    child: Padding(padding: const EdgeInsets.all(6.0),
+                                      child: Center(child: (
+                                          Icon(DeviceState.getIconData(report.currentState),
+                                            size: 28,
+                                            color: Colors.grey[900],
+                                          )
+                                        )
+                                      )
+                                    )
+                                  ),
+                                  title: Text(device.type),
+                                  subtitle: Text("${device.manufacturer} ${device.model}"),
+                                  trailing: ButtonBar(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      device.orgUnit != null ? Text(device.orgUnit!) : const SizedBox.shrink(),
+                                      Tooltip(message: "show/download barcode", child: TextButton(child: const Icon(Icons.qr_code), onPressed: () => _showBarcode(deviceInfo))),
+                                      Tooltip(message: "edit device", child: TextButton(child: const Icon(Icons.edit), onPressed: () => _editDevice(deviceInfo).then((modifiedDeviceInfo) {
+                                        if(modifiedDeviceInfo != null) {
+                                          ShortDeviceInfo modifiedDevice = ShortDeviceInfo(device: modifiedDeviceInfo.device, report: deviceInfo.report, imageData: deviceInfo.imageData);
+
+                                          final devicesIndex = _devices.indexWhere((deviceInfo) => deviceInfo.device.id == modifiedDevice.device.id);
+                                          final assignedDevicesIndex = _assignedDevices.indexWhere((deviceInfo) => deviceInfo.device.id == modifiedDevice.device.id);
+                                          final prefilteredDevicesIndex = _preFilteredDevices.indexWhere((deviceInfo) => deviceInfo.device.id == modifiedDevice.device.id);
+                                          final displayedDevicesIndex = _displayedDevices.indexWhere((deviceInfo) => deviceInfo.device.id == modifiedDevice.device.id);
+
+                                          setState(() {
+                                            if(devicesIndex >= 0) _devices[devicesIndex] = modifiedDevice;
+                                            if(assignedDevicesIndex >= 0) _assignedDevices[assignedDevicesIndex] = modifiedDevice;
+                                            if(prefilteredDevicesIndex >= 0) _preFilteredDevices[prefilteredDevicesIndex] = modifiedDevice;
+                                            if(displayedDevicesIndex >= 0) _displayedDevices[displayedDevicesIndex] = modifiedDevice;
+                                            if(_selectedDeviceInfo != null && _selectedDeviceInfo!.device.id == modifiedDeviceInfo.device.id) _selectedDeviceInfo = modifiedDeviceInfo; 
+                                          });
+                                        }
+                                      }))),
+                                      Tooltip(message: "delete device", child: TextButton(child: const Icon(Icons.delete, color: Colors.red), onPressed: () => _deleteDevice(deviceInfo)))
+                                    ],
+                                  ),
+                                  onTap: () => {
+                                    comm.getDeviceInfo(device.id).then((deviceInfo) {
+                                      setState(() {
+                                        _selectedDeviceInfo = deviceInfo;
+                                      });
+                                    }).onError<MessageException>((error, stackTrace) {
+                                      final snackBar = SnackBar(content: Text(error.message));
+                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                    })
+                                  }
+                                );
+                              },
+                              separatorBuilder: (BuildContext context, int index) => const Divider(),
+                            ),
+                          ),
+                        )),
+                        ButtonBar(
+                          alignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () => _csvExportInventory(),
+                              child: const Text("Export current list"),
+                            ),
+                            ElevatedButton(
+                              onPressed: () => _plotHistory(),
+                              child: const Text("Plot history"),
+                            ),
+                            _totalDevices >= 0 ? Text("checking devices for missing documents... $_checkedDevices/$_totalDevices")
+                            : ElevatedButton(
+                              onPressed: () => _checkManuals(),
+                              child: const Text("Get devices with missing documents")
+                            ), 
+                          ],
+                        ),
+                      ]
                     )
                   ),
-                  const SizedBox(height: 15),
-                  Text("Number of devices matching filter: ${_displayedDevices.length}", style: const TextStyle(fontSize: 20)),
-                  Flexible(child: Padding(padding: const EdgeInsets.all(10.0),
-                    child: Scrollbar(
-                      controller: _scrollController,
-                      child: ListView.separated(
-                        controller: _scrollController,
-                        padding: const EdgeInsets.all(3),
-                        itemCount: _displayedDevices.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          ShortDeviceInfo deviceInfo = _displayedDevices[index];
-                          HospitalDevice device = deviceInfo.device;
-                          Report report = deviceInfo.report;
-
-                          return ListTile(
-                            leading: Container(width: 40, height: 40, color: DeviceState.getColor(report.currentState),
-                              child: Padding(padding: const EdgeInsets.all(6.0),
-                                child: Center(child: (
-                                    Icon(DeviceState.getIconData(report.currentState),
-                                      size: 28,
-                                      color: Colors.grey[900],
-                                    )
-                                  )
-                                )
-                              )
-                            ),
-                            title: Text(device.type),
-                            subtitle: Text("${device.manufacturer} ${device.model}"),
-                            trailing: ButtonBar(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                device.orgUnit != null ? Text(device.orgUnit!) : const SizedBox.shrink(),
-                                TextButton(child: const Icon(Icons.delete, color: Colors.red), onPressed: () => _deleteDevice(deviceInfo))
-                              ],
-                            ),
-                            onTap: () => {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: device.id))).then((value) => {
-                                //TODO: Geräte ohne Handbuch zeigen, falls das vorher ausgewählt war
-                              })
-                            }
-                          );
-                        },
-                        separatorBuilder: (BuildContext context, int index) => const Divider(),
-                      ),
-                    ),
-                  )),
-                  ButtonBar(
-                    alignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () => _csvExportInventory(),
-                        child: const Text("Export current list"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () => _plotHistory(),
-                        child: const Text("Plot history"),
-                      ),
-                      _totalDevices >= 0 ? Text("checking devices for missing documents... $_checkedDevices/$_totalDevices")
-                      : ElevatedButton(
-                        onPressed: () => _checkManuals(),
-                        child: const Text("Get devices with missing documents")
-                      ), 
-                    ],
-                  ),
+                  Expanded(child: _selectedDeviceInfo != null ? TechnicianDeviceScreen(user: widget.user, deviceInfo: _selectedDeviceInfo!) : const Center())
                 ]
               ),
             ),

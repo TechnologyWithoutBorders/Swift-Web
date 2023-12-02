@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:teog_swift/utilities/hospital_device.dart';
+import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/maintenance_event.dart';
 import 'package:teog_swift/utilities/constants.dart';
 
@@ -9,7 +10,9 @@ import 'package:teog_swift/screens/technicians/technician_device_screen.dart';
 import 'package:teog_swift/utilities/network_functions.dart' as comm;
 
 class MaintenanceScreen extends StatefulWidget {
-  const MaintenanceScreen({Key? key}) : super(key: key);
+  final User user;
+
+  const MaintenanceScreen({Key? key, required this.user}) : super(key: key);
 
   @override
   State<MaintenanceScreen> createState() => _MaintenanceScreenState();
@@ -168,7 +171,21 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                   subtitle: Text("${device.manufacturer} ${device.model}"),
                                   trailing: device.orgUnit != null ? Text(device.orgUnit!) : null,
                                   onTap: () => {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: device.id)))
+                                    comm.getDeviceInfo(device.id).then((deviceInfo) {
+                                      showDialog<void>(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return Dialog(alignment: Alignment.center,
+                                            child: FractionallySizedBox(widthFactor: 0.5, heightFactor: 0.7,
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(25.0),
+                                                child: TechnicianDeviceScreen(user: widget.user, deviceInfo: deviceInfo)
+                                              )
+                                            )
+                                          );
+                                        }
+                                      );
+                                    })
                                   }
                                 );
                               },

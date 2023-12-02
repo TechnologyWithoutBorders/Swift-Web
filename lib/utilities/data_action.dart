@@ -11,6 +11,7 @@ class DataAction {
   static const String createUser = "create_user";
   static const String getHospitals = "get_hospitals";
   static const String getHospitalInfo = "get_hospital_info";
+  static const String getHospitalImage = "get_hospital_image";
   static const String getCountries = "get_countries";
   static const String uploadDocument = "upload_document";
   static const String editDevice = "edit_device";

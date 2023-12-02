@@ -33,6 +33,8 @@ class _TabScreenState extends State<TabScreen> {
   List<User>? _users;
   User? _user;
 
+  Image? _hospitalImage;
+
   void _logout(BuildContext context) async {
     await prefs.logout();
     Navigator.pushNamedAndRemoveUntil(context, SwiftApp.route, (r) => false);
@@ -88,42 +90,78 @@ class _TabScreenState extends State<TabScreen> {
   @override
   Widget build(BuildContext context) {
     if(_user == null) {
+      if(_hospitalImage == null) {
+        comm.getHospitalImage().then((image) {
+          setState(() {
+            _hospitalImage = image;
+          });
+        });
+      }
+
       return Scaffold(
         backgroundColor: Colors.grey[200],
         body: Container(
           alignment: Alignment.center,
           child: FractionallySizedBox(
-            widthFactor: 0.3,
+            widthFactor: 0.7,
             heightFactor: 0.8,
-            child: Card(
-              child: Column(
-                children: [
-                  Text("Please select your user:",
-                        style: Theme.of(context)
-                          .textTheme
-                          .headlineMedium),
-                  const SizedBox(height: 15),
-                  Flexible(
-                    child: _users != null ? Scrollbar(
-                      controller: _scrollController,
-                      child: ListView.separated(
-                        controller: _scrollController,
-                        itemCount: _users!.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          User user = _users![index];
-
-                          return ListTile(
-                            title: Text(user.name),
-                            subtitle: Text(user.position),
-                            onTap: () => _saveUser(user),
-                          );
-                        },
-                        separatorBuilder: (BuildContext context, int index) => const Divider(),
-                      ),
-                    ) : const Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator()))
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                            child: _hospital != null ? Text(
+                              _hospital!.name,
+                              style: Theme.of(context).textTheme.headlineMedium
+                              ) : const Text("loading..."),
+                          ),
+                          _hospitalImage != null ? Flexible(child: _hospitalImage!) : const Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator()))
+                        ]
+                      )
+                    )
                   )
-                ]
-              )
+                ),
+                Flexible(child: Card(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Text("Please select your name in the list:",
+                          style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall),
+                      ),
+                      Flexible(
+                        child: _users != null ? Scrollbar(
+                          controller: _scrollController,
+                          child: ListView.separated(
+                            controller: _scrollController,
+                            itemCount: _users!.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              User user = _users![index];
+
+                              return ListTile(
+                                title: Text(user.name),
+                                subtitle: Text(user.position),
+                                onTap: () => _saveUser(user),
+                              );
+                            },
+                            separatorBuilder: (BuildContext context, int index) => const Divider(),
+                          ),
+                        ) : const Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator()))
+                      )
+                    ]
+                  )
+                )),
+              ]
             )
           )
         )
@@ -191,17 +229,17 @@ class _TabScreenState extends State<TabScreen> {
                 Tab(text: "Maintenance", icon: Icon(Icons.calendar_today)),
                 Tab(text: "Inventory", icon: Icon(Icons.inventory)),
                 Tab(text: "Organisation", icon: Icon(Icons.account_tree_outlined)),
-                Tab(text: "People", icon: Icon(Icons.people)),
+                Tab(text: "Settings", icon: Icon(Icons.settings)),
               ],
             ),
           ),
-          body: const TabBarView(
+          body: TabBarView(
             children: [
-              DashboardScreen(),
-              MaintenanceScreen(),
-              InventoryScreen(),
-              OrganizationScreen(),
-              UserManagementScreen(),
+              DashboardScreen(user: _user!),
+              MaintenanceScreen(user: _user!),
+              InventoryScreen(user: _user!),
+              const OrganizationScreen(),
+              const UserManagementScreen(),
             ],
           ),
         ),
