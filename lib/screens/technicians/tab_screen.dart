@@ -235,8 +235,8 @@ class _TabScreenState extends State<TabScreen> {
           ),
           body: TabBarView(
             children: [
-              const DashboardScreen(),
-              const MaintenanceScreen(),
+              DashboardScreen(user: _user!),
+              MaintenanceScreen(user: _user!),
               InventoryScreen(user: _user!),
               const OrganizationScreen(),
               const UserManagementScreen(),

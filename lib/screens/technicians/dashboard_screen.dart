@@ -10,11 +10,14 @@ import 'package:teog_swift/utilities/short_device_info.dart';
 import 'package:teog_swift/screens/technicians/technician_device_screen.dart';
 import 'package:teog_swift/utilities/device_state.dart';
 import 'package:teog_swift/utilities/report.dart';
+import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/detailed_report.dart';
 import 'package:teog_swift/utilities/message_exception.dart';
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({Key? key}) : super(key: key);
+  final User user;
+
+  const DashboardScreen({Key? key, required this.user}) : super(key: key);
 
   @override
   State<DashboardScreen> createState() => _DetailScreenState();
@@ -156,10 +159,21 @@ class _DetailScreenState extends State<DashboardScreen> {
                                   subtitle: Text("${device.manufacturer} ${device.model}"),
                                   trailing: device.orgUnit != null ? Text(device.orgUnit!) : null,
                                   onTap: () => {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: device.id))).then((value) => {
-                                      //this is called when the newly created route returns
-                                      _updateDevices()
-                                    })
+                                    comm.getDeviceInfo(device.id).then((deviceInfo) {
+                                      showDialog<void>(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return Dialog(alignment: Alignment.center,
+                                            child: FractionallySizedBox(widthFactor: 0.5, heightFactor: 0.7,
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(25.0),
+                                                child: TechnicianDeviceScreen(user: widget.user, deviceInfo: deviceInfo)
+                                              )
+                                            )
+                                          );
+                                        }
+                                      );
+                                    }),
                                   }
                                 );
                               },
@@ -223,10 +237,21 @@ class _DetailScreenState extends State<DashboardScreen> {
                                             )
                                           ),
                                           onTap: () => {
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => TechnicianDeviceScreen(id: report.deviceId))).then((value) => {
-                                              //this is called when the newly created route returns
-                                              _updateDevices()
-                                            })
+                                            comm.getDeviceInfo(report.deviceId).then((deviceInfo) {
+                                              showDialog<void>(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return Dialog(alignment: Alignment.center,
+                                                    child: FractionallySizedBox(widthFactor: 0.5, heightFactor: 0.7,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.all(25.0),
+                                                        child: TechnicianDeviceScreen(user: widget.user, deviceInfo: deviceInfo)
+                                                      )
+                                                    )
+                                                  );
+                                                }
+                                              );
+                                            }),
                                           }
                                         )
                                       ]
