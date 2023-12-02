@@ -229,7 +229,7 @@ class _TabScreenState extends State<TabScreen> {
                 Tab(text: "Maintenance", icon: Icon(Icons.calendar_today)),
                 Tab(text: "Inventory", icon: Icon(Icons.inventory)),
                 Tab(text: "Organisation", icon: Icon(Icons.account_tree_outlined)),
-                Tab(text: "People", icon: Icon(Icons.people)),
+                Tab(text: "Settings", icon: Icon(Icons.settings)),
               ],
             ),
           ),
