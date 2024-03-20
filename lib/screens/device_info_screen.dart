@@ -8,6 +8,7 @@ import 'package:teog_swift/utilities/network_functions.dart' as comm;
 import 'package:teog_swift/utilities/short_device_info.dart';
 import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/device_state.dart';
+import 'package:teog_swift/utilities/message_exception.dart';
 
 class DetailScreen extends StatefulWidget {
   //this one is never modified
@@ -207,8 +208,8 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
     if(_formKey.currentState!.validate()) {
       await comm.queueRepair(widget.deviceInfo.device.id, _reportTitleController.text, _problemTextController.text).then((newReport) {
         widget.updateDeviceInfo(ShortDeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData));
-      }).onError((error, stackTrace) {
-        final snackBar = SnackBar(content: Text(error.toString()));
+      }).onError<MessageException>((error, stackTrace) {
+        final snackBar = SnackBar(content: Text(error.message));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       });
 
