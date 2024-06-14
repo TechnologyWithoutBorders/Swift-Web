@@ -474,7 +474,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
         message: "show all devices",
         child: ElevatedButton(
           onPressed: () => _showAllDevices(),
-          style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(_filterState == filterNone ? const Color(Constants.teogBlue) : Colors.blueGrey)),
+          style: ButtonStyle(backgroundColor: WidgetStateProperty.all<Color>(_filterState == filterNone ? const Color(Constants.teogBlue) : Colors.blueGrey)),
           child: const Text("All"),
         )
       ),

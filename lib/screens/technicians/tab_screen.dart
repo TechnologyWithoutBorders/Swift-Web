@@ -213,8 +213,8 @@ class _TabScreenState extends State<TabScreen> {
               Padding(padding: const EdgeInsets.only(right: 20.0),
                 child: TextButton(
                   style: ButtonStyle(
-                    foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                      return states.contains(MaterialState.disabled) ? Colors.grey : Colors.white;
+                    foregroundColor: WidgetStateColor.resolveWith((Set<WidgetState> states) {
+                      return states.contains(WidgetState.disabled) ? Colors.grey : Colors.white;
                     }),
                   ),
                   child: const Text("Logout"),

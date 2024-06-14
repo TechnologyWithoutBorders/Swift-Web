@@ -45,7 +45,7 @@ class SwiftApp extends StatelessWidget {
           )
         ),
         scrollbarTheme: ScrollbarThemeData(
-          thumbVisibility: MaterialStateProperty.all<bool>(true),
+          thumbVisibility: WidgetStateProperty.all<bool>(true),
         )
       ),
     );
