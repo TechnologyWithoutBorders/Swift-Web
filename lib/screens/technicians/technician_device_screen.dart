@@ -232,7 +232,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
     _retrieveDocuments();
   }
 
-   @override
+  @override
   void didUpdateWidget(DocumentScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
 
