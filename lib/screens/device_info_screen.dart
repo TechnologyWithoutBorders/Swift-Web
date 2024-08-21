@@ -39,7 +39,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
     switch(deviceInfo.report.currentState) {
       case DeviceState.broken:
-        reasonText = "The defect has already been reported.";
+        reasonText = "A defect has been reported.";
         break;
       case DeviceState.inProgress:
         reasonText = "A technician is already working on this device.";
