@@ -46,6 +46,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
   DepartmentFilter? _departmentFilter;
   int _filterState = filterNone;
 
+  int? _selectedDeviceId;
   DeviceInfo? _selectedDeviceInfo;
 
   @override
@@ -570,7 +571,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                 Report report = deviceInfo.report;
 
                                 return ListTile(
-                                  selected: _selectedDeviceInfo != null && _selectedDeviceInfo!.device.id == device.id,
+                                  selected: _selectedDeviceId != null && _selectedDeviceId == device.id,
                                   selectedColor: Colors.black,
                                   selectedTileColor: const Color(Constants.teogBlueLighter),
                                   leading: Container(width: 40, height: 40, color: DeviceState.getColor(report.currentState),
@@ -612,7 +613,12 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                       Tooltip(message: "delete device", child: TextButton(child: const Icon(Icons.delete, color: Colors.red), onPressed: () => _deleteDevice(deviceInfo)))
                                     ],
                                   ),
-                                  onTap: () => {
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedDeviceInfo = null;
+                                      _selectedDeviceId = deviceInfo.device.id;
+                                    });
+
                                     comm.getDeviceInfo(device.id).then((deviceInfo) {
                                       setState(() {
                                         _selectedDeviceInfo = deviceInfo;
@@ -620,7 +626,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                     }).onError<MessageException>((error, stackTrace) {
                                       final snackBar = SnackBar(content: Text(error.message));
                                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                    })
+                                    });
                                   }
                                 );
                               },
@@ -649,7 +655,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       ]
                     )
                   ),
-                  Expanded(child: _selectedDeviceInfo != null ? TechnicianDeviceScreen(user: widget.user, deviceInfo: _selectedDeviceInfo!) : const Center())
+                  Expanded(child: _selectedDeviceInfo != null ? TechnicianDeviceScreen(user: widget.user, deviceInfo: _selectedDeviceInfo!) : _selectedDeviceId != null ? const Center(child: CircularProgressIndicator()) : const Center())
                 ]
               ),
             ),
