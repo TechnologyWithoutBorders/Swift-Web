@@ -420,19 +420,19 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                       );
                                     },
                                     onWillAcceptWithDetails: (item) {
-                                      if(item is Node) {
-                                        return !((item as Node).key!.value == 1 || (item as Node).key!.value == id);
-                                      } else if(item is PreviewDeviceInfo) {
+                                      if(item.data is Node) {
+                                        return !((item.data as Node).key!.value == 1 || (item.data as Node).key!.value == id);
+                                      } else if(item.data is PreviewDeviceInfo) {
                                         return true;
                                       } else {
                                         return false;
                                       }
                                     },
                                     onAcceptWithDetails: (item) {
-                                      if(item is Node) {
-                                        _reOrganizeUnit((item as Node).key!.value, id);
-                                      } else if(item is PreviewDeviceInfo) {
-                                        _assignDevice((item as PreviewDeviceInfo), id);
+                                      if(item.data is Node) {
+                                        _reOrganizeUnit((item.data as Node).key!.value, id);
+                                      } else if(item.data is PreviewDeviceInfo) {
+                                        _assignDevice((item.data as PreviewDeviceInfo), id);
                                       }
                                     },
                                   )
