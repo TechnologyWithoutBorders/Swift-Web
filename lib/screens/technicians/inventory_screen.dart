@@ -649,7 +649,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                             : ElevatedButton(
                               onPressed: () => _checkManuals(),
                               child: const Text("Get devices with missing documents")
-                            ), 
+                            ),
                           ],
                         ),
                       ]
