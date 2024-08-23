@@ -171,21 +171,19 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                   subtitle: Text("${device.manufacturer} ${device.model}"),
                                   trailing: device.orgUnit != null ? Text(device.orgUnit!) : null,
                                   onTap: () => {
-                                    comm.getDeviceInfo(device.id).then((deviceInfo) {
-                                      showDialog<void>(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return Dialog(alignment: Alignment.center,
-                                            child: FractionallySizedBox(widthFactor: 0.5, heightFactor: 0.7,
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(25.0),
-                                                child: TechnicianDeviceScreen(user: widget.user, deviceInfo: deviceInfo)
-                                              )
+                                    showDialog<void>(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return Dialog(alignment: Alignment.center,
+                                          child: FractionallySizedBox(widthFactor: 0.5, heightFactor: 0.7,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(25.0),
+                                              child: TechnicianDeviceScreen(user: widget.user, deviceId: device.id)
                                             )
-                                          );
-                                        }
-                                      );
-                                    })
+                                          )
+                                        );
+                                      }
+                                    )
                                   }
                                 );
                               },

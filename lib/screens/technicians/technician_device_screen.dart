@@ -17,9 +17,9 @@ import 'package:file_picker/file_picker.dart';
 
 class TechnicianDeviceScreen extends StatefulWidget {
   final User user;
-  final DeviceInfo deviceInfo;
+  final int deviceId;
 
-  const TechnicianDeviceScreen({Key? key, required this.user, required this.deviceInfo}) : super(key: key);
+  const TechnicianDeviceScreen({Key? key, required this.user, required this.deviceId}) : super(key: key);
 
   @override
   State<TechnicianDeviceScreen> createState() => _TechnicianDeviceScreenState();
@@ -27,39 +27,56 @@ class TechnicianDeviceScreen extends StatefulWidget {
 
 class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
 
+  DeviceInfo? _deviceInfo;
+
+  @override
+  void initState() {
+    super.initState();
+
+    comm.getDeviceInfo(widget.deviceId).then((deviceInfo) {
+      setState(() {
+        _deviceInfo = deviceInfo;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Expanded(flex: 2, child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(child: widget.deviceInfo.imageData != null && widget.deviceInfo.imageData!.isNotEmpty ? Image.memory(base64Decode(widget.deviceInfo.imageData!)) : const Text("no image available")),
-            Expanded(child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SelectableText("${widget.deviceInfo.device.manufacturer} ${widget.deviceInfo.device.model}", style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                widget.deviceInfo.device.orgUnit != null ? Text(widget.deviceInfo.device.orgUnit!, style: const TextStyle(fontSize: 25)) : const Text(""),
-                SelectableText("Serial number: ${widget.deviceInfo.device.serialNumber}"),
-                Text("Maintenance interval: ${widget.deviceInfo.device.maintenanceInterval/4} months"),
-              ]
-            )),
-          ]
-        )),
-        const SizedBox(height: 10),
-        Expanded(flex: 3, child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(child: ReportHistoryScreen(deviceInfo: widget.deviceInfo, user: widget.user)),
-            Expanded(child: DocumentScreen(deviceInfo: widget.deviceInfo))
-          ]
-        )),
-      ]
-    );
+    if(_deviceInfo == null) {
+      return const Center(child: CircularProgressIndicator());
+    } else {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(flex: 2, child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(child: _deviceInfo!.imageData != null && _deviceInfo!.imageData!.isNotEmpty ? Image.memory(base64Decode(_deviceInfo!.imageData!)) : const Text("no image available")),
+              Expanded(child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SelectableText("${_deviceInfo!.device.manufacturer} ${_deviceInfo!.device.model}", style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                  _deviceInfo!.device.orgUnit != null ? Text(_deviceInfo!.device.orgUnit!, style: const TextStyle(fontSize: 25)) : const Text(""),
+                  SelectableText("Serial number: ${_deviceInfo!.device.serialNumber}"),
+                  Text("Maintenance interval: ${_deviceInfo!.device.maintenanceInterval/4} months"),
+                ]
+              )),
+            ]
+          )),
+          const SizedBox(height: 10),
+          Expanded(flex: 3, child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(child: ReportHistoryScreen(deviceInfo: _deviceInfo!, user: widget.user)),
+              Expanded(child: DocumentScreen(deviceInfo: _deviceInfo!))
+            ]
+          )),
+        ]
+      );
+    }
   }
 }
 

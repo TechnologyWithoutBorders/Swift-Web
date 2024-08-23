@@ -47,7 +47,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
   int _filterState = filterNone;
 
   int? _selectedDeviceId;
-  DeviceInfo? _selectedDeviceInfo;
 
   @override
   void initState() {
@@ -606,7 +605,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                             if(assignedDevicesIndex >= 0) _assignedDevices[assignedDevicesIndex] = modifiedDevice;
                                             if(prefilteredDevicesIndex >= 0) _preFilteredDevices[prefilteredDevicesIndex] = modifiedDevice;
                                             if(displayedDevicesIndex >= 0) _displayedDevices[displayedDevicesIndex] = modifiedDevice;
-                                            if(_selectedDeviceInfo != null && _selectedDeviceInfo!.device.id == modifiedDeviceInfo.device.id) _selectedDeviceInfo = modifiedDeviceInfo; 
                                           });
                                         }
                                       }))),
@@ -615,17 +613,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                   ),
                                   onTap: () {
                                     setState(() {
-                                      _selectedDeviceInfo = null;
                                       _selectedDeviceId = deviceInfo.device.id;
-                                    });
-
-                                    comm.getDeviceInfo(device.id).then((deviceInfo) {
-                                      setState(() {
-                                        _selectedDeviceInfo = deviceInfo;
-                                      });
-                                    }).onError<MessageException>((error, stackTrace) {
-                                      final snackBar = SnackBar(content: Text(error.message));
-                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                     });
                                   }
                                 );
@@ -655,7 +643,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       ]
                     )
                   ),
-                  Expanded(child: _selectedDeviceInfo != null ? TechnicianDeviceScreen(user: widget.user, deviceInfo: _selectedDeviceInfo!) : _selectedDeviceId != null ? const Center(child: CircularProgressIndicator()) : const Center())
+                  Expanded(child: _selectedDeviceId != null ? TechnicianDeviceScreen(user: widget.user, deviceId: _selectedDeviceId!) : _selectedDeviceId != null ? const Center(child: CircularProgressIndicator()) : const Center())
                 ]
               ),
             ),

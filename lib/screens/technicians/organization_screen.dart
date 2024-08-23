@@ -488,21 +488,19 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                     subtitle: Text("${device.manufacturer} ${device.model}"),
                                     trailing: device.orgUnit != null ? Text(device.orgUnit!) : const Text(""),
                                     onTap: () => {
-                                      comm.getDeviceInfo(device.id).then((deviceInfo) {
-                                        showDialog<void>(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return Dialog(alignment: Alignment.center,
-                                              child: FractionallySizedBox(widthFactor: 0.7, heightFactor: 0.85,
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(25.0),
-                                                  child: TechnicianDeviceScreen(user: widget.user, deviceInfo: deviceInfo)
-                                                )
+                                      showDialog<void>(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return Dialog(alignment: Alignment.center,
+                                            child: FractionallySizedBox(widthFactor: 0.7, heightFactor: 0.85,
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(25.0),
+                                                child: TechnicianDeviceScreen(user: widget.user, deviceId: deviceInfo.device.id)
                                               )
-                                            );
-                                          }
-                                        );
-                                      }),
+                                            )
+                                          );
+                                        }
+                                      )
                                     }
                                   )
                                 );
