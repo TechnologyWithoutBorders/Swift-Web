@@ -9,9 +9,13 @@ import 'package:teog_swift/utilities/organizational_unit.dart';
 import 'package:teog_swift/utilities/message_exception.dart';
 import 'package:teog_swift/utilities/preview_device_info.dart';
 import 'package:teog_swift/utilities/constants.dart';
+import 'package:teog_swift/utilities/user.dart';
+import 'package:teog_swift/screens/technicians/technician_device_screen.dart';
 
 class OrganizationScreen extends StatefulWidget {
-  const OrganizationScreen({Key? key}) : super(key: key);
+  final User user;
+
+  const OrganizationScreen({Key? key, required this.user}) : super(key: key);
 
   @override
   State<OrganizationScreen> createState() => _OrganizationScreenState();
@@ -483,6 +487,23 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                     title: Text(device.type),
                                     subtitle: Text("${device.manufacturer} ${device.model}"),
                                     trailing: device.orgUnit != null ? Text(device.orgUnit!) : const Text(""),
+                                    onTap: () => {
+                                      comm.getDeviceInfo(device.id).then((deviceInfo) {
+                                        showDialog<void>(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return Dialog(alignment: Alignment.center,
+                                              child: FractionallySizedBox(widthFactor: 0.7, heightFactor: 0.85,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(25.0),
+                                                  child: TechnicianDeviceScreen(user: widget.user, deviceInfo: deviceInfo)
+                                                )
+                                              )
+                                            );
+                                          }
+                                        );
+                                      }),
+                                    }
                                   )
                                 );
                               },

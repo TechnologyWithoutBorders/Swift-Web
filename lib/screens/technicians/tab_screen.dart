@@ -238,7 +238,7 @@ class _TabScreenState extends State<TabScreen> {
               DashboardScreen(user: _user!),
               MaintenanceScreen(user: _user!),
               InventoryScreen(user: _user!),
-              const OrganizationScreen(),
+              OrganizationScreen(user: _user!),
               const UserManagementScreen(),
             ],
           ),

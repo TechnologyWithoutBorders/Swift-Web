@@ -164,7 +164,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                                         context: context,
                                         builder: (BuildContext context) {
                                           return Dialog(alignment: Alignment.center,
-                                            child: FractionallySizedBox(widthFactor: 0.5, heightFactor: 0.7,
+                                            child: FractionallySizedBox(widthFactor: 0.7, heightFactor: 0.85,
                                               child: Padding(
                                                 padding: const EdgeInsets.all(25.0),
                                                 child: TechnicianDeviceScreen(user: widget.user, deviceInfo: deviceInfo)
@@ -237,7 +237,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                                                 context: context,
                                                 builder: (BuildContext context) {
                                                   return Dialog(alignment: Alignment.center,
-                                                    child: FractionallySizedBox(widthFactor: 0.5, heightFactor: 0.7,
+                                                    child: FractionallySizedBox(widthFactor: 0.7, heightFactor: 0.85,
                                                       child: Padding(
                                                         padding: const EdgeInsets.all(25.0),
                                                         child: TechnicianDeviceScreen(user: widget.user, deviceInfo: deviceInfo)
