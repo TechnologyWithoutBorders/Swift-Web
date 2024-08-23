@@ -643,7 +643,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       ]
                     )
                   ),
-                  Expanded(child: _selectedDeviceId != null ? TechnicianDeviceScreen(user: widget.user, deviceId: _selectedDeviceId!) : _selectedDeviceId != null ? const Center(child: CircularProgressIndicator()) : const Center())
+                  Expanded(child: _selectedDeviceId != null ? TechnicianDeviceScreen(user: widget.user, deviceId: _selectedDeviceId!) : const Center())
                 ]
               ),
             ),
