@@ -613,7 +613,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                   ),
                                   onTap: () {
                                     setState(() {
-                                      _selectedDeviceId = deviceInfo.device.id;
+                                      _selectedDeviceId = device.id;
                                     });
                                   }
                                 );
