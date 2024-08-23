@@ -225,7 +225,7 @@ class _TabScreenState extends State<TabScreen> {
             bottom: const TabBar(
               indicatorColor: Colors.white,
               tabs: [
-                Tab(text: "Dashboard", icon: Icon(Icons.chair)),
+                Tab(text: "Dashboard", icon: Icon(Icons.query_stats)),
                 Tab(text: "Maintenance", icon: Icon(Icons.calendar_today)),
                 Tab(text: "Inventory", icon: Icon(Icons.inventory)),
                 Tab(text: "Organisation", icon: Icon(Icons.account_tree_outlined)),
