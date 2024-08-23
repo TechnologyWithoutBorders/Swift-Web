@@ -11,7 +11,7 @@ _flutter.buildConfig = {"engineRevision":"b8800d88be4866db1b15f8b954ab2573bba996
 
 const loading = document.createElement('div');
 document.body.appendChild(loading);
-loading.textContent = "Loading resources...";
+loading.textContent = "Loading entrypoint...";
 
 _flutter.loader.load({
   serviceWorkerSettings: {
