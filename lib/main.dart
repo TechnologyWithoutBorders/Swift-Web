@@ -134,6 +134,7 @@ class _LoginFormState extends State<LoginForm> {
   final _countryScrollController = ScrollController();
   List<Country> _countries = [];
   Country? _selectedCountry;
+  bool _loadingCountries = false;
 
   final _hospitalScrollController = ScrollController();
   List<Hospital> _hospitals = [];
@@ -181,7 +182,11 @@ class _LoginFormState extends State<LoginForm> {
     });
   }
 
-  void _checkForPreferences() async{
+  void _checkForPreferences() async {
+    setState(() {
+      _loadingCountries = true;
+    });
+
     List<Country> countries = await comm.getCountries();
     for (var i = 0; i < countries.length; i++) {
       if (countries[i].name == await prefs.getCountry()) {
@@ -195,6 +200,7 @@ class _LoginFormState extends State<LoginForm> {
       }
     }
     setState(() {
+      _loadingCountries = false;
       _countries = countries;
     });
   }
@@ -230,7 +236,7 @@ class _LoginFormState extends State<LoginForm> {
                     .textTheme
                     .headlineSmall),
                 Flexible(
-                  child: Scrollbar(
+                  child: _loadingCountries ? const Center(child: CircularProgressIndicator()) : Scrollbar(
                     controller: _countryScrollController,
                     child: ListView.separated(
                       controller: _countryScrollController,
