@@ -317,7 +317,6 @@ class _FilterFormState extends State<FilterForm> {
                   leading: deviceInfo.imageData != null && deviceInfo.imageData!.isNotEmpty ? Image.memory(base64Decode(deviceInfo.imageData!)) : const Text("no image"),
                   title: Text(device.type),
                   subtitle: Text("${device.manufacturer} ${device.model}"),
-                  trailing: device.orgUnit != null ? Text(device.orgUnit!) : null,
                   onTap: () => _openDeviceById(device.id)
                 );
               },
