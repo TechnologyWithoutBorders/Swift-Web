@@ -209,6 +209,7 @@ class _FilterFormState extends State<FilterForm> {
   OrganizationalUnit? _department;
   List<PreviewDeviceInfo> _filteredDevices = [];
   bool _loading = false;
+  bool _opening = false;
 
   @override
   void initState() {
@@ -258,7 +259,15 @@ class _FilterFormState extends State<FilterForm> {
   }
 
   void _openDeviceById(int id) {
+    setState(() {
+      _opening = true;
+    });
+
     comm.fetchDevice(id).then((deviceInfo) {
+      setState(() {
+        _opening = false;
+      });
+
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -266,6 +275,10 @@ class _FilterFormState extends State<FilterForm> {
         )
       );
     }).onError<MessageException>((error, stackTrace) {
+      setState(() {
+        _opening = false;
+      });
+
       final snackBar = SnackBar(content: Text(error.message));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
@@ -275,7 +288,7 @@ class _FilterFormState extends State<FilterForm> {
   Widget build(BuildContext context) {
     return Form(key: _formKey,
       child: SizedBox(width: 450, height: 600,//TODO: loading animation
-        child: Column(
+        child: _opening ? const Center(child: CircularProgressIndicator()) : Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text('By searching', style: Theme
