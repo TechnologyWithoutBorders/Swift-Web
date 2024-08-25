@@ -301,7 +301,7 @@ class _FilterFormState extends State<FilterForm> {
             child: const Text('Search'),
           ),
           const SizedBox(height: 10),
-          Text("${_filteredDevices.length} device(s) match the filter:"),
+          Text("${_filteredDevices.length} devices match the filter:"),
           const SizedBox(height: 10),
           Flexible(
             child: ListView.separated(
