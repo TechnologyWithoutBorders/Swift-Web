@@ -109,6 +109,8 @@ class _SearchFormState extends State with SessionMixin {
 
   final _deviceIDController = TextEditingController();
 
+  bool _searching = false;
+
   ///Validates whether a given [value] is a valid device ID.
   ///
   ///Returns null if value is valid, otherwise text message.
@@ -128,7 +130,15 @@ class _SearchFormState extends State with SessionMixin {
 
   void _processDeviceId() {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _searching = true;
+      });
+
       comm.fetchDevice(int.parse(_deviceIDController.text)).then((deviceInfo) {
+        setState(() {
+          _searching = false;
+        });
+
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -136,6 +146,10 @@ class _SearchFormState extends State with SessionMixin {
           )
         );
       }).onError<MessageException>((error, stackTrace) {
+        setState(() {
+          _searching = false;
+        });
+
         final snackBar = SnackBar(content: Text(error.message));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       });
@@ -166,7 +180,7 @@ class _SearchFormState extends State with SessionMixin {
             onFieldSubmitted: (value) => _processDeviceId(),
           ),
           const SizedBox(height: 10),
-          ElevatedButton(
+          _searching ? const CircularProgressIndicator() : ElevatedButton(
             onPressed: () => _processDeviceId(),
             child: const Text('Search'),
           ),
