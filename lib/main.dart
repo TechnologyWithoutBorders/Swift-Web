@@ -138,6 +138,7 @@ class _LoginFormState extends State<LoginForm> {
   final _hospitalScrollController = ScrollController();
   List<Hospital> _hospitals = [];
   Hospital? _selectedHospital;
+  bool _loadingHospitals = false;
 
   final _passwordTextController = TextEditingController();
 
@@ -239,13 +240,18 @@ class _LoginFormState extends State<LoginForm> {
                         return ListTile(
                           leading: Flag.fromString(_countries[index].code, height: 35, width: 35),
                           title: Text(_countries[index].name),
-                          onTap: () => {
+                          onTap: () {
+                            setState(() {
+                              _loadingHospitals = true;
+                            });
+
                             comm.getHospitals(_countries[index].name).then((hospitals) {
                               setState(() {
+                                _loadingHospitals = false;
                                 _selectedCountry = _countries[index];
                                 _hospitals = hospitals;
                               });
-                            })
+                            });
                           }
                         );
                       },
@@ -265,7 +271,7 @@ class _LoginFormState extends State<LoginForm> {
                     .textTheme
                     .headlineSmall),
                 Flexible(
-                  child: Scrollbar(
+                  child: _loadingHospitals ? const Center(child: CircularProgressIndicator()) : Scrollbar(
                     controller: _hospitalScrollController,
                     child: ListView.separated(
                       controller: _hospitalScrollController,
