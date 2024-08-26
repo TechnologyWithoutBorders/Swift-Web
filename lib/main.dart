@@ -246,6 +246,9 @@ class _LoginFormState extends State<LoginForm> {
                         return ListTile(
                           leading: Flag.fromString(_countries[index].code, height: 35, width: 35),
                           title: Text(_countries[index].name),
+                          selected: _selectedCountry != null && _selectedCountry!.code == _countries[index].code,
+                          selectedColor: Colors.black,
+                          selectedTileColor: const Color(Constants.teogBlueLighter),
                           onTap: () {
                             setState(() {
                               _loadingHospitals = true;
