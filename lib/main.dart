@@ -91,31 +91,32 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         title: const Text(Constants.appName)
       ),
-      body: Center(
-        child: SizedBox(
-          width: 500,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Spacer(),
-              const Flexible(flex: 6, child: Padding(padding: EdgeInsets.all(10.0), child: Image(image: AssetImage(Constants.logoPath)))),
-              const Spacer(),
-              const Flexible(flex: 20, child: Card(child: Padding(padding: EdgeInsets.all(10.0), child: LoginForm()))),
-              const Spacer(),
-              TextButton(
-                onPressed: () => showAboutDialog(
-                  context: context,
-                  applicationName: _packageInfo.appName,
-                  applicationVersion: " v${_packageInfo.version}-${_packageInfo.buildNumber}",
-                  applicationIcon: const Image(image: AssetImage(Constants.logoPath))
+      body: SingleChildScrollView(
+        child:  Center(
+          child: SizedBox(
+            width: 500,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 10),
+                const Padding(padding: EdgeInsets.all(10.0), child: Image(image: AssetImage(Constants.logoPath))),
+                const SizedBox(height: 10),
+                const SizedBox(height: 350, child: Card(child: Padding(padding: EdgeInsets.all(10.0), child: LoginForm()))),
+                const SizedBox(height: 10),
+                TextButton(
+                  onPressed: () => showAboutDialog(
+                    context: context,
+                    applicationName: _packageInfo.appName,
+                    applicationVersion: " v${_packageInfo.version}-${_packageInfo.buildNumber}",
+                    applicationIcon: const Image(image: AssetImage(Constants.logoPath))
+                  ),
+                  child: const Text('About'),
                 ),
-                child: const Text('About'),
-              ),
-              const Spacer(flex: 2),
-            ],
+              ],
+            ),
           ),
-        ),
+        )
       ),
     );
   }
