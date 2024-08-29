@@ -449,11 +449,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 onPressed: () {
                   comm.deleteDevice(device).then((_) {
                     setState(() {
-                    _devices.remove(deviceInfo);
-                    _assignedDevices.remove(deviceInfo);
-                    _preFilteredDevices.remove(deviceInfo);
-                    _displayedDevices.remove(deviceInfo);
-                  });
+                      _devices.remove(deviceInfo);
+                      _assignedDevices.remove(deviceInfo);
+                      _preFilteredDevices.remove(deviceInfo);
+                      _displayedDevices.remove(deviceInfo);
+                    });
                   }).onError<MessageException>((error, stackTrace) {
                     final snackBar = SnackBar(content: Text(error.message));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
