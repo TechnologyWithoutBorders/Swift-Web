@@ -12,7 +12,6 @@ import 'package:teog_swift/utilities/detailed_report.dart';
 import 'package:teog_swift/utilities/device_state.dart';
 import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/message_exception.dart';
-import 'package:teog_swift/utilities/device_state.dart';
 
 import 'package:file_picker/file_picker.dart';
 
