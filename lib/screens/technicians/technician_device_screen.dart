@@ -12,6 +12,7 @@ import 'package:teog_swift/utilities/detailed_report.dart';
 import 'package:teog_swift/utilities/device_state.dart';
 import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/message_exception.dart';
+import 'package:teog_swift/utilities/device_state.dart';
 
 import 'package:file_picker/file_picker.dart';
 
@@ -93,6 +94,11 @@ class ReportHistoryScreen extends StatefulWidget {
 class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
   final _scrollController = ScrollController();
 
+  final _formKey = GlobalKey<FormState>();
+
+  final _reportTitleController = TextEditingController();
+  final _problemTextController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     List<DetailedReport> reports = widget.deviceInfo.reports;
@@ -168,9 +174,115 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
         const SizedBox(height: 10,),
         ElevatedButton(
           child: const Text('Create report'),
-          onPressed: () => {}
+          onPressed: () => _createReportDialog(latestReport.currentState),
         ),
       ]
+    );
+  }
+
+  Future<bool> _createReport(int state) async {
+    if(_formKey.currentState!.validate()) {
+      await comm.createReport(widget.deviceInfo.device.id, _reportTitleController.text, _problemTextController.text, state).then((newReport) {
+        //widget.updateDeviceInfo(ShortDeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData));
+      }).onError<MessageException>((error, stackTrace) {
+        final snackBar = SnackBar(content: Text(error.message));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      });
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void _createReportDialog(int initialState) {
+    int state = initialState;
+
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context){
+        return Form(key: _formKey,
+          child: AlertDialog(
+            contentPadding: const EdgeInsets.all(16.0),
+            content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text("Create a report", style: Theme
+                        .of(context)
+                        .textTheme
+                        .headlineSmall),
+                    DropdownButton<int>(
+                      hint: const Text("State"),
+                      value: state,
+                      onChanged: (int? selectedState) {
+                        if(selectedState != null) {
+                          setState(() {
+                            state = selectedState;
+                          });
+                        }
+                      },
+                      items: [0, 1, 2, 3, 4, 5].map<DropdownMenuItem<int>>((int selectedState) {
+                        return DropdownMenuItem<int>(
+                          value: selectedState,
+                          child: Text(DeviceState.getStateString(selectedState)),
+                        );
+                      }).toList(),
+                    ),
+                    TextFormField(
+                      controller: _reportTitleController,
+                      decoration: const InputDecoration(labelText: 'Title'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please give your report a title.";
+                        }
+                        return null;
+                      },
+                      maxLength: 25,
+                      onFieldSubmitted: (value) => _createReport(state),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: _problemTextController,
+                        decoration: const InputDecoration(labelText: 'Problem description'),
+                        maxLength: 600,
+                        maxLines: null,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Please describe the problem in a few sentences.";
+                          }
+                          return null;
+                        },
+                        onFieldSubmitted: (value) => _createReport(state),
+                      ),
+                    ),
+                  ],
+                );
+              }
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                  child: const Text('Cancel'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }
+              ),
+              ElevatedButton(
+                child: const Text('Create report'),
+                onPressed: () async {
+                  bool success = await _createReport(state);
+                  
+                  if(success) {
+                    Navigator.pop(context);
+                  }
+                },
+              )
+            ],
+          )
+        );
+      }
     );
   }
 }
