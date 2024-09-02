@@ -40,6 +40,12 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
     });
   }
 
+  _updateDeviceInfo(DeviceInfo modifiedDeviceInfo) {
+    setState(() {
+      _deviceInfo = modifiedDeviceInfo;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if(_deviceInfo == null) {
@@ -70,7 +76,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
           Expanded(flex: 3, child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(child: ReportHistoryScreen(deviceInfo: _deviceInfo!, user: widget.user)),
+              Expanded(child: ReportHistoryScreen(deviceInfo: _deviceInfo!, user: widget.user, updateDeviceInfo: _updateDeviceInfo)),
               Expanded(child: DocumentScreen(deviceInfo: _deviceInfo!))
             ]
           )),
@@ -84,7 +90,9 @@ class ReportHistoryScreen extends StatefulWidget {
   final DeviceInfo deviceInfo;
   final User user;
 
-  const ReportHistoryScreen({Key? key, required this.deviceInfo, required this.user}) : super(key: key);
+  final ValueChanged<DeviceInfo> updateDeviceInfo;
+
+  const ReportHistoryScreen({Key? key, required this.deviceInfo, required this.user, required this.updateDeviceInfo}) : super(key: key);
 
   @override
   State<ReportHistoryScreen> createState() => _ReportHistoryScreenState();
@@ -182,7 +190,12 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
   Future<bool> _createReport(int state) async {
     if(_formKey.currentState!.validate()) {
       await comm.createReport(widget.deviceInfo.device.id, _reportTitleController.text, _problemTextController.text, state).then((newReport) {
-        //widget.updateDeviceInfo(ShortDeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData));
+        List<DetailedReport> newReports = List<DetailedReport>.from(widget.deviceInfo.reports);
+        newReports.add(newReport);
+
+        DeviceInfo modifiedDeviceInfo = DeviceInfo(device: widget.deviceInfo.device, reports: newReports, imageData: widget.deviceInfo.imageData);
+
+        widget.updateDeviceInfo(modifiedDeviceInfo);
       }).onError<MessageException>((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.message));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
