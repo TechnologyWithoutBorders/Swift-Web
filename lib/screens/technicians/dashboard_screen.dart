@@ -69,7 +69,7 @@ class _DetailScreenState extends State<DashboardScreen> {
     });
   }
 
-  void _updateTodoDevice(ShortDeviceInfo deviceInfo) {
+  void _updateDeviceReports(ShortDeviceInfo deviceInfo) {
     if(_todoDevices != null) {
       setState(() {
         //remove old device info
@@ -178,7 +178,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                                           child: FractionallySizedBox(widthFactor: 0.7, heightFactor: 0.85,
                                             child: Padding(
                                               padding: const EdgeInsets.all(25.0),
-                                              child: TechnicianDeviceScreen(user: widget.user, deviceId: device.id, onReportCreated: _updateTodoDevice)
+                                              child: TechnicianDeviceScreen(user: widget.user, deviceId: device.id, onReportCreated: _updateDeviceReports)
                                             )
                                           )
                                         );
@@ -249,7 +249,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                                                   child: FractionallySizedBox(widthFactor: 0.7, heightFactor: 0.85,
                                                     child: Padding(
                                                       padding: const EdgeInsets.all(25.0),
-                                                      child: TechnicianDeviceScreen(user: widget.user, deviceId: report.deviceId, onReportCreated: (shortDeviceInfo) => {})
+                                                      child: TechnicianDeviceScreen(user: widget.user, deviceId: report.deviceId, onReportCreated: _updateDeviceReports)
                                                     )
                                                   )
                                                 );
