@@ -69,6 +69,18 @@ class _DetailScreenState extends State<DashboardScreen> {
     });
   }
 
+  void _updateTodoDevice(ShortDeviceInfo deviceInfo) {
+    if(_todoDevices != null) {
+      setState(() {
+        //remove old device info
+        _todoDevices!.removeWhere((todoDevice) => todoDevice.device.id == deviceInfo.device.id);
+
+        //add new device info at beginning of list
+        _todoDevices!.insert(0, deviceInfo);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     List<charts.Series<CategoryData, String>> seriesList = [];
@@ -166,7 +178,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                                           child: FractionallySizedBox(widthFactor: 0.7, heightFactor: 0.85,
                                             child: Padding(
                                               padding: const EdgeInsets.all(25.0),
-                                              child: TechnicianDeviceScreen(user: widget.user, deviceId: device.id, onReportCreated: (shortDeviceInfo) => {})
+                                              child: TechnicianDeviceScreen(user: widget.user, deviceId: device.id, onReportCreated: _updateTodoDevice)
                                             )
                                           )
                                         );
