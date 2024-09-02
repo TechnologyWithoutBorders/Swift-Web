@@ -166,7 +166,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                                           child: FractionallySizedBox(widthFactor: 0.7, heightFactor: 0.85,
                                             child: Padding(
                                               padding: const EdgeInsets.all(25.0),
-                                              child: TechnicianDeviceScreen(user: widget.user, deviceId: device.id)
+                                              child: TechnicianDeviceScreen(user: widget.user, deviceId: device.id, onReportCreated: (shortDeviceInfo) => {})
                                             )
                                           )
                                         );
@@ -237,7 +237,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                                                   child: FractionallySizedBox(widthFactor: 0.7, heightFactor: 0.85,
                                                     child: Padding(
                                                       padding: const EdgeInsets.all(25.0),
-                                                      child: TechnicianDeviceScreen(user: widget.user, deviceId: report.deviceId)
+                                                      child: TechnicianDeviceScreen(user: widget.user, deviceId: report.deviceId, onReportCreated: (shortDeviceInfo) => {})
                                                     )
                                                   )
                                                 );

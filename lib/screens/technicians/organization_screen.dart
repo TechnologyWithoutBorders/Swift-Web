@@ -495,7 +495,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                                             child: FractionallySizedBox(widthFactor: 0.7, heightFactor: 0.85,
                                               child: Padding(
                                                 padding: const EdgeInsets.all(25.0),
-                                                child: TechnicianDeviceScreen(user: widget.user, deviceId: deviceInfo.device.id)
+                                                child: TechnicianDeviceScreen(user: widget.user, deviceId: deviceInfo.device.id, onReportCreated: (shortDeviceInfo) => {})
                                               )
                                             )
                                           );

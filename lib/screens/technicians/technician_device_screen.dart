@@ -10,6 +10,8 @@ import 'package:teog_swift/utilities/network_functions.dart' as comm;
 import 'package:teog_swift/utilities/device_info.dart';
 import 'package:teog_swift/utilities/detailed_report.dart';
 import 'package:teog_swift/utilities/device_state.dart';
+import 'package:teog_swift/utilities/report.dart';
+import 'package:teog_swift/utilities/short_device_info.dart';
 import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/message_exception.dart';
 
@@ -19,7 +21,9 @@ class TechnicianDeviceScreen extends StatefulWidget {
   final User user;
   final int deviceId;
 
-  const TechnicianDeviceScreen({Key? key, required this.user, required this.deviceId}) : super(key: key);
+  final ValueChanged<ShortDeviceInfo> onReportCreated;
+
+  const TechnicianDeviceScreen({Key? key, required this.user, required this.deviceId, required this.onReportCreated}) : super(key: key);
 
   @override
   State<TechnicianDeviceScreen> createState() => _TechnicianDeviceScreenState();
@@ -41,9 +45,14 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
   }
 
   _updateDeviceInfo(DeviceInfo modifiedDeviceInfo) {
+    DetailedReport latestReport = modifiedDeviceInfo.reports.last;
+    ShortDeviceInfo shortDeviceInfo = ShortDeviceInfo(device: modifiedDeviceInfo.device, report: Report(currentState: latestReport.currentState, created: latestReport.created));
+
     setState(() {
       _deviceInfo = modifiedDeviceInfo;
     });
+
+    widget.onReportCreated(shortDeviceInfo);
   }
 
   @override
