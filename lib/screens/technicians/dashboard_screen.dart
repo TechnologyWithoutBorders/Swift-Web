@@ -88,7 +88,7 @@ class _DetailScreenState extends State<DashboardScreen> {
           _todoDevices!.insert(0, shortDeviceInfo);
         }
 
-        _recentReports!.add(modifiedDeviceInfo.reports.last);
+        _recentReports!.insert(0, modifiedDeviceInfo.reports.last);
       });
     }
   }
