@@ -21,7 +21,7 @@ class TechnicianDeviceScreen extends StatefulWidget {
   final User user;
   final int deviceId;
 
-  final ValueChanged<ShortDeviceInfo> onReportCreated;
+  final ValueChanged<DeviceInfo> onReportCreated;
 
   const TechnicianDeviceScreen({Key? key, required this.user, required this.deviceId, required this.onReportCreated}) : super(key: key);
 
@@ -45,14 +45,11 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
   }
 
   _updateDeviceInfo(DeviceInfo modifiedDeviceInfo) {
-    DetailedReport latestReport = modifiedDeviceInfo.reports.last;
-    ShortDeviceInfo shortDeviceInfo = ShortDeviceInfo(device: modifiedDeviceInfo.device, report: Report(currentState: latestReport.currentState, created: latestReport.created));
-
     setState(() {
       _deviceInfo = modifiedDeviceInfo;
     });
 
-    widget.onReportCreated(shortDeviceInfo);
+    widget.onReportCreated(modifiedDeviceInfo);
   }
 
   @override

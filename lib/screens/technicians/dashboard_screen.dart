@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:community_charts_flutter/community_charts_flutter.dart' as charts;
+import 'package:teog_swift/utilities/device_info.dart';
 import 'package:teog_swift/utilities/device_stats.dart';
 import 'package:teog_swift/utilities/hospital_device.dart';
 
@@ -69,14 +70,19 @@ class _DetailScreenState extends State<DashboardScreen> {
     });
   }
 
-  void _updateDeviceReports(ShortDeviceInfo deviceInfo) {
-    if(_todoDevices != null) {
+  void _updateDeviceReports(DeviceInfo modifiedDeviceInfo) {
+    if(_todoDevices != null && _recentReports != null) {
+      DetailedReport latestReport = modifiedDeviceInfo.reports.last;
+      ShortDeviceInfo shortDeviceInfo = ShortDeviceInfo(device: modifiedDeviceInfo.device, report: Report(currentState: latestReport.currentState, created: latestReport.created));
+
       setState(() {
         //remove old device info
-        _todoDevices!.removeWhere((todoDevice) => todoDevice.device.id == deviceInfo.device.id);
+        _todoDevices!.removeWhere((todoDevice) => todoDevice.device.id == shortDeviceInfo.device.id);
 
         //add new device info at beginning of list
-        _todoDevices!.insert(0, deviceInfo);
+        _todoDevices!.insert(0, shortDeviceInfo);
+
+        _recentReports!.add(modifiedDeviceInfo.reports.last);
       });
     }
   }
