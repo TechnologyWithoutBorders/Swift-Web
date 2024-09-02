@@ -225,7 +225,20 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
                       items: [0, 1, 2, 3, 4, 5].map<DropdownMenuItem<int>>((int selectedState) {
                         return DropdownMenuItem<int>(
                           value: selectedState,
-                          child: Text(DeviceState.getStateString(selectedState)),
+                          child: Row(
+                            children: [
+                              Container(width: 33, height: 33, color: DeviceState.getColor(selectedState),
+                                child: Padding(padding: const EdgeInsets.all(4.0),
+                                  child: Icon(DeviceState.getIconData(selectedState),
+                                      size: 25,
+                                      color: Colors.grey[900]
+                                    )
+                                )
+                              ),
+                              const SizedBox(width: 10),
+                              Text(DeviceState.getStateString(selectedState))
+                            ]
+                          )
                         );
                       }).toList(),
                     ),
