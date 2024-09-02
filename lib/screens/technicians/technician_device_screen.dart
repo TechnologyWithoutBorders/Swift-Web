@@ -10,8 +10,6 @@ import 'package:teog_swift/utilities/network_functions.dart' as comm;
 import 'package:teog_swift/utilities/device_info.dart';
 import 'package:teog_swift/utilities/detailed_report.dart';
 import 'package:teog_swift/utilities/device_state.dart';
-import 'package:teog_swift/utilities/report.dart';
-import 'package:teog_swift/utilities/short_device_info.dart';
 import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/message_exception.dart';
 
