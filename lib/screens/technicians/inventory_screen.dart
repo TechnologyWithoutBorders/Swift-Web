@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:teog_swift/screens/organization_filter_view.dart';
 import 'package:teog_swift/screens/report_history_plot.dart';
 import 'package:teog_swift/screens/technicians/technician_device_screen.dart';
+import 'package:teog_swift/utilities/detailed_report.dart';
 import 'package:teog_swift/utilities/hospital_device.dart';
 import 'package:teog_swift/utilities/constants.dart';
 
@@ -467,6 +468,29 @@ class _InventoryScreenState extends State<InventoryScreen> {
     );
   }
 
+  void _updateDeviceReports(DeviceInfo modifiedDeviceInfo) {
+    DetailedReport latestReport = modifiedDeviceInfo.reports.last;
+    ShortDeviceInfo shortDeviceInfo = ShortDeviceInfo(device: modifiedDeviceInfo.device, report: Report(currentState: latestReport.currentState, created: latestReport.created));
+
+    setState(() {
+      int deviceIndex = _devices.indexWhere((todoDevice) => todoDevice.device.id == shortDeviceInfo.device.id);
+      _devices.removeWhere((todoDevice) => todoDevice.device.id == shortDeviceInfo.device.id);
+      _devices.insert(deviceIndex, shortDeviceInfo);
+
+      int assignedDevicesIndex = _assignedDevices.indexWhere((todoDevice) => todoDevice.device.id == shortDeviceInfo.device.id);
+      _assignedDevices.removeWhere((todoDevice) => todoDevice.device.id == shortDeviceInfo.device.id);
+      _assignedDevices.insert(assignedDevicesIndex, shortDeviceInfo);
+
+      int prefilteredDevicesIndex = _preFilteredDevices.indexWhere((todoDevice) => todoDevice.device.id == shortDeviceInfo.device.id);
+      _preFilteredDevices.removeWhere((todoDevice) => todoDevice.device.id == shortDeviceInfo.device.id);
+      _preFilteredDevices.insert(prefilteredDevicesIndex, shortDeviceInfo);
+
+      int displayedDevicesIndex = _displayedDevices.indexWhere((todoDevice) => todoDevice.device.id == shortDeviceInfo.device.id);
+      _displayedDevices.removeWhere((todoDevice) => todoDevice.device.id == shortDeviceInfo.device.id);
+      _displayedDevices.insert(displayedDevicesIndex, shortDeviceInfo);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> templateButtons = [
@@ -643,7 +667,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       ]
                     )
                   ),
-                  Expanded(child: _selectedDeviceId != null ? TechnicianDeviceScreen(user: widget.user, deviceId: _selectedDeviceId!, onReportCreated: (shortDeviceInfo) => {}, key: ValueKey(_selectedDeviceId)) : const Center())
+                  Expanded(child: _selectedDeviceId != null ? TechnicianDeviceScreen(user: widget.user, deviceId: _selectedDeviceId!, onReportCreated: _updateDeviceReports, key: ValueKey(_selectedDeviceId)) : const Center())
                 ]
               ),
             ),
