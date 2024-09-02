@@ -259,7 +259,7 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
                         controller: _problemTextController,
-                        decoration: const InputDecoration(labelText: 'Problem description'),
+                        decoration: const InputDecoration(labelText: 'Description'),
                         maxLength: 600,
                         maxLines: null,
                         validator: (value) {
