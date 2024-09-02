@@ -79,8 +79,10 @@ class _DetailScreenState extends State<DashboardScreen> {
         //remove old device info
         _todoDevices!.removeWhere((todoDevice) => todoDevice.device.id == shortDeviceInfo.device.id);
 
-        //add new device info at beginning of list
-        _todoDevices!.insert(0, shortDeviceInfo);
+        //add new device info at beginning of list, but only if its still relevant
+        if(latestReport.currentState == DeviceState.broken || latestReport.currentState == DeviceState.maintenance || latestReport.currentState == DeviceState.inProgress) {
+          _todoDevices!.insert(0, shortDeviceInfo);
+        }
 
         _recentReports!.add(modifiedDeviceInfo.reports.last);
       });
