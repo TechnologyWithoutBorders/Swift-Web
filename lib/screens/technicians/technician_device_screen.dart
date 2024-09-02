@@ -195,7 +195,7 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
 
   Future<bool> _createReport(int state) async {
     if(_formKey.currentState!.validate()) {
-      await comm.createReport(widget.deviceInfo.device.id, _reportTitleController.text, _problemTextController.text, state).then((newReport) {
+      await comm.createReport(widget.user.id, widget.deviceInfo.device.id, _reportTitleController.text, _problemTextController.text, state).then((newReport) {
         List<DetailedReport> newReports = List<DetailedReport>.from(widget.deviceInfo.reports);
         newReports.add(newReport);
 

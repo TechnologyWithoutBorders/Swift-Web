@@ -625,14 +625,14 @@ Future<Report> queueRepair(int deviceId, String title, String problemDescription
   }
 }
 
-Future<DetailedReport> createReport(int deviceId, String title, String description, int currentState) async {
+Future<DetailedReport> createReport(int authorId, int deviceId, String title, String description, int currentState) async {
   final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
   
   final response = await http.post(
     uri,
     headers: _headers,
     body: jsonEncode(await _generateParameterMap(action: DataAction.createReport, authentication: true,
-        additional: <String, dynamic> {'device_id': deviceId, 'title': title, 'description': description, 'current_state': currentState}),
+        additional: <String, dynamic> {'author_id': authorId, 'device_id': deviceId, 'title': title, 'description': description, 'current_state': currentState}),
     ),
   );
 
