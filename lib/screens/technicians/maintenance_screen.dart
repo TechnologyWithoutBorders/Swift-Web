@@ -178,7 +178,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                           child: FractionallySizedBox(widthFactor: 0.5, heightFactor: 0.7,
                                             child: Padding(
                                               padding: const EdgeInsets.all(25.0),
-                                              child: TechnicianDeviceScreen(user: widget.user, deviceId: device.id)
+                                              child: TechnicianDeviceScreen(user: widget.user, deviceId: device.id, onReportCreated: (shortDeviceInfo) => {})
                                             )
                                           )
                                         );

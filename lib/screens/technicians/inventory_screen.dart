@@ -643,7 +643,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       ]
                     )
                   ),
-                  Expanded(child: _selectedDeviceId != null ? TechnicianDeviceScreen(user: widget.user, deviceId: _selectedDeviceId!, key: ValueKey(_selectedDeviceId)) : const Center())
+                  Expanded(child: _selectedDeviceId != null ? TechnicianDeviceScreen(user: widget.user, deviceId: _selectedDeviceId!, onReportCreated: (shortDeviceInfo) => {}, key: ValueKey(_selectedDeviceId)) : const Center())
                 ]
               ),
             ),
