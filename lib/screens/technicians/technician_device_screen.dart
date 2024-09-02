@@ -212,6 +212,7 @@ class _ReportHistoryScreenState extends State<ReportHistoryScreen> {
                         .of(context)
                         .textTheme
                         .headlineSmall),
+                    const SizedBox(height: 10),
                     DropdownButton<int>(
                       hint: const Text("State"),
                       value: state,
