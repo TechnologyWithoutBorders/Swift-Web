@@ -71,11 +71,15 @@ class _DetailScreenState extends State<DashboardScreen> {
   }
 
   void _updateDeviceReports(DeviceInfo modifiedDeviceInfo) {
-    if(_todoDevices != null && _recentReports != null) {
+    if(_todoDevices != null && _recentReports != null && _deviceStats != null) {
       DetailedReport latestReport = modifiedDeviceInfo.reports.last;
+      DetailedReport secondToLatestReport = modifiedDeviceInfo.reports[modifiedDeviceInfo.reports.length-2];
       ShortDeviceInfo shortDeviceInfo = ShortDeviceInfo(device: modifiedDeviceInfo.device, report: Report(currentState: latestReport.currentState, created: latestReport.created));
 
       setState(() {
+        _deviceStats!.add(secondToLatestReport.currentState, -1);
+        _deviceStats!.add(latestReport.currentState, 1);
+
         //remove old device info
         _todoDevices!.removeWhere((todoDevice) => todoDevice.device.id == shortDeviceInfo.device.id);
 
