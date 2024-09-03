@@ -200,7 +200,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
     List<ShortDeviceInfo> preFilteredDevices = [];
     List<ShortDeviceInfo> displayedDevices = [];
 
-    for(ShortDeviceInfo deviceInfo in _devices) {
+    for(ShortDeviceInfo deviceInfo in _assignedDevices) {
       if(deviceInfo.report.currentState == state) {
         preFilteredDevices.add(deviceInfo);
         displayedDevices.add(deviceInfo);
