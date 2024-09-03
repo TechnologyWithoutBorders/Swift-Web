@@ -70,6 +70,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
                 children: [
                   SelectableText("${_deviceInfo!.device.manufacturer} ${_deviceInfo!.device.model}", style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                   _deviceInfo!.device.orgUnit != null ? Text(_deviceInfo!.device.orgUnit!, style: const TextStyle(fontSize: 25)) : const Text(""),
+                  SelectableText("Asset number: ${_deviceInfo!.device.id}"),
                   SelectableText("Serial number: ${_deviceInfo!.device.serialNumber}"),
                   Text("Maintenance interval: ${_deviceInfo!.device.maintenanceInterval/4} months"),
                 ]
