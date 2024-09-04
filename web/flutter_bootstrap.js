@@ -9,7 +9,7 @@ if (!window._flutter) {
 _flutter.buildConfig = {"engineRevision":"b8800d88be4866db1b15f8b954ab2573bba9960f","builds":[{"compileTarget":"dart2js","renderer":"canvaskit","mainJsPath":"main.dart.js"}]};
 
 
-const loading = document.createElement('div');
+const loading = document.createElement('h2');
 document.body.appendChild(loading);
 loading.textContent = "Loading entrypoint...";
 
