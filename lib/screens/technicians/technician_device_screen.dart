@@ -63,7 +63,11 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Expanded(child: _deviceInfo!.imageData != null && _deviceInfo!.imageData!.isNotEmpty ? Image.memory(base64Decode(_deviceInfo!.imageData!)) : const Text("no image available")),
+              Expanded(
+                child: InteractiveViewer(
+                  child: _deviceInfo!.imageData != null && _deviceInfo!.imageData!.isNotEmpty ? Image.memory(base64Decode(_deviceInfo!.imageData!)) : const Text("no image available")
+                ),
+              ),
               Expanded(child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
