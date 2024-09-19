@@ -17,7 +17,7 @@ class ReportHistoryPlot extends StatefulWidget {
 }
 
 class _ReportHistoryPlotState extends State<ReportHistoryPlot> {
-  List<charts.Series<CategoryData, DateTime>>? _seriesList;
+  List<List<CategoryData>>? _dataList;
 
   @override
   void initState() {
@@ -76,22 +76,8 @@ class _ReportHistoryPlotState extends State<ReportHistoryPlot> {
         }
       }
 
-      List<charts.Series<CategoryData, DateTime>> seriesList = [];
-
-      for(int state = 0; state < 6; state++) {
-        seriesList.add(
-          charts.Series<CategoryData, DateTime>(
-            id: DeviceState.getStateString(state),
-            domainFn: (CategoryData categoryData, _) => categoryData.category,
-            measureFn: (CategoryData categoryData, _) => categoryData.count,
-            colorFn: (CategoryData categoryData, _) => categoryData.color,
-            data: dataList[state],
-            labelAccessorFn: (CategoryData categoryData, _) => '${categoryData.category}: ${categoryData.count}',
-        ));
-      }
-
       setState(() {
-        _seriesList = seriesList;
+        _dataList = dataList;
       });
     }).onError<MessageException>((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.message));
@@ -101,33 +87,40 @@ class _ReportHistoryPlotState extends State<ReportHistoryPlot> {
 
   @override
   Widget build(BuildContext context) {
+    List<charts.Series<CategoryData, DateTime>>? seriesList;
+
+    if(_dataList != null) {
+      seriesList = [];
+
+      for(int state = 0; state < 6; state++) {
+        seriesList.add(
+          charts.Series<CategoryData, DateTime>(
+            id: DeviceState.getStateString(state),
+            domainFn: (CategoryData categoryData, _) => categoryData.category,
+            measureFn: (CategoryData categoryData, _) => categoryData.count,
+            colorFn: (CategoryData categoryData, _) => categoryData.color,
+            data: _dataList![state],
+            labelAccessorFn: (CategoryData categoryData, _) => '${categoryData.category}: ${categoryData.count}',
+        ));
+      }
+    }
+
     return Dialog(alignment: Alignment.center,
       child: FractionallySizedBox(widthFactor: 0.9, heightFactor: 0.9,
         child: Card(
           child: Padding(
             padding: const EdgeInsets.all(25.0),
-            child: _seriesList != null ? Center(
-              child: Center(child: StateLineChart(_seriesList!))
+            child: seriesList != null ? Center(
+              child: Center(child: charts.TimeSeriesChart(
+                seriesList,
+                behaviors: [
+                  charts.SeriesLegend()
+                ])
+              )
             ) : const Center(child: SizedBox(width: 60, height: 60, child: CircularProgressIndicator()))
           )
         )
       )
-    );
-  }
-}
-
-class StateLineChart extends StatelessWidget {
-  final List<charts.Series<dynamic, DateTime>> seriesList;
-
-  const StateLineChart(this.seriesList, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return charts.TimeSeriesChart(
-      seriesList,
-      behaviors: [
-        charts.SeriesLegend()
-      ]
     );
   }
 }
