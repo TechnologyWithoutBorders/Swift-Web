@@ -229,8 +229,6 @@ class _DetailScreenState extends State<DashboardScreen> {
                                   int deviceId = keys[index];
                                   List<DetailedReport> reports = _recentReports![deviceId]!;
 
-                                  reports.sort((a, b) => a.created.compareTo(b.created));
-
                                   List<Widget> rows = [];
                                   int counter = 0;
 

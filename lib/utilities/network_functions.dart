@@ -464,7 +464,11 @@ Future<Map<int, List<DetailedReport>>> getRecentActivity() async {
         }
       }
 
-      return reports;
+      for(var reportList in reports.values) {
+        reportList.sort((a, b) => a.created.compareTo(b.created));
+      }
+
+      return Map.fromEntries(reports.entries.toList()..sort((a, b) => b.value.last.created.compareTo(a.value.last.created)));
     } else {
       throw MessageException(swiftResponse.data);
     }
