@@ -437,7 +437,7 @@ Future<List<User>> getUsers() async {
   }
 }
 
-Future<List<DetailedReport>> getRecentActivity() async {
+Future<Map<int, List<DetailedReport>>> getRecentActivity() async {
   final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
   final response = await http.post(
@@ -450,10 +450,18 @@ Future<List<DetailedReport>> getRecentActivity() async {
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
     
     if(swiftResponse.responseCode == 0) {
-      List<DetailedReport> reports = [];
+      Map<int, List<DetailedReport>> reports = {};
 
       for(var jsonReport in swiftResponse.data["reports"]) {
-        reports.add(DetailedReport.fromJson(jsonReport));
+        DetailedReport report = DetailedReport.fromJson(jsonReport);
+
+        if(reports.containsKey(report.deviceId)) {
+          reports[report.deviceId]!.add(report);
+        } else {
+          List<DetailedReport> deviceReports = [report];
+
+          reports[report.deviceId] = deviceReports;
+        }
       }
 
       return reports;
