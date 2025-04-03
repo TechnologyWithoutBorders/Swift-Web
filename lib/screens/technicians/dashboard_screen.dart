@@ -229,6 +229,8 @@ class _DetailScreenState extends State<DashboardScreen> {
                                   int deviceId = keys[index];
                                   List<DetailedReport> reports = _recentReports![deviceId]!;
 
+                                  reports.sort((a, b) => a.created.compareTo(b.created));
+
                                   List<Widget> rows = [];
                                   int counter = 0;
 
@@ -252,7 +254,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                                   }
 
                                   // Flutter does not support date formatting without libraries
-                                  String dateStamp = reports.first.created.toString().substring(0, reports.first.created.toString().length-7);
+                                  String dateStamp = reports.last.created.toString().substring(0, reports.last.created.toString().length-7);
 
                                   return Padding(
                                     padding: const EdgeInsets.all(15.0),
