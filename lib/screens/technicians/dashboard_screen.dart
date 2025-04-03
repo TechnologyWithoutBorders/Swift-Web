@@ -226,9 +226,11 @@ class _DetailScreenState extends State<DashboardScreen> {
                                 itemCount: _recentReports!.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   List<int> keys = _recentReports!.keys.toList();
-                                  List<DetailedReport> reports = _recentReports![keys[index]]!;
+                                  int deviceId = keys[index];
+                                  List<DetailedReport> reports = _recentReports![deviceId]!;
 
                                   List<Widget> rows = [];
+                                  int counter = 0;
 
                                   for(DetailedReport report in reports) {
                                     rows.add(Row(
@@ -241,17 +243,23 @@ class _DetailScreenState extends State<DashboardScreen> {
                                     ));
                                     rows.add(Text(report.title, style: const TextStyle(fontWeight: FontWeight.bold)));
                                     rows.add(Text(report.description));
+
+                                    counter += 1;
+
+                                    if(counter != reports.length) {
+                                      rows.add(Divider());
+                                    }
                                   }
 
                                   // Flutter does not support date formatting without libraries
-                                  //String dateStamp = report.created.toString().substring(0, report.created.toString().length-7);
+                                  String dateStamp = reports.first.created.toString().substring(0, reports.first.created.toString().length-7);
 
                                   return Padding(
                                     padding: const EdgeInsets.all(15.0),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.stretch,
                                       children: [
-                                        //Text(dateStamp),
+                                        Text(dateStamp),
                                         InkWell(
                                           child: Card(
                                             color: Colors.white,
@@ -263,7 +271,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                                               )
                                             )
                                           ),
-                                          /*onTap: () => {
+                                          onTap: () => {
                                             showDialog<void>(
                                               context: context,
                                               builder: (BuildContext context) {
@@ -271,13 +279,13 @@ class _DetailScreenState extends State<DashboardScreen> {
                                                   child: FractionallySizedBox(widthFactor: 0.7, heightFactor: 0.85,
                                                     child: Padding(
                                                       padding: const EdgeInsets.all(25.0),
-                                                      child: TechnicianDeviceScreen(user: widget.user, deviceId: report.deviceId, onReportCreated: _updateDeviceReports)
+                                                      child: TechnicianDeviceScreen(user: widget.user, deviceId: deviceId, onReportCreated: _updateDeviceReports)
                                                     )
                                                   )
                                                 );
                                               }
                                             )
-                                          }*/
+                                          }
                                         )
                                       ]
                                     )
