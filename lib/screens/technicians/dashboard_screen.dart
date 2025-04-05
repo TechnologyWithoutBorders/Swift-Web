@@ -30,7 +30,7 @@ class _DetailScreenState extends State<DashboardScreen> {
 
   DeviceStats? _deviceStats;
   List<ShortDeviceInfo>? _todoDevices;
-  Map<int, List<DetailedReport>>? _recentReports;
+  List<DeviceInfo>? _recentReports;
 
   @override
   void initState() {
@@ -87,11 +87,19 @@ class _DetailScreenState extends State<DashboardScreen> {
         if(latestReport.currentState == DeviceState.broken || latestReport.currentState == DeviceState.maintenance || latestReport.currentState == DeviceState.inProgress) {
           _todoDevices!.insert(0, shortDeviceInfo);
         }
-        
-        if(_recentReports!.containsKey(modifiedDeviceInfo.device.id)) {
-          _recentReports![modifiedDeviceInfo.device.id]!.insert(0, modifiedDeviceInfo.reports.last);
+
+        //try to find device in recent activity
+        int index = _recentReports!.indexWhere((deviceInfo) => deviceInfo.device.id == modifiedDeviceInfo.device.id);
+
+        if(index == -1) {
+          List<DetailedReport> newReports = [];
+          newReports.add(modifiedDeviceInfo.reports.last);
+          
+          DeviceInfo newDeviceInfo = DeviceInfo(device: modifiedDeviceInfo.device, reports: newReports);
+
+          _recentReports!.add(newDeviceInfo);
         } else {
-          _recentReports![modifiedDeviceInfo.device.id] = [modifiedDeviceInfo.reports.last];
+          _recentReports![index].reports.add(modifiedDeviceInfo.reports.last);
         }
       });
     }
@@ -225,9 +233,8 @@ class _DetailScreenState extends State<DashboardScreen> {
                                 controller: _activityScrollController,
                                 itemCount: _recentReports!.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  List<int> keys = _recentReports!.keys.toList();
-                                  int deviceId = keys[index];
-                                  List<DetailedReport> reports = _recentReports![deviceId]!;
+                                  DeviceInfo deviceInfo = _recentReports![index];
+                                  List<DetailedReport> reports = deviceInfo.reports;
 
                                   List<Widget> rows = [];
                                   int counter = 0;
@@ -259,7 +266,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.stretch,
                                       children: [
-                                        Text(dateStamp),
+                                        Text("$dateStamp - ${deviceInfo.device.orgUnit} ${deviceInfo.device.type}"),
                                         InkWell(
                                           child: Card(
                                             color: Colors.white,
@@ -279,7 +286,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                                                   child: FractionallySizedBox(widthFactor: 0.7, heightFactor: 0.85,
                                                     child: Padding(
                                                       padding: const EdgeInsets.all(25.0),
-                                                      child: TechnicianDeviceScreen(user: widget.user, deviceId: deviceId, onReportCreated: _updateDeviceReports)
+                                                      child: TechnicianDeviceScreen(user: widget.user, deviceId: deviceInfo.device.id, onReportCreated: _updateDeviceReports)
                                                     )
                                                   )
                                                 );

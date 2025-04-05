@@ -437,7 +437,7 @@ Future<List<User>> getUsers() async {
   }
 }
 
-Future<Map<int, List<DetailedReport>>> getRecentActivity() async {
+Future<List<DeviceInfo>> getRecentActivity() async {
   final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
 
   final response = await http.post(
@@ -450,25 +450,27 @@ Future<Map<int, List<DetailedReport>>> getRecentActivity() async {
     SwiftResponse swiftResponse = SwiftResponse.fromJson(jsonDecode(response.body));
     
     if(swiftResponse.responseCode == 0) {
-      Map<int, List<DetailedReport>> reports = {};
+      Map<int, DeviceInfo> deviceInfos = {};
+
+      for(var jsonDevice in swiftResponse.data["devices"]) {
+        HospitalDevice device = HospitalDevice.fromJson(jsonDevice);
+        DeviceInfo deviceInfo = DeviceInfo(device: device, reports: []);
+        deviceInfos[device.id] = deviceInfo;
+      }
 
       for(var jsonReport in swiftResponse.data["reports"]) {
         DetailedReport report = DetailedReport.fromJson(jsonReport);
 
-        if(reports.containsKey(report.deviceId)) {
-          reports[report.deviceId]!.add(report);
-        } else {
-          List<DetailedReport> deviceReports = [report];
-
-          reports[report.deviceId] = deviceReports;
-        }
+        deviceInfos[report.deviceId]!.reports.add(report);
       }
 
-      for(var reportList in reports.values) {
-        reportList.sort((a, b) => a.created.compareTo(b.created));
+      List<DeviceInfo> deviceInfoList = deviceInfos.values.toList();
+
+      for(var deviceInfo in deviceInfoList) {
+        deviceInfo.reports.sort((a, b) => a.created.compareTo(b.created));
       }
 
-      return Map.fromEntries(reports.entries.toList()..sort((a, b) => b.value.last.created.compareTo(a.value.last.created)));
+      return deviceInfoList..sort((a, b) => b.reports.last.created.compareTo(a.reports.last.created));
     } else {
       throw MessageException(swiftResponse.data);
     }
