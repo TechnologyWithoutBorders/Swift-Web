@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
+import 'package:web/web.dart' as web;
 
 import 'package:teog_swift/main.dart';
 import 'package:teog_swift/screens/technicians/dashboard_screen.dart';
@@ -52,7 +51,7 @@ class _TabScreenState extends State<TabScreen> {
 
   void _openMap() {
     if(_hospital != null) {
-      html.window.open('https://www.openstreetmap.org/?mlat=${_hospital!.latitude}&mlon=${_hospital!.longitude}#map=17/${_hospital!.latitude}/${_hospital!.longitude}', 'map');
+      //html.window.open('https://www.openstreetmap.org/?mlat=${_hospital!.latitude}&mlon=${_hospital!.longitude}#map=17/${_hospital!.latitude}/${_hospital!.longitude}', 'map');
     }
   }
 
