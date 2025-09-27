@@ -601,14 +601,14 @@ Future<List<String>> retrieveDocuments(String manufacturer, String model) async 
   }
 }
 
-Future<Report> queueRepair(int deviceId, String title, String problemDescription) async {
+Future<Report> requestTechnician(int deviceId, int state, String title, String problemDescription) async {
   final Uri uri = Uri.https(_host, 'interface/${Constants.interfaceVersion}/test.php');
   
   final response = await http.post(
     uri,
     headers: _headers,
     body: jsonEncode(await _generateParameterMap(action: DataAction.createReport, authentication: true,
-        additional: <String, dynamic> {'device_id': deviceId, 'title': title, 'description': problemDescription, 'current_state': DeviceState.broken}),
+        additional: <String, dynamic> {'device_id': deviceId, 'title': title, 'description': problemDescription, 'current_state': state}),
     ),
   );
 
