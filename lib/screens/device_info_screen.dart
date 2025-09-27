@@ -25,7 +25,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
   _DetailScreenState({required this.deviceInfo});
 
-  _updateDeviceInfo(ShortDeviceInfo modifiedDeviceInfo) {
+  void _updateDeviceInfo(ShortDeviceInfo modifiedDeviceInfo) {
     setState(() {
       deviceInfo = modifiedDeviceInfo;
     });
