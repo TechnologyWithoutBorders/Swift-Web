@@ -42,7 +42,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
     });
   }
 
-  _updateDeviceInfo(DeviceInfo modifiedDeviceInfo) {
+  void _updateDeviceInfo(DeviceInfo modifiedDeviceInfo) {
     setState(() {
       _deviceInfo = modifiedDeviceInfo;
     });
