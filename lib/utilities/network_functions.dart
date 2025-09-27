@@ -8,7 +8,6 @@ import 'package:teog_swift/screens/organization_filter_view.dart';
 import 'package:teog_swift/utilities/country.dart';
 import 'package:teog_swift/utilities/data_action.dart';
 import 'package:teog_swift/utilities/device_info.dart';
-import 'package:teog_swift/utilities/device_state.dart';
 import 'package:teog_swift/utilities/device_stats.dart';
 import 'package:teog_swift/utilities/maintenance_event.dart';
 import 'package:teog_swift/utilities/organizational_relation.dart';
