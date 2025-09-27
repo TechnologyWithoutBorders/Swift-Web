@@ -245,7 +245,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
                           });
                         }
                       },
-                      child: Row(
+                      child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Flexible(
