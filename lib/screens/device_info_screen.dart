@@ -268,7 +268,7 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
                               leading: Container(width: 33, height: 33, color: DeviceState.getColor(DeviceState.maintenance),
                                 child: Padding(
                                 padding: const EdgeInsets.all(4.0),
-                                child: Icon(DeviceState.getIconData(DeviceState.broken),
+                                child: Icon(DeviceState.getIconData(DeviceState.maintenance),
                                     size: 25,
                                     color: Colors.grey[900]
                                   )
