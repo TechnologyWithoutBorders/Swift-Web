@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
 
+import 'package:web/web.dart' as web;
 import 'package:flutter/material.dart';
 import 'package:teog_swift/utilities/constants.dart';
 
@@ -42,7 +41,7 @@ class _TechnicianDeviceScreenState extends State<TechnicianDeviceScreen> {
     });
   }
 
-  _updateDeviceInfo(DeviceInfo modifiedDeviceInfo) {
+  void _updateDeviceInfo(DeviceInfo modifiedDeviceInfo) {
     setState(() {
       _deviceInfo = modifiedDeviceInfo;
     });
@@ -384,9 +383,10 @@ class _DocumentScreenState extends State<DocumentScreen> {
 
   void _downloadDocument(String docName) {
     String url = "${comm.getBaseUrl()}device_documents/${widget.deviceInfo.device.manufacturer}/${widget.deviceInfo.device.model}/$docName";
-    html.AnchorElement anchorElement =  html.AnchorElement(href: url);
-    anchorElement.download = docName;
-    anchorElement.click();
+    final anchor = web.document.createElement('a') as web.HTMLAnchorElement;
+    anchor.href = url;
+    anchor.download = docName;
+    anchor.click();
   }
 
   @override

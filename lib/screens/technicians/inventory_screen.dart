@@ -155,7 +155,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
     await FileSaver.instance.saveFile(
       name: "devices_with_missing_documents",
       bytes: data,
-      ext: "csv",
+      fileExtension: "csv",
       mimeType: type);
   }
 
@@ -273,7 +273,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
     FileSaver.instance.saveFile(
       name: "inventory",
       bytes: data,
-      ext: "csv",
+      fileExtension: "csv",
       mimeType: type);
   }
 
@@ -326,7 +326,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   FileSaver.instance.saveFile(
                     name: "barcode_${deviceInfo.device.type.replaceAll(" ", "_")}_${deviceInfo.device.id}",
                     bytes: data,
-                    ext: "png",
+                    fileExtension: "png",
                     mimeType: type);
                   }
                 );

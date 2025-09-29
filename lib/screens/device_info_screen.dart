@@ -1,7 +1,5 @@
 import 'dart:convert';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
-
+import 'package:web/web.dart' as web;
 import 'package:flutter/material.dart';
 
 import 'package:teog_swift/utilities/network_functions.dart' as comm;
@@ -25,7 +23,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
   _DetailScreenState({required this.deviceInfo});
 
-  _updateDeviceInfo(ShortDeviceInfo modifiedDeviceInfo) {
+  void _updateDeviceInfo(ShortDeviceInfo modifiedDeviceInfo) {
     setState(() {
       deviceInfo = modifiedDeviceInfo;
     });
@@ -113,9 +111,10 @@ class _DocumentScreenState extends State<DocumentScreen> {
 
   void _downloadDocument(String docName) {
     String url = "${comm.getBaseUrl()}device_documents/${widget.deviceInfo.device.manufacturer}/${widget.deviceInfo.device.model}/$docName";
-    html.AnchorElement anchorElement =  html.AnchorElement(href: url);
-    anchorElement.download = docName;
-    anchorElement.click();
+    final anchor = web.document.createElement('a') as web.HTMLAnchorElement;
+    anchor.href = url;
+    anchor.download = docName;
+    anchor.click();
   }
 
   @override
@@ -204,9 +203,9 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
   final _reportTitleController = TextEditingController();
   final _problemTextController = TextEditingController();
 
-  Future<bool> _createReport() async {
+  Future<bool> _createReport(int state) async {
     if(_formKey.currentState!.validate()) {
-      await comm.queueRepair(widget.deviceInfo.device.id, _reportTitleController.text, _problemTextController.text).then((newReport) {
+      await comm.requestTechnician(widget.deviceInfo.device.id, state, _reportTitleController.text, _problemTextController.text).then((newReport) {
         widget.updateDeviceInfo(ShortDeviceInfo(device: widget.deviceInfo.device, report: newReport, imageData: widget.deviceInfo.imageData));
       }).onError<MessageException>((error, stackTrace) {
         final snackBar = SnackBar(content: Text(error.message));
@@ -220,70 +219,115 @@ class _ReportProblemFormState extends State<ReportProblemForm> {
   }
 
   void _createReportDialog() {
+    int state = DeviceState.broken;
+
     showDialog<String>(
       context: context,
-      builder: (BuildContext context){
+      builder: (BuildContext context) {
         return Form(key: _formKey,
             child: AlertDialog(
               contentPadding: const EdgeInsets.all(16.0),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text("Report a problem", style: Theme
-                      .of(context)
-                      .textTheme
-                      .headlineSmall),
-                  TextFormField(
-                    controller: _reportTitleController,
-                    decoration: const InputDecoration(labelText: 'Title'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Please give your report a title.";
-                      }
-                      return null;
-                    },
-                    maxLength: 25,
-                    onFieldSubmitted: (value) => _createReport(),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      controller: _problemTextController,
-                      decoration: const InputDecoration(labelText: 'Problem description'),
-                      maxLength: 600,
-                      maxLines: null,
+              content: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) { 
+                  return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text("Request a technician", style: Theme
+                        .of(context)
+                        .textTheme
+                        .headlineSmall),
+                    RadioGroup(
+                      groupValue: state,
+                      onChanged: (int? selectedState) {
+                        if(selectedState != null) {
+                          setState(() {
+                            state = selectedState;
+                          });
+                        }
+                      },
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            child: ListTile(
+                              leading: Container(width: 33, height: 33, color: DeviceState.getColor(DeviceState.broken),
+                                child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Icon(DeviceState.getIconData(DeviceState.broken),
+                                    size: 25,
+                                    color: Colors.grey[900]
+                                  )
+                                )
+                              ),
+                              title: Text(DeviceState.getStateString(DeviceState.broken)),
+                              trailing: Radio<int>(value: DeviceState.broken),
+                            )
+                          ),
+                          Flexible(
+                            child: ListTile(
+                              leading: Container(width: 33, height: 33, color: DeviceState.getColor(DeviceState.maintenance),
+                                child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Icon(DeviceState.getIconData(DeviceState.maintenance),
+                                    size: 25,
+                                    color: Colors.grey[900]
+                                  )
+                                )
+                              ),
+                              title: Text(DeviceState.getStateString(DeviceState.maintenance)),
+                              trailing: Radio<int>(value: DeviceState.maintenance),
+                            )
+                          )
+                        ]
+                      )
+                    ),
+                    TextFormField(
+                      controller: _reportTitleController,
+                      decoration: const InputDecoration(labelText: 'Title'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Please describe the problem in a few sentences.";
+                          return "Please give your report a title.";
                         }
                         return null;
                       },
-                      onFieldSubmitted: (value) => _createReport(),
+                      maxLength: 25,
+                      onFieldSubmitted: (value) => _createReport(state),
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: _problemTextController,
+                        decoration: const InputDecoration(labelText: 'Problem description'),
+                        maxLength: 600,
+                        maxLines: null,
+                        onFieldSubmitted: (value) => _createReport(state),
+                      ),
+                    ),
+                  ],
+                );
+              }
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                  child: const Text('Cancel'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }
               ),
-              actions: <Widget>[
-                ElevatedButton(
-                    child: const Text('Cancel'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }
-                ),
-                ElevatedButton(
-                  child: const Text('Request repair'),
-                  onPressed: () async {
-                    bool success = await _createReport();
-                    
-                    if(success) {
-                      Navigator.pop(context);
-                    }
-                  },
-                )
-              ],
-            )
-          );
-        }
+              ElevatedButton(
+                child: const Text('Request technician'),
+                onPressed: () async {
+                  bool success = await _createReport(state);
+                  
+                  if(success) {
+                    Navigator.pop(context);
+                  }
+                },
+              )
+            ],
+          )
+        );
+      }
     );
   }
 

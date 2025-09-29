@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:teog_swift/main.dart';
 import 'package:teog_swift/screens/technicians/dashboard_screen.dart';
@@ -14,6 +13,7 @@ import 'package:teog_swift/utilities/preference_manager.dart' as prefs;
 import 'package:teog_swift/utilities/network_functions.dart' as comm;
 import 'package:teog_swift/utilities/user.dart';
 import 'package:teog_swift/utilities/hospital.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class TabScreen extends StatefulWidget {
   static const String route = '/tabs';
@@ -52,7 +52,7 @@ class _TabScreenState extends State<TabScreen> {
 
   void _openMap() {
     if(_hospital != null) {
-      html.window.open('https://www.openstreetmap.org/?mlat=${_hospital!.latitude}&mlon=${_hospital!.longitude}#map=17/${_hospital!.latitude}/${_hospital!.longitude}', 'map');
+      launchUrlString('https://www.openstreetmap.org/?mlat=${_hospital!.latitude}&mlon=${_hospital!.longitude}#map=17/${_hospital!.latitude}/${_hospital!.longitude}', webOnlyWindowName: 'map');
     }
   }
 
