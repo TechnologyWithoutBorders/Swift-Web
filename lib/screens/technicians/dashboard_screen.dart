@@ -30,7 +30,7 @@ class _DetailScreenState extends State<DashboardScreen> {
 
   DeviceStats? _deviceStats;
   List<ShortDeviceInfo>? _todoDevices;
-  List<DetailedReport>? _recentReports;
+  List<DeviceInfo>? _recentReports;
 
   @override
   void initState() {
@@ -88,7 +88,19 @@ class _DetailScreenState extends State<DashboardScreen> {
           _todoDevices!.insert(0, shortDeviceInfo);
         }
 
-        _recentReports!.insert(0, modifiedDeviceInfo.reports.last);
+        //try to find device in recent activity
+        int index = _recentReports!.indexWhere((deviceInfo) => deviceInfo.device.id == modifiedDeviceInfo.device.id);
+
+        if(index == -1) {
+          List<DetailedReport> newReports = [];
+          newReports.add(modifiedDeviceInfo.reports.last);
+          
+          DeviceInfo newDeviceInfo = DeviceInfo(device: modifiedDeviceInfo.device, reports: newReports);
+
+          _recentReports!.add(newDeviceInfo);
+        } else {
+          _recentReports![index].reports.add(modifiedDeviceInfo.reports.last);
+        }
       });
     }
   }
@@ -221,16 +233,40 @@ class _DetailScreenState extends State<DashboardScreen> {
                                 controller: _activityScrollController,
                                 itemCount: _recentReports!.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  DetailedReport report = _recentReports![index];
+                                  DeviceInfo deviceInfo = _recentReports![index];
+                                  List<DetailedReport> reports = deviceInfo.reports;
+
+                                  List<Widget> rows = [];
+                                  int counter = 0;
+
+                                  for(DetailedReport report in reports) {
+                                    rows.add(Row(
+                                      children: [
+                                        Expanded(child: Text("${report.author}:")),
+                                        Icon(DeviceState.getIconData(report.currentState),
+                                          color: DeviceState.getColor(report.currentState)
+                                        )
+                                      ]
+                                    ));
+                                    rows.add(Text(report.title, style: const TextStyle(fontWeight: FontWeight.bold)));
+                                    rows.add(Text(report.description));
+
+                                    counter += 1;
+
+                                    if(counter != reports.length) {
+                                      rows.add(Divider());
+                                    }
+                                  }
+
                                   // Flutter does not support date formatting without libraries
-                                  String dateStamp = report.created.toString().substring(0, report.created.toString().length-7);
+                                  String dateStamp = reports.last.created.toString().substring(0, reports.last.created.toString().length-7);
 
                                   return Padding(
                                     padding: const EdgeInsets.all(15.0),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.stretch,
                                       children: [
-                                        Text(dateStamp),
+                                        Text("$dateStamp - ${deviceInfo.device.orgUnit} ${deviceInfo.device.type}"),
                                         InkWell(
                                           child: Card(
                                             color: Colors.white,
@@ -238,18 +274,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                                               padding: const EdgeInsets.all(5.0),
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Expanded(child: Text("${report.author}:")),
-                                                      Icon(DeviceState.getIconData(report.currentState),
-                                                        color: DeviceState.getColor(report.currentState)
-                                                      )
-                                                    ]
-                                                  ),
-                                                  Text(report.title, style: const TextStyle(fontWeight: FontWeight.bold)),
-                                                  Text(report.description)
-                                                ]
+                                                children: rows
                                               )
                                             )
                                           ),
@@ -261,7 +286,7 @@ class _DetailScreenState extends State<DashboardScreen> {
                                                   child: FractionallySizedBox(widthFactor: 0.7, heightFactor: 0.85,
                                                     child: Padding(
                                                       padding: const EdgeInsets.all(25.0),
-                                                      child: TechnicianDeviceScreen(user: widget.user, deviceId: report.deviceId, onReportCreated: _updateDeviceReports)
+                                                      child: TechnicianDeviceScreen(user: widget.user, deviceId: deviceInfo.device.id, onReportCreated: _updateDeviceReports)
                                                     )
                                                   )
                                                 );
