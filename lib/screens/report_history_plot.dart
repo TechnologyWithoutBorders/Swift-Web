@@ -40,12 +40,13 @@ class _ReportHistoryPlotState extends State<ReportHistoryPlot> {
       DateTime today = DateTime(now.year, now.month, now.day);
       int days = today.difference(earliest).inDays;
 
-      List<List<CategoryData>> dataList = [[], [], [], [], [], []];
+      List<List<CategoryData>> dataList = List.generate(DeviceState.names.length+1, (_) => <CategoryData>[], growable: false);
 
       for(int day = 0; day <= days+1; day++) {
         DateTime current = earliest.add(Duration(days: day));
 
-        var stateCounters = [0, 0, 0, 0, 0, 0];
+        var stateCounters = List.filled(DeviceState.names.length, 0);
+        var activityCounter = 0;
 
         //find current state of every device
         for(var deviceInfo in deviceInfos) {
@@ -55,6 +56,14 @@ class _ReportHistoryPlotState extends State<ReportHistoryPlot> {
           DetailedReport? relevantReport;
 
           for(var report in reports) {
+            // track overall activity
+            if(report.author != "Swift App" && DateUtils.isSameDay(report.created, current)) {//TODO: should not be identified by name (but by mail!)
+              activityCounter += 1;
+            }
+          }
+
+          for(var report in reports) {
+            // track state changes
             if(report.created.isBefore(current)) {
               if(relevantReport == null) {
                 relevantReport = report;
@@ -71,9 +80,11 @@ class _ReportHistoryPlotState extends State<ReportHistoryPlot> {
           }
         }
 
-        for(int state = 0; state < 6; state++) {
+        for(int state = 0; state < DeviceState.names.length; state++) {
           dataList[state].add(CategoryData(current, stateCounters[state], charts.ColorUtil.fromDartColor(DeviceState.getColor(state))));
         }
+
+        dataList.last.add(CategoryData(current, activityCounter, charts.Color.black));
       }
 
       setState(() {
@@ -103,6 +114,17 @@ class _ReportHistoryPlotState extends State<ReportHistoryPlot> {
             labelAccessorFn: (CategoryData categoryData, _) => '${categoryData.category}: ${categoryData.count}',
         ));
       }
+
+      seriesList.add(
+        charts.Series<CategoryData, DateTime>(
+            id: "Activity",
+            domainFn: (CategoryData categoryData, _) => categoryData.category,
+            measureFn: (CategoryData categoryData, _) => categoryData.count,
+            colorFn: (CategoryData categoryData, _) => categoryData.color,
+            data: _dataList!.last,
+            labelAccessorFn: (CategoryData categoryData, _) => '${categoryData.category}: ${categoryData.count}',
+        )
+      );
     }
 
     return Dialog(alignment: Alignment.center,
