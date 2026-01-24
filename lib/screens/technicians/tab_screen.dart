@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:url_launcher/url_launcher.dart';
-
 import 'package:teog_swift/main.dart';
 import 'package:teog_swift/screens/technicians/dashboard_screen.dart';
 import 'package:teog_swift/screens/technicians/inventory_screen.dart';
