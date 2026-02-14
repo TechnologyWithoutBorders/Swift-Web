@@ -1,6 +1,7 @@
 import 'package:csv/csv.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:typed_data';
 import 'package:teog_swift/screens/organization_filter_view.dart';
 import 'package:teog_swift/screens/technicians/technician_device_screen.dart';
@@ -278,12 +279,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
       mimeType: type);
   }
 
-  Future<Uint8List> _generateStickerPdf() async {
+  Future<Uint8List> _generateStickerPdf(int from, int to) async {
     final pdf = pw.Document();
 
     const stickerWidth = 40 * PdfPageFormat.mm;
     const stickerHeight = 25 * PdfPageFormat.mm;
-    const numStickers = 100;
 
     pdf.addPage(
       pw.MultiPage(
@@ -293,8 +293,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
           return [
             pw.Center(
               child: pw.Wrap(
-                children: List.generate(numStickers, (index) {
-                  final value = (index + 1).toString();
+                children: List.generate(to-from+1, (index) {
+                  final value = (from+index).toString();
 
                   return pw.Container(
                     width: stickerWidth,
@@ -342,15 +342,73 @@ class _InventoryScreenState extends State<InventoryScreen> {
   }
 
   void _printBarcodes() async {
-    var data = await _generateStickerPdf();
+    TextEditingController fromController = TextEditingController();
+    TextEditingController toController = TextEditingController();
 
-    MimeType type = MimeType.pdf;
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("The user will receive his/her password for the mobile app via email.\nPlease check the spam folder if it does not show up."),
+          contentPadding: const EdgeInsets.all(16.0),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TextField(
+                controller: fromController,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                decoration: const InputDecoration(
+                  labelText: 'First number'),
+                maxLength: 10,
+              ),
+              TextField(
+                controller: toController,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                decoration: const InputDecoration(
+                  labelText: 'Last number'),
+                maxLength: 10,
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+                child: const Text('Close'),
+                onPressed: () {
+                  Navigator.pop(context);
 
-    await FileSaver.instance.saveFile(
-      name: "swift_barcodes",
-      bytes: data,
-      fileExtension: "pdf",
-      mimeType: type);
+                  fromController.dispose();
+                  toController.dispose();
+                }),
+            ElevatedButton(
+                child: const Text('Download'),
+                onPressed: () async {
+                  String fromText = fromController.text.trim();
+                  String toText = toController.text.trim();
+
+                  if(fromText.isNotEmpty && toText.isNotEmpty) {
+                    int? from = int.tryParse(fromText);
+                    int? to = int.tryParse(toText);
+
+                    if(from != null && to != null && from >= 0 && to >= from) {
+                      var data = await _generateStickerPdf(from, to);
+
+                      MimeType type = MimeType.pdf;
+
+                      await FileSaver.instance.saveFile(
+                        name: "swift_barcodes",
+                        bytes: data,
+                        fileExtension: "pdf",
+                        mimeType: type);
+                    }
+                  }
+
+                  fromController.dispose();
+                  toController.dispose();
+                })
+          ],
+        );
+      }
+    );
   }
 
   void _showBarcode(ShortDeviceInfo deviceInfo) async {
