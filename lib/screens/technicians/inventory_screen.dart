@@ -349,7 +349,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Create a printable PDF of up to 1000 device barcodes"),
+          title: const Text("Create a printable PDF with device barcodes"),
           contentPadding: const EdgeInsets.all(16.0),
           content: Column(
             mainAxisSize: MainAxisSize.min,
