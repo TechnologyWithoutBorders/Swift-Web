@@ -35,6 +35,7 @@ dependencies:
   http: ^1.1.0
   numberpicker: ^2.1.1
   package_info_plus: ^9.0.0
+  pdf: ^3.11.3
   qr_flutter: ^4.0.0
   screenshot: ^3.0.0
   shared_preferences: ^2.0.13

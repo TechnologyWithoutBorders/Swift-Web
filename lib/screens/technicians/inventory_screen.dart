@@ -19,6 +19,8 @@ import 'package:teog_swift/utilities/message_exception.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 class InventoryScreen extends StatefulWidget {
   final User user;
@@ -273,6 +275,82 @@ class _InventoryScreenState extends State<InventoryScreen> {
       name: "inventory",
       bytes: data,
       fileExtension: "csv",
+      mimeType: type);
+  }
+
+  Future<Uint8List> _generateStickerPdf() async {
+    final pdf = pw.Document();
+
+    const stickerWidth = 40 * PdfPageFormat.mm;
+    const stickerHeight = 25 * PdfPageFormat.mm;
+    const numStickers = 100;
+
+    pdf.addPage(
+      pw.MultiPage(
+        pageFormat: PdfPageFormat.a4,
+        margin: const pw.EdgeInsets.all(10 * PdfPageFormat.mm),
+        build: (context) {
+          return [
+            pw.Center(
+              child: pw.Wrap(
+                children: List.generate(numStickers, (index) {
+                  final value = (index + 1).toString();
+
+                  return pw.Container(
+                    width: stickerWidth,
+                    height: stickerHeight,
+                    decoration: pw.BoxDecoration(
+                      border: pw.Border.all(width: 0.5),
+                    ),
+                    padding: const pw.EdgeInsets.all(2),
+                    child: pw.Column(
+                      mainAxisAlignment: pw.MainAxisAlignment.center,
+                      children: [
+                        pw.Text(
+                          "Swift Inventory",
+                          style: pw.TextStyle(
+                            fontSize: 12,
+                          ),
+                        ),
+                        pw.SizedBox(height: 1 * PdfPageFormat.mm),
+                        pw.BarcodeWidget(
+                          barcode: pw.Barcode.code128(),
+                          data: value,
+                          width: 30 * PdfPageFormat.mm,
+                          height: 8 * PdfPageFormat.mm,
+                          drawText: false,
+                        ),
+                        pw.SizedBox(height: 1 * PdfPageFormat.mm),
+                        pw.Text(
+                          value,
+                          style: pw.TextStyle(
+                            fontSize: 10,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+              ),
+            ),
+          ];
+        },
+      ),
+    );
+
+    return pdf.save();
+  }
+
+
+  void _printBarcodes() async {
+    var data = await _generateStickerPdf();
+
+    MimeType type = MimeType.pdf;
+
+    await FileSaver.instance.saveFile(
+      name: "stickers",
+      bytes: data,
+      fileExtension: "pdf",
       mimeType: type);
   }
 
@@ -647,6 +725,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
                             : ElevatedButton(
                               onPressed: () => _checkManuals(),
                               child: const Text("Get devices with missing documents")
+                            ),
+                            ElevatedButton(
+                              onPressed: () => _printBarcodes(),
+                              child: const Text("Print barcodes"),
                             ),
                           ],
                         ),
