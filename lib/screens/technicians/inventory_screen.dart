@@ -3,7 +3,6 @@ import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'package:teog_swift/screens/organization_filter_view.dart';
-import 'package:teog_swift/screens/report_history_plot.dart';
 import 'package:teog_swift/screens/technicians/technician_device_screen.dart';
 import 'package:teog_swift/utilities/detailed_report.dart';
 import 'package:teog_swift/utilities/hospital_device.dart';
@@ -275,15 +274,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
       bytes: data,
       fileExtension: "csv",
       mimeType: type);
-  }
-
-  void _plotHistory() async {
-    showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return const ReportHistoryPlot();
-      }
-    );
   }
 
   void _showBarcode(ShortDeviceInfo deviceInfo) async {
@@ -652,10 +642,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
                             ElevatedButton(
                               onPressed: () => _csvExportInventory(),
                               child: const Text("Export current list"),
-                            ),
-                            ElevatedButton(
-                              onPressed: () => _plotHistory(),
-                              child: const Text("Plot history"),
                             ),
                             _totalDevices >= 0 ? Text("checking devices for missing documents... $_checkedDevices/$_totalDevices")
                             : ElevatedButton(

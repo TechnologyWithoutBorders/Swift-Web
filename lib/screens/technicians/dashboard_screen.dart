@@ -9,6 +9,7 @@ import 'package:teog_swift/utilities/network_functions.dart' as comm;
 import 'package:teog_swift/utilities/constants.dart';
 import 'package:teog_swift/utilities/short_device_info.dart';
 import 'package:teog_swift/screens/technicians/technician_device_screen.dart';
+import 'package:teog_swift/screens/report_history_plot.dart';
 import 'package:teog_swift/utilities/device_state.dart';
 import 'package:teog_swift/utilities/report.dart';
 import 'package:teog_swift/utilities/user.dart';
@@ -68,6 +69,15 @@ class _DetailScreenState extends State<DashboardScreen> {
       final snackBar = SnackBar(content: Text(error.message));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
+  }
+
+  void _plotHistory() async {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return const ReportHistoryPlot();
+      }
+    );
   }
 
   void _updateDeviceReports(DeviceInfo modifiedDeviceInfo) {
@@ -153,6 +163,15 @@ class _DetailScreenState extends State<DashboardScreen> {
                           color: const Color(Constants.lightRed),
                           child: Text("${_deviceStats!.maintenanceOverdue} devices are overdue for maintenance", style: const TextStyle(fontSize: 20))
                         ) : Container(),
+                        ButtonBar(
+                          alignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () => _plotHistory(),
+                              child: const Text("Plot history"),
+                            ),
+                          ],
+                        ),
                       ]
                     ),
                   ),
