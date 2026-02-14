@@ -365,7 +365,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 controller: numController,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: const InputDecoration(
-                  labelText: 'Number of barcodes (max. 264; 44 per page)'),
+                  labelText: 'Amount of barcodes (max. 264; 44 per page)'),
                 maxLength: 5,
               ),
             ],
