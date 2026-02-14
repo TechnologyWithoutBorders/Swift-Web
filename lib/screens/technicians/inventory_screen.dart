@@ -279,7 +279,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
       mimeType: type);
   }
 
-  Future<Uint8List> _generateStickerPdf(int from, int to) async {
+  Future<Uint8List> _generateStickerPdf(int from, int numCodes) async {
     final pdf = pw.Document();
 
     const stickerWidth = 40 * PdfPageFormat.mm;
@@ -293,7 +293,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
           return [
             pw.Center(
               child: pw.Wrap(
-                children: List.generate(to-from+1, (index) {
+                children: List.generate(numCodes, (index) {
                   final value = (from+index).toString();
 
                   return pw.Container(
@@ -343,13 +343,13 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   void _printBarcodes() async {
     TextEditingController fromController = TextEditingController();
-    TextEditingController toController = TextEditingController();
+    TextEditingController numController = TextEditingController();
 
     showDialog<String>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Create a printable PDF of device barcodes"),
+          title: const Text("Create a printable PDF of up to 1000 device barcodes"),
           contentPadding: const EdgeInsets.all(16.0),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -362,10 +362,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 maxLength: 5,
               ),
               TextField(
-                controller: toController,
+                controller: numController,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: const InputDecoration(
-                  labelText: 'Last barcode number'),
+                  labelText: 'Number of barcodes (max. 264; 44 per page)'),
                 maxLength: 5,
               ),
             ],
@@ -377,20 +377,20 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   Navigator.pop(context);
 
                   fromController.dispose();
-                  toController.dispose();
+                  numController.dispose();
                 }),
             ElevatedButton(
                 child: const Text('Download'),
                 onPressed: () async {
                   String fromText = fromController.text.trim();
-                  String toText = toController.text.trim();
+                  String numText = numController.text.trim();
 
-                  if(fromText.isNotEmpty && toText.isNotEmpty) {
+                  if(fromText.isNotEmpty && numText.isNotEmpty) {
                     int? from = int.tryParse(fromText);
-                    int? to = int.tryParse(toText);
+                    int? numCodes = int.tryParse(numText);
 
-                    if(from != null && to != null && from >= 0 && to >= from) {
-                      var data = await _generateStickerPdf(from, to);
+                    if(from != null && numCodes != null && from >= 0 && numCodes >= 1 && numCodes <= 264) {
+                      var data = await _generateStickerPdf(from, numCodes);
 
                       MimeType type = MimeType.pdf;
 
@@ -401,9 +401,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         mimeType: type);
                     }
                   }
-
-                  fromController.dispose();
-                  toController.dispose();
                 })
           ],
         );
