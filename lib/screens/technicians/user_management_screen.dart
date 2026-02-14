@@ -55,8 +55,8 @@ class _DetailScreenState extends State<UserManagementScreen> {
             ElevatedButton(
                 child: const Text('Register'),
                 onPressed: () {
-                  String name = nameController.text;
-                  String mail = mailController.text;
+                  String name = nameController.text.trim();
+                  String mail = mailController.text.trim();
 
                   if(name.isNotEmpty && mail.isNotEmpty) {
                     comm.createUser(mail, name).then((_) {
