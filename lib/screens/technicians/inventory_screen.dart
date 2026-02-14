@@ -349,7 +349,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("The user will receive his/her password for the mobile app via email.\nPlease check the spam folder if it does not show up."),
+          title: const Text("Create a printable PDF of device barcodes"),
           contentPadding: const EdgeInsets.all(16.0),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -358,15 +358,15 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 controller: fromController,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: const InputDecoration(
-                  labelText: 'First number'),
-                maxLength: 10,
+                  labelText: 'First barcode number'),
+                maxLength: 5,
               ),
               TextField(
                 controller: toController,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: const InputDecoration(
-                  labelText: 'Last number'),
-                maxLength: 10,
+                  labelText: 'Last barcode number'),
+                maxLength: 5,
               ),
             ],
           ),
