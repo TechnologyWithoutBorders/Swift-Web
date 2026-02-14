@@ -348,7 +348,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
     MimeType type = MimeType.pdf;
 
     await FileSaver.instance.saveFile(
-      name: "stickers",
+      name: "swift_barcodes",
       bytes: data,
       fileExtension: "pdf",
       mimeType: type);
