@@ -341,7 +341,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
     return pdf.save();
   }
 
-
   void _printBarcodes() async {
     var data = await _generateStickerPdf();
 
